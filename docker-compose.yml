@@ -1,0 +1,50 @@
+services:
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile.dev
+        ports:
+            - "4200:4200" # ng serve usa la porta 4200
+        volumes:
+            - ./frontend/src:/app/src
+            - ./frontend/angular.json:/app/angular.json
+            - ./frontend/package.json:/app/package.json
+            - ./frontend/package-lock.json:/app/package-lock.json
+        networks:
+            - ticketing-network
+
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile.dev
+        environment:
+            - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+            - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+            - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+        ports:
+            - "8080:8080"
+        depends_on:
+            - mysql
+        volumes:
+            - ./backend/src:/app/src
+            - ./backend/pom.xml:/app/pom.xml
+        networks:
+            - ticketing-network
+
+    mysql:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        ports:
+            - "3300:3306"
+        volumes:
+            - ./mysql-data:/var/lib/mysql
+        networks:
+            - ticketing-network
+
+networks:
+    ticketing-network:
+        driver: bridge

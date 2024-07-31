@@ -1,0 +1,42 @@
+services:
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile.prod
+        ports:
+            - "80:80"
+        networks:
+            - ticketing-network
+
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile.prod
+        environment:
+            - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
+            - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
+            - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
+        ports:
+            - "8080:8080"
+        depends_on:
+            - mysql
+        networks:
+            - ticketing-network
+
+    mysql:
+        image: mysql:8.0
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+            - MYSQL_DATABASE=${MYSQL_DATABASE}
+            - MYSQL_USER=${MYSQL_USER}
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./mysql-data:/var/lib/mysql
+        networks:
+            - ticketing-network
+
+networks:
+    ticketing-network:
+        driver: bridge

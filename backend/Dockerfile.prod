@@ -1,0 +1,30 @@
+# Utilizza una immagine di Maven con JDK 17 come base per la build
+FROM maven:3.8.5-openjdk-17 AS build
+
+# Imposta la directory di lavoro
+WORKDIR /app
+
+# Copia il file pom.xml e scarica le dipendenze
+COPY pom.xml ./
+RUN mvn dependency:go-offline
+
+# Copia il resto dei file dell'applicazione
+COPY src ./src
+
+# Compila il progetto senza eseguire i test
+RUN mvn package -DskipTests
+
+# Utilizza una immagine di JDK 17 per l'esecuzione del contenitore
+FROM openjdk:17-jdk-slim
+
+# Imposta la directory di lavoro
+WORKDIR /app
+
+# Copia l'artefatto compilato dalla fase di build
+COPY --from=build /app/target/*.jar app.jar
+
+# Esponi la porta
+EXPOSE 8080
+
+# Comando per eseguire l'applicazione
+ENTRYPOINT ["java", "-jar", "app.jar"]
