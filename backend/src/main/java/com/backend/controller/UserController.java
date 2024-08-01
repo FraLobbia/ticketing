@@ -2,6 +2,7 @@
 
 package com.backend.controller;
 import java.util.Arrays;
+import com.backend.model.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

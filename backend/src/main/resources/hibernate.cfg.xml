@@ -1,0 +1,29 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN" 
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+
+		<!-- Set URL -->
+		<property name = "hibernate.connection.url">jdbc:mysql://localhost:3300/ticketing</property>
+
+		<!-- Set User Name -->
+		<property name = "hibernate.connection.username">francesco</property>
+
+		<!-- Set Password -->
+		<property name = "hibernate.connection.password">1234</property>
+
+		<!-- auto update -->
+		<property name = "hibernate.hbm2ddl.auto">update</property>
+
+		<!-- Set Driver Name -->
+		<property name = "hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+
+		<property name = "hibernate.show_sql">true</property>
+	
+		<!-- Optional: Auto-generate schema -->
+		<!-- <property name = "hibernate.hbm2ddl.auto">create</property> -->
+
+	</session-factory>
+</hibernate-configuration>
