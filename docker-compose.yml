@@ -23,11 +23,13 @@ services:
             - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
         ports:
             - "8080:8080"
+            - "35729:35729" # livereload
         depends_on:
             - mysql
         volumes:
             - ./backend/src:/app/src
             - ./backend/pom.xml:/app/pom.xml
+              - ./backend/application.properties:/app/src/main/resources/application.properties
         networks:
             - ticketing-network
 

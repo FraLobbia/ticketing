@@ -1,51 +1,61 @@
-
-
 package com.backend.controller;
-import java.util.Arrays;
+import java.util.ArrayList;
 import com.backend.model.User;
-
+import com.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users")
 public class UserController {
-    // @Autowired
-    // private UserService userService;
 
-    @GetMapping
-    public List<String> getAllUsers() {
-        // create a list of fake users
-        List<String> fakeUsers = Arrays.asList("John", "Jane", "Mikeuhjb");
+    private final UserService userService;
 
-
-
-        return fakeUsers;
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    // @GetMapping("/{id}")
-    // public ResponseEntity<User> getUserById(@PathVariable Long id) {
-    //     User user = userService.getUserById(id).orElseThrow(() -> new RuntimeException("User not found"));
-    //     return ResponseEntity.ok(user);
-    // }
+    @PostMapping
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User savedUser = userService.saveUser(user);
+        return ResponseEntity.ok(savedUser);
+    }
 
-    // @PostMapping
-    // public User createUser(@RequestBody User user) {
-    //     return userService.createUser(user);
-    // }
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        Optional<User> user = userService.getUserById(id);
+        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-    // @PutMapping("/{id}")
-    // public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-    //     User updatedUser = userService.updateUser(id, userDetails);
-    //     return ResponseEntity.ok(updatedUser);
-    // }
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+        // User user = new User();
+        // user.setId(1L);
+        // user.setName("John");
+        // user.setSurname("Doe");
 
-    // @DeleteMapping("/{id}")
-    // public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-    //     userService.deleteUser(id);
-    //     return ResponseEntity.noContent().build();
-    // }
+        // List<User> fakeuser = new ArrayList<>();
+        // fakeuser.add(user);
+        // return ResponseEntity.ok(fakeuser);
+        }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
+        user.setId(id);
+        User updatedUser = userService.updateUser(user);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
 }

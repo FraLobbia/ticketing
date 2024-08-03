@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import java.util.List;
 import java.util.ArrayList;
 
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -18,11 +17,17 @@ public class User {
     private Long id;
     private String name;
     private String surname;
-    
+
     private String email;
     private String password;
     private String role;
     @Lob
     private byte[] profilePicture;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Ticket> tickets = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
 }
