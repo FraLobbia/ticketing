@@ -1,69 +1,58 @@
 package com.backend.config;
 
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import jakarta.servlet.Filter;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.backend.security.JwtRequestFilter;
+import org.springframework.stereotype.Component;
 import com.backend.security.JwtAuthenticationEntryPoint;
-import jakarta.servlet.FilterChain;
+import com.backend.security.JwtAuthenticationFilter;
 
-@Configuration
-@EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Component
+@EnableMethodSecurity
+@AllArgsConstructor
+public class SecurityConfig {
 
-  @Autowired
-  private JwtRequestFilter jwtRequestFilter;
-
-  @Autowired
   private UserDetailsService userDetailsService;
 
-  @Override
-  protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-    auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-  }
+  private JwtAuthenticationEntryPoint authenticationEntryPoint;
+
+  private JwtAuthenticationFilter authenticationFilter;
 
   @Bean
-  public PasswordEncoder passwordEncoder() {
+  public static PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
 
   @Bean
-  @Override
-  public AuthenticationManager authenticationManagerBean() throws Exception {
-    return super.authenticationManagerBean();
-  }
+  SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-  @Override
-  protected void configure(HttpSecurity httpSecurity) throws Exception {
-    httpSecurity.csrf(csrf -> csrf.disable())
-        .authorizeRequests(authorization -> authorization
-            // Non autentica queste richieste specifiche
-            .antMatchers("/authenticate", "/register").permitAll()
-            // Tutte le altre richieste devono essere autenticate
-            .anyRequest().authenticated())
-        .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint()))
-        .sessionManagement(session -> session
-            // Assicurati di usare sessioni stateless
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+    http.csrf(csrf -> csrf.disable())
+        .authorizeHttpRequests((authorize) -> {
+          authorize.requestMatchers("/auth/**", "/users").permitAll();
+          authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+          authorize.anyRequest().authenticated();
+        }).httpBasic(Customizer.withDefaults());
 
-    // Aggiungi un filtro per validare il token con ogni richiesta
-    httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    http.exceptionHandling(exception -> exception
+        .authenticationEntryPoint(authenticationEntryPoint));
+
+    http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
   }
 
   @Bean
-  public AuthenticationEntryPoint authenticationEntryPoint() {
-    return new JwtAuthenticationEntryPoint();
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    return configuration.getAuthenticationManager();
   }
 }

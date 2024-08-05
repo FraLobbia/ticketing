@@ -4,6 +4,7 @@ import com.backend.model.User;
 import com.backend.repository.UserRepository;
 import com.backend.service.UserService;
 
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,8 +45,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserDetails getUserByEmail(String email) {
+        return userRepository.findByEmail(email).orElse(null);
     }
 
 }
