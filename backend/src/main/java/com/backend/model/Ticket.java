@@ -4,6 +4,8 @@ import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.backend.model.Enum.TicketStatus;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

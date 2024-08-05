@@ -22,11 +22,9 @@ import com.backend.security.JwtAuthenticationFilter;
 @AllArgsConstructor
 public class SecurityConfig {
 
-  private UserDetailsService userDetailsService;
-
-  private JwtAuthenticationEntryPoint authenticationEntryPoint;
-
-  private JwtAuthenticationFilter authenticationFilter;
+  private final UserDetailsService userDetailsService;
+  private final JwtAuthenticationEntryPoint authenticationEntryPoint;
+  private final JwtAuthenticationFilter authenticationFilter;
 
   @Bean
   public static PasswordEncoder passwordEncoder() {
@@ -37,11 +35,12 @@ public class SecurityConfig {
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
     http.csrf(csrf -> csrf.disable())
-        .authorizeHttpRequests((authorize) -> {
-          authorize.requestMatchers("/auth/**", "/users").permitAll();
+        .authorizeHttpRequests(authorize -> {
+          authorize.requestMatchers("/auth/**", "/users").permitAll(); // Assicurati che il percorso sia corretto
           authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
           authorize.anyRequest().authenticated();
-        }).httpBasic(Customizer.withDefaults());
+        })
+        .httpBasic(Customizer.withDefaults());
 
     http.exceptionHandling(exception -> exception
         .authenticationEntryPoint(authenticationEntryPoint));
