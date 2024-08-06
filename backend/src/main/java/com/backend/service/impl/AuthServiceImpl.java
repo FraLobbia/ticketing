@@ -40,4 +40,5 @@ public class AuthServiceImpl implements AuthService {
     // 04 - Return the token to controller
     return token;
   }
+
 }

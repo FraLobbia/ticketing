@@ -5,7 +5,7 @@ import lombok.Data;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import com.backend.model.Enum.RoleName;
+import com.backend.model.Enum.RoleEnum;
 
 @Entity
 @Data
@@ -18,7 +18,7 @@ public class Role implements GrantedAuthority {
 
   @Enumerated(EnumType.STRING)
   @Column(length = 20)
-  private RoleName name;
+  private RoleEnum name;
 
   @Override
   public String getAuthority() {

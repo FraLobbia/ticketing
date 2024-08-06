@@ -1,0 +1,84 @@
+package com.backend.service.impl;
+
+import com.backend.model.Account;
+import com.backend.model.Role;
+import com.backend.model.DTO.AccountRegistrationDTO;
+import com.backend.model.Enum.RoleEnum;
+import com.backend.repository.AccountRepository;
+import com.backend.service.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.backend.repository.RoleRepository;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+@Service
+public class AccountServiceImpl implements AccountService {
+
+  @Autowired
+  private AccountRepository accountRepository;
+
+  @Autowired
+  private RoleRepository roleRepository;
+
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
+  @Override
+  public List<Account> getAllAccounts() {
+    return accountRepository.findAll();
+  }
+
+  @Override
+  public Optional<Account> getAccountById(Long id) {
+    return accountRepository.findById(id);
+  }
+
+  @Override
+  public Account createAccount(AccountRegistrationDTO accountRegistrationDTO) {
+    Account account = new Account();
+    account.setName(accountRegistrationDTO.getName());
+    account.setSurname(accountRegistrationDTO.getSurname());
+    account.setEmail(accountRegistrationDTO.getEmail());
+
+    String encodedPassword = passwordEncoder.encode(accountRegistrationDTO.getPassword());
+    account.setPassword(encodedPassword);
+
+    Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
+        .orElseThrow(() -> new RuntimeException("Error: Role not found."));
+
+    account.getRoles().add(userRole);
+    try {
+      accountRepository.save(account);
+      return account;
+    } catch (Exception e) {
+      // TODO: handle exception
+
+      return null;
+    }
+  }
+
+  @Override
+  public Optional<Account> updateAccount(Long id, Account accountDetails) {
+    return accountRepository.findById(id).map(account -> {
+      account.setName(accountDetails.getName());
+      account.setSurname(accountDetails.getSurname());
+      account.setEmail(accountDetails.getEmail());
+      account.setPassword(accountDetails.getPassword());
+      account.setRoles(accountDetails.getRoles());
+      account.setProfilePicture(accountDetails.getProfilePicture());
+      account.setTickets(accountDetails.getTickets());
+      account.setComments(accountDetails.getComments());
+      return accountRepository.save(account);
+    });
+  }
+
+  @Override
+  public boolean deleteAccount(Long id) {
+    return accountRepository.findById(id).map(account -> {
+      accountRepository.delete(account);
+      return true;
+    }).orElse(false);
+  }
+}

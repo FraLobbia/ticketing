@@ -2,6 +2,7 @@ package com.backend.controller;
 
 import com.backend.model.DTO.AuthResponseDTO;
 import com.backend.model.DTO.LoginDTO;
+import com.backend.service.AccountService;
 import com.backend.service.AuthService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.backend.model.DTO.UserRegistrationDTO;
-import com.backend.service.UserService;
+import com.backend.model.DTO.AccountRegistrationDTO;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,7 +22,7 @@ public class AuthController {
   private AuthService authService;
 
   @Autowired
-  private UserService userService;
+  private AccountService accountService;
 
   // Build Login REST API
   @PostMapping("/login")
@@ -40,9 +40,9 @@ public class AuthController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> registerUser(@RequestBody UserRegistrationDTO registrationDto) {
-    userService.registerUser(registrationDto);
-    return ResponseEntity.ok("User registered successfully");
+  public ResponseEntity<?> register(@RequestBody AccountRegistrationDTO registrationDto) {
+    accountService.createAccount(registrationDto);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
   }
 
 }
