@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.backend.model.Account;
 import com.backend.model.DTO.AccountRegistrationDTO;
 
 @RestController
@@ -37,12 +39,14 @@ public class AuthController {
 
     // 03 - Return the response to the user
     return ResponseEntity.status(HttpStatus.OK).body(authResponseDto);
+
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> register(@RequestBody AccountRegistrationDTO registrationDto) {
-    accountService.createAccount(registrationDto);
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+  public ResponseEntity<Account> register(@RequestBody AccountRegistrationDTO registrationDto) {
+
+    Account createdAccount = accountService.createAccount(registrationDto);
+    return ResponseEntity.status(HttpStatus.CREATED).body(createdAccount);
   }
 
 }

@@ -35,7 +35,6 @@ public class JwtUtils {
   public String generateTokenFromUsername(UserDetails userDetails) {
     String username = userDetails.getUsername();
     // Long id = userDetails.getId(); da fare impl come Alfonso??
-
     return Jwts.builder()
         .subject(username)
         // .id(id.toString())

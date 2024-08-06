@@ -25,11 +25,6 @@ public class AccountController {
     return ResponseEntity.of(accountService.getAccountById(id));
   }
 
-  @PostMapping
-  public Account createAccount(@RequestBody Account account) {
-    return accountService.createAccount(account);
-  }
-
   @PutMapping("/{id}")
   public ResponseEntity<Account> updateAccount(@PathVariable Long id, @RequestBody Account accountDetails) {
     return ResponseEntity.of(accountService.updateAccount(id, accountDetails));

@@ -42,7 +42,7 @@ public class SecurityConfig {
 
     http.csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(authorize -> {
-          authorize.requestMatchers("/auth/**", "/users").permitAll(); // Assicurati che il percorso sia corretto
+          authorize.requestMatchers("/auth/**", "/accounts").permitAll(); // Assicurati che il percorso sia corretto
           authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
           authorize.anyRequest().authenticated();
         })

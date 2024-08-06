@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import java.util.List;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Set;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,9 +38,11 @@ public class Account implements UserDetails {
     private byte[] profilePicture;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Ticket> tickets = new ArrayList<>();
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Comment> comments = new ArrayList<>();
 
     @Override
@@ -50,23 +55,4 @@ public class Account implements UserDetails {
         return this.email;
     }
 
-    // @Override
-    // public boolean isAccountNonExpired() {
-    // return true;
-    // }
-
-    // @Override
-    // public boolean isAccountNonLocked() {
-    // return true;
-    // }
-
-    // @Override
-    // public boolean isCredentialsNonExpired() {
-    // return true;
-    // }
-
-    // @Override
-    // public boolean isEnabled() {
-    // return true;
-    // }
 }
