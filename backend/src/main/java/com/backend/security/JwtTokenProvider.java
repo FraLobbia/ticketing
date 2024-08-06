@@ -1,14 +1,18 @@
 package com.backend.security;
 
-import io.jsonwebtoken.JwtParser;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import java.security.Key;
+import java.util.Date;
+
+import javax.crypto.SecretKey;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import javax.crypto.SecretKey;
-import java.security.Key;
-import java.util.Date;
+
+import io.jsonwebtoken.JwtParserBuilder;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtTokenProvider {
@@ -49,13 +53,21 @@ public class JwtTokenProvider {
   // Valida il token JWT
   public boolean validateToken(String token) {
     try {
-      ((JwtParser) Jwts.parser()
+      ((JwtParserBuilder) Jwts.parser()
           .verifyWith((SecretKey) getSigningKey()))
+          .build()
           .parseSignedClaims(token);
+
       return true;
     } catch (Exception e) {
       // Qui puoi gestire le eccezioni specifiche per token non validi
+      System.out.println("Error: " + e.getMessage());
       return false;
     }
   }
+
+  private Key key() {
+    return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+  }
+
 }
