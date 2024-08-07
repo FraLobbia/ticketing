@@ -1,9 +1,10 @@
 package com.backend.service;
 
-import com.backend.model.Account;
-import com.backend.model.DTO.AccountRegistrationDTO;
 import java.util.List;
 import java.util.Optional;
+
+import com.backend.model.Account;
+import com.backend.model.DTO.AccountRegistrationDTO;
 
 public interface AccountService {
   List<Account> getAllAccounts();

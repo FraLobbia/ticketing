@@ -1,12 +1,25 @@
 package com.backend.controller;
 
-import com.backend.model.Account;
-import com.backend.service.AccountService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.backend.model.Account;
+import com.backend.model.DTO.AuthResponseDTO;
+import com.backend.model.DTO.LoginDTO;
+import com.backend.service.AccountService;
+import com.backend.service.AuthService;
 
 @RestController
 @RequestMapping("/accounts")
@@ -14,6 +27,9 @@ public class AccountController {
 
   @Autowired
   private AccountService accountService;
+
+  @Autowired
+  private AuthService authService;
 
   @GetMapping
   public List<Account> getAllAccounts() {
@@ -26,8 +42,32 @@ public class AccountController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Account> updateAccount(@PathVariable Long id, @RequestBody Account accountDetails) {
-    return ResponseEntity.of(accountService.updateAccount(id, accountDetails));
+  public ResponseEntity<?> updateAccount(@PathVariable Long id, @RequestBody Account accountDetails) {
+
+    // TODO: Implement the updateAccount method, QUESTO NON FUNZIONA
+
+    Optional<Account> updatedAccount = accountService.updateAccount(id, accountDetails);
+
+    if (updatedAccount == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    // Crea un oggetto LoginDTO per passare i dettagli dell'account all'AuthService
+    LoginDTO loginDto = new LoginDTO();
+    loginDto.setEmail(updatedAccount.get().getEmail());
+    loginDto.setPassword(updatedAccount.get().getPassword());
+
+    // Ottieni il token JWT aggiornato
+    String token = authService.login(loginDto);
+    AuthResponseDTO authResponseDto = new AuthResponseDTO();
+    authResponseDto.setAccessToken(token);
+
+    // Crea una risposta combinata con i dettagli dell'account aggiornato e il token
+    Map<String, Object> response = new HashMap<>();
+    response.put("account", updatedAccount);
+    response.put("auth", authResponseDto);
+
+    return ResponseEntity.ok(response);
   }
 
   @DeleteMapping("/{id}")

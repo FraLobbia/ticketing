@@ -1,10 +1,5 @@
 package com.backend.controller;
 
-import com.backend.model.DTO.AuthResponseDTO;
-import com.backend.model.DTO.LoginDTO;
-import com.backend.service.AccountService;
-import com.backend.service.AuthService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.model.Account;
 import com.backend.model.DTO.AccountRegistrationDTO;
+import com.backend.model.DTO.AuthResponseDTO;
+import com.backend.model.DTO.LoginDTO;
+import com.backend.service.AccountService;
+import com.backend.service.AuthService;
 
 @RestController
 @RequestMapping("/auth")
@@ -46,6 +45,10 @@ public class AuthController {
   public ResponseEntity<Account> register(@RequestBody AccountRegistrationDTO registrationDto) {
 
     Account createdAccount = accountService.createAccount(registrationDto);
+
+    if (createdAccount == null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
     return ResponseEntity.status(HttpStatus.CREATED).body(createdAccount);
   }
 
