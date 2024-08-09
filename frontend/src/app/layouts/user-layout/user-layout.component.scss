@@ -1,0 +1,15 @@
+/* user-layout.component.css */
+.user-layout {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  padding: 20px;
+  flex: 1;
+}

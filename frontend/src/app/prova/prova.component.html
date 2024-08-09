@@ -1,23 +1,29 @@
-<mat-card class="example-card" appearance="outlined">
-  <mat-card-header>
-    <div mat-card-avatar class="example-header-image"></div>
-    <mat-card-title>Shiba Inu</mat-card-title>
-    <mat-card-subtitle>Dog Breed</mat-card-subtitle>
-  </mat-card-header>
-  <img
-    mat-card-image
-    src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-    alt="Photo of a Shiba Inu"
+<!-- <button mat-raised-button color="primary" (click)="onClick($event)">
+  clicca
+</button> -->
+
+<!-- <mat-form-field class="example-full-width" appearance="fill">
+  <mat-label>Favourite food</mat-label>
+  <input
+    matInput
+    placeholder="Inserisci cibo preferito"
+    (input)="onInput($event)"
+    [(ngModel)]="title"
   />
-  <mat-card-content>
-    <p>
-      The Shiba Inu is the smallest of the six original and distinct spitz
-      breeds of dog from Japan. A small, agile dog that copes very well with
-      mountainous terrain, the Shiba Inu was originally bred for hunting.
-    </p>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-button>LIKE</button>
-    <button mat-button>SHARE</button>
-  </mat-card-actions>
-</mat-card>
+</mat-form-field>
+<p>{{ title }}</p> -->
+
+<ng-template *ngIf="isDisabled; then bloccoIf; else bloccoElse"></ng-template>
+
+<ng-template #bloccoIf>
+  <p>sono visibile</p>
+</ng-template>
+<ng-template #bloccoElse>
+  <p>sono nascosto</p>
+</ng-template>
+
+<ul>
+  <li *ngFor="let persona of data">{{ persona.nome }} {{ persona.cognome }}</li>
+</ul>
+
+<button (click)="mandaDati()">manda dati al parente</button>
