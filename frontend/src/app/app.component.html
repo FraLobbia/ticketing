@@ -1,29 +1,5 @@
-<app-prova
-  [data]="persone"
-  (mandaDatiEvento)="onRiceviDati($event)"
-></app-prova>
+<a routerLink="/">Home</a>
+<a routerLink="about">About</a>
+<a routerLink="contact">Contact</a>
 
-<button (click)="cambiaPersone()">cambia</button>
-
-<input #inputSaluti value="ciao" />
-
-<div>
-  <input
-    type="radio"
-    name="coloreEvidenziatore"
-    (click)="cambiaColoreEvid('red')"
-  />
-  Rosso
-  <input
-    type="radio"
-    name="coloreEvidenziatore"
-    (click)="cambiaColoreEvid('pink')"
-  />
-  Rosa
-  <input
-    type="radio"
-    name="coloreEvidenziatore"
-    (click)="cambiaColoreEvid('purple')"
-  />
-  Viola
-</div>
+<router-outlet></router-outlet>

@@ -1,0 +1,16 @@
+<h1>Lista contatti</h1>
+
+<div *ngIf="!isProfile">
+  <ul>
+    <li *ngFor="let persona of persone; index as i">
+      <a routerLink="/contact/{{ i }}">{{ persona.name }}</a>
+    </li>
+  </ul>
+</div>
+
+<router-outlet></router-outlet>
+
+<!-- <ng-template #profile>
+  <app-persona [persona]="persona"></app-persona>
+  {{ persona.name }}
+</ng-template> -->
