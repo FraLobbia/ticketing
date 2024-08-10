@@ -1,20 +1,30 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
+import { interval, Observable } from 'rxjs';
+import { FirebaseService } from './firebase.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent implements OnInit, AfterViewInit {
-  ngAfterViewInit(): void {
-    console.log(this.valoreInput);
+export class AppComponent implements OnInit {
+  constructor(private firebase: FirebaseService) {}
+  // @ViewChild('homeform') homeform!: NgForm;
+  homeform!: FormGroup;
+
+  onSubmit() {
+    console.log('submit');
+    this.firebase
+      .insertPersona({
+        name: this.homeform.value.nome,
+        email: this.homeform.value.email,
+      })
+      .subscribe((data) => {
+        console.log(data);
+      });
   }
+
   title = 'frontend';
 
   colore = '';
@@ -28,7 +38,27 @@ export class AppComponent implements OnInit, AfterViewInit {
   ];
 
   ngOnInit(): void {
-    console.log(this.valoreInput);
+    this.homeform = new FormGroup({
+      nome: new FormControl(null, Validators.required),
+      email: new FormControl(null, [Validators.required, Validators.email]),
+    });
+
+    this.firebase.getPersone().subscribe((data: any) => {
+      console.log(data);
+      this.persone = Object.keys(data).map((key) => {
+        return data[key];
+      });
+      console.log(this.persone);
+    });
+    // new Observable((observer) => {
+    //   let count = 0;
+    //   setInterval(() => {
+    //     observer.next(count);
+    //     count++;
+    //   }, 1000);
+    // }).subscribe((numero) => {
+    //   console.log(numero);
+    // });
   }
 
   cambiaPersone(): any {

@@ -3,22 +3,19 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
-import { AboutComponent } from './about/about.component';
-import { ContactComponent } from './contact/contact.component';
-import { HomeComponent } from './home/home.component';
-import { PersonaComponent } from './persona/persona.component';
-
+import { HttpClientModule } from '@angular/common/http';
+import { CoreModule } from './core/core.module';
+import { SharedModule } from './shared/shared.module';
+import { MaterialModule } from './material/material.module';
 @NgModule({
-  declarations: [AppComponent, AboutComponent, ContactComponent, HomeComponent, PersonaComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    MatButtonModule,
-    MatInputModule,
-    FormsModule,
+    HttpClientModule,
+    CoreModule,
+    SharedModule,
+    MaterialModule,
   ],
   providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],
