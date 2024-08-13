@@ -21,10 +21,15 @@ public class JwtTokenProvider {
 
   private long jwtExpirationDate = 3600000; // 1h = 3600s e 3600*1000 = 3600000 milliseconds
 
+  /**
+   * Generates a JWT token for the given authentication.
+   *
+   * @param authentication The authentication object containing the user's
+   *                       details.
+   * @return The generated JWT token.
+   */
   public String generateToken(Authentication authentication) {
-
     UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-
     String username = userPrincipal.getUsername();
     Date currentDate = new Date();
     Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
@@ -32,6 +37,7 @@ public class JwtTokenProvider {
     return Jwts.builder()
         .subject(username)
         .issuedAt(currentDate)
+        .claim("idAccount", "todo")
         .expiration(expireDate)
         .signWith(getSigningKey())
         .compact();

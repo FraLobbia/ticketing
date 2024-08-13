@@ -1,11 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
+  constructor(private authService: AuthService) {}
+
+  private id!: string | null;
+
+  ngOnInit(): void {
+    // Assicurati di utilizzare authService solo dopo che è stato inizializzato
+    const id = this.getId();
+    console.log('User ID:', id);
+  }
+
+  getId(): string | null {
+    const token = this.authService.getToken();
+    console.log('Token:', token);
+    this.id = this.authService.getUserIdFromToken(token!);
+    return this.id;
+  }
+
   tickets = [
     {
       id: 1,
