@@ -1,1 +1,19 @@
-<p>not-found-404 works!</p>
+<mat-card class="not-found-card container">
+  <mat-card-header>
+    <mat-card-title>
+      <mat-icon class="not-found-icon">error_outline</mat-icon>
+      Pagina non trovata
+    </mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <p>
+      La pagina che stai cercando non esiste. Potresti aver digitato l'indirizzo
+      in modo errato o la pagina potrebbe essere stata spostata.
+    </p>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button color="primary" routerLink="/tickets">
+      Torna alla Dashboard
+    </button>
+  </mat-card-actions>
+</mat-card>

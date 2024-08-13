@@ -1,0 +1,63 @@
+<form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="fill">
+    <mat-label>Titolo</mat-label>
+    <input matInput formControlName="title" placeholder="Titolo del ticket" />
+    <mat-error *ngIf="ticketForm.get('title')!.invalid"
+      >Titolo obbligatorio</mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Descrizione</mat-label>
+    <textarea
+      matInput
+      formControlName="description"
+      placeholder="Descrizione del ticket"
+    ></textarea>
+    <mat-error *ngIf="ticketForm.get('description')!.invalid"
+      >Descrizione obbligatoria</mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Status</mat-label>
+    <mat-select formControlName="status">
+      <mat-option *ngFor="let status of statuses" [value]="status">{{
+        status
+      }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Account ID</mat-label>
+    <input
+      matInput
+      formControlName="account.id"
+      placeholder="ID dell'account"
+    />
+    <mat-error *ngIf="ticketForm.get('account.id')!.invalid"
+      >Account ID obbligatorio</mat-error
+    >
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Username</mat-label>
+    <input
+      matInput
+      formControlName="account.username"
+      placeholder="Nome utente"
+    />
+    <mat-error *ngIf="ticketForm.get('account.username')!.invalid"
+      >Username obbligatorio</mat-error
+    >
+  </mat-form-field>
+
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    [disabled]="ticketForm.invalid"
+  >
+    Crea Ticket
+  </button>
+</form>

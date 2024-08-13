@@ -4,11 +4,14 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { ReactiveFormsModule } from '@angular/forms';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
+import { LoginModule } from './login-register-components/login/login.module';
+import { RegisterModule } from './login-register-components/register/register.module';
+import { LayoutsModule } from './layouts/layouts.module';
+
+const modules = [LoginModule, RegisterModule, LayoutsModule];
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, ...modules],
   providers: [
     AuthService,
     {
@@ -17,10 +20,8 @@ import { RegisterComponent } from './components/register/register.component';
       multi: true,
     },
   ],
-  declarations: [LoginComponent, RegisterComponent],
-  exports: [
-    // Componenti che devono essere accessibili in altri moduli
-  ],
+  declarations: [],
+  exports: [...modules],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

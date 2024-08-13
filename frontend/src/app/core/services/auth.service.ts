@@ -3,44 +3,53 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
+import { LoginModel, RegisterModel } from '../../shared/models/auth.model';
+import { Router } from '@angular/router';
+import { LoginResponseModel } from '../../shared/models/auth.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private authUrl = environment.API_URL;
-  private tokenKey = 'auth-token';
+  private url = environment.API_URL;
+  private tokenKey = environment.SECRET_KEY;
 
   isAdmin = false;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   /**
    * Effettua il login dell'utente.
-   * @param username - Nome utente
+   * @param email - Email utente
    * @param password - Password
+   *
    * @returns Observable contenente la risposta del server
    */
-  login(username: string, password: string): Observable<any> {
-    const url = `${this.authUrl}/login`;
-    const body = { username, password };
-    return this.http.post<any>(url, body).pipe(
-      tap((response) => this.setToken(response.token)),
-      catchError(this.handleError<any>('login'))
+  login(loginData: LoginModel): Observable<LoginResponseModel> {
+    const url = `${this.url}/auth/login`;
+    const { email, password } = loginData;
+    const body = { email, password };
+
+    return this.http.post<LoginResponseModel>(url, body).pipe(
+      tap((response) => this.setToken(response.accessToken)), // Salva il token
+      catchError(this.handleError<LoginResponseModel>('login'))
     );
   }
 
   /**
    * Registra un nuovo utente.
-   * @param username - Nome utente
+   * @param name - Nome utente
+   * @param surname - Cognome utente
+   * @param email - Email utente
    * @param password - Password
+   *
    * @returns Observable contenente la risposta del server
    */
-  register(username: string, password: string): Observable<any> {
-    const url = `${this.authUrl}/register`;
-    const body = { username, password };
+  register(userData: RegisterModel): Observable<any> {
+    const url = `${this.url}/register`;
+    const body = { userData };
     return this.http
-      .post<any>(url, body)
+      .post(url, body)
       .pipe(catchError(this.handleError<any>('register')));
   }
 
@@ -59,7 +68,7 @@ export class AuthService {
    */
   logout(): void {
     this.removeToken();
-    // Puoi aggiungere ulteriori azioni, come reindirizzare l'utente alla pagina di login
+    this.router.navigate(['/auth/login']);
   }
 
   /**

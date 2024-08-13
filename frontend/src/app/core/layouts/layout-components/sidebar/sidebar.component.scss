@@ -1,0 +1,44 @@
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  &.menu-item-active,
+  &.active {
+    /* Classe aggiunta da routerLinkActive */
+    background-color: #007bff;
+    color: white;
+
+    .material-icons {
+      color: white;
+    }
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+
+  .material-icons {
+    margin-right: 10px;
+    color: #007bff;
+  }
+
+  .menu-title {
+    font-size: 16px;
+  }
+}

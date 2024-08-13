@@ -6,16 +6,21 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
-import { MaterialModule } from './material/material.module';
+import { MaterialModule } from './core/material/material.module';
+import { RouterModule } from '@angular/router';
+import { TicketModule } from './features/tickets/ticket.module';
+
+const featuresModules = [CoreModule, SharedModule, TicketModule];
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    RouterModule,
     HttpClientModule,
-    CoreModule,
-    SharedModule,
     MaterialModule,
+    ...featuresModules,
   ],
   providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],

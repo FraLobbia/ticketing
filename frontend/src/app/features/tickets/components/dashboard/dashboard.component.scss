@@ -1,0 +1,17 @@
+.ticket-row {
+  display: flex;
+  justify-content: start;
+  gap: 1rem;
+  padding-inline: 1rem;
+  border: 2px solid #e0e0e0;
+}
+
+.ticket-row:hover {
+  background-color: #f0f0f0;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}

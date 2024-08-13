@@ -1,37 +1,48 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NotFound404Component } from './shared/components/not-found-404/not-found-404.component';
+import { AuthLayoutComponent } from './core/layouts/auth-layout/auth-layout.component';
+import { StandardLayoutComponent } from './core/layouts/standard-layout/standard-layout.component';
+import { LoginComponent } from './core/login-register-components/login/login.component';
+import { RegisterComponent } from './core/login-register-components/register/register.component';
 import { AuthGuard } from './core/guards/auth.guard';
-import { LoginComponent } from './core/components/login/login.component';
+import { NotFound404Component } from './shared/components/not-found-404/not-found-404.component';
 
 const routes: Routes = [
   {
     path: '',
-    pathMatch: 'full',
-    redirectTo: '',
+    component: StandardLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'tickets',
+        loadChildren: () =>
+          import('../app/features/tickets/ticket.module').then(
+            (m) => m.TicketModule
+          ),
+      },
+      // Aggiungi qui altre rotte per moduli protetti
+    ],
   },
   {
-    path: '',
-    component: LoginComponent,
-  },
-  // {
-  //   path: 'about',
-  //   component: AboutComponent,
-  // },
-  // {
-  //   path: 'contact',
-  //   component: ContactComponent,
-  //   canActivate: [AuthGuard],
-  //   canActivateChild: [AuthGuard],
-  //   children: [{ path: ':id', component: PersonaComponent }],
-  // },
-  {
-    path: '404',
-    component: NotFound404Component,
-  },
-  {
-    path: '**',
-    redirectTo: '404',
+    path: 'auth',
+    component: AuthLayoutComponent,
+    children: [
+      {
+        path: 'login',
+        loadChildren: () =>
+          import('./core/login-register-components/login/login.module').then(
+            (m) => m.LoginModule
+          ),
+      },
+      {
+        path: 'register',
+        loadChildren: () =>
+          import(
+            './core/login-register-components/register/register.module'
+          ).then((m) => m.RegisterModule),
+      },
+      // Aggiungi altre rotte per l'autenticazione (es. register, forgot-password)
+    ],
   },
 ];
 

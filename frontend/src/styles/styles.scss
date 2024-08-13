@@ -8,3 +8,36 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px,
+);
+
+@mixin make-container($max-width: null) {
+  width: 100%;
+  padding-right: var(--bs-gutter-x, 0.75rem);
+  padding-left: var(--bs-gutter-x, 0.75rem);
+  margin-right: auto;
+  margin-left: auto;
+
+  @if $max-width != null {
+    max-width: $max-width;
+  }
+}
+
+.container {
+  @include make-container();
+
+  @each $breakpoint, $max-width in $container-max-widths {
+    @media (min-width: #{map-get($container-max-widths, $breakpoint)}) {
+      @include make-container($max-width);
+    }
+  }
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

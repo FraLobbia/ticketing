@@ -1,0 +1,23 @@
+<ul>
+  <li *ngFor="let ticket of tickets; index as i">
+    <div class="ticket-row">
+      <div class="ticket-number">
+        <span>{{ i + 1 }}</span>
+      </div>
+
+      <div class="ticket-title">
+        {{ ticket.title }}
+      </div>
+      <div class="ticket-status">
+        <span
+          class="status-dot"
+          [ngClass]="{
+            'status-dot-open': ticket.status === 'open',
+            'status-dot-closed': ticket.status === 'closed'
+          }"
+        ></span>
+        <span>{{ ticket.status }}</span>
+      </div>
+    </div>
+  </li>
+</ul>
