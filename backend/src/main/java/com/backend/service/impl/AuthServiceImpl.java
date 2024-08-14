@@ -5,7 +5,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.backend.model.DTO.LoginDTO;
@@ -22,9 +21,14 @@ public class AuthServiceImpl implements AuthService {
 
   /**
    * Login
+   * Crea un oggetto UsernamePasswordAuthenticationToken con le credenziali dal
+   * Dto e lo passa all'oggetto AuthenticationManager per
+   * l'autenticazione.
+   * Se l'autenticazione ha successo, l'oggetto Authentication viene impostato nel
+   * contesto di sicurezza, quindi viene generato un token JWT.
    * 
    * @param loginDto
-   * @return
+   * @return token JWT generato dal metodo {@link JwtTokenProvider#generateToken}
    */
   @Override
   public String login(LoginDTO loginDto) {
@@ -33,27 +37,8 @@ public class AuthServiceImpl implements AuthService {
         loginDto.getEmail(),
         loginDto.getPassword()));
 
-    // Ottieni i dettagli dell'utente (UserDetails)
-    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-
-    // // Crea un CustomAuthenticationToken con l'ID dell'utente
-    // AuthenticationToken customAuthentication = new AuthenticationToken(
-    // userDetails.getUsername(),
-    // userDetails.getPassword(),
-    // userDetails.getAuthorities(),
-    // userDetails.getId());
-    /*
-     * 02 - SecurityContextHolder is used to allows the rest of the application to
-     * know
-     * that the user is authenticated and can use user data from Authentication
-     * object
-     */
     SecurityContextHolder.getContext().setAuthentication(authentication);
-
-    // 03 - Generate the token based on username and secret key
     String token = jwtTokenProvider.generateToken(authentication);
-
-    // 04 - Return the token to controller
     return token;
   }
 

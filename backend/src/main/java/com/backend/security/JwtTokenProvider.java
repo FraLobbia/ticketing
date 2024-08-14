@@ -53,20 +53,23 @@ public class JwtTokenProvider {
    */
   public String generateToken(Authentication authentication) {
 
-    Long userId = null;
-    if (authentication instanceof CustomAuthenticationToken customAuthenticationToken) {
-      userId = customAuthenticationToken.getUserId();
-    }
-
+    // Estraggo l'oggetto UserDetails dall'oggetto Authentication
     UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-    String username = userPrincipal.getUsername();
 
+    // converto l'oggetto UserDetails in un oggetto CustomUserDetails per ottenere i
+    // metodi personalizzati come getId() e getEmail()
+    CustomUserDetails customUserDetails = (CustomUserDetails) userPrincipal;
+
+    Long idAccount = customUserDetails.getId();
+    String email = customUserDetails.getEmail();
     Date currentDate = new Date();
     Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
+
     return Jwts.builder()
-        .subject(username)
+        .subject(email)
         .issuedAt(currentDate)
-        .claim("idAccount", userId)
+        .claim("idAccount", idAccount)
+        .claim("roles", "todo")
         .expiration(expireDate)
         .signWith(getSigningKey())
         .compact();
