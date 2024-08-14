@@ -7,6 +7,7 @@ import com.backend.model.Account;
 import com.backend.model.DTO.AccountRegistrationDTO;
 
 public interface AccountService {
+
   List<Account> getAllAccounts();
 
   Optional<Account> getAccountById(Long id);

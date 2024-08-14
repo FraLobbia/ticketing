@@ -2,7 +2,7 @@ package com.backend.security;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,55 +20,56 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-  @Autowired
-  private JwtTokenProvider jwtTokenProvider;
+  private final JwtTokenProvider jwtTokenProvider;
 
-  private UserDetailsService userDetailsService;
+  private final UserDetailsService userDetailsService;
 
-  // Constructor
+  // Costruttore della classe JwtAuthenticationFilter.
   public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
     this.jwtTokenProvider = jwtTokenProvider;
     this.userDetailsService = userDetailsService;
   }
 
-  // This method is executed for every request intercepted by the filter.
-  // And, it extract the token from the request header and validate the token.
+  /**
+   * Filtra le richieste HTTP per autenticare l'utente tramite il token JWT.
+   * 
+   * @param request     La richiesta HTTP.
+   * @param response    La risposta HTTP.
+   * @param filterChain Il chain di filtri che gestisce la richiesta HTTP.
+   * @throws ServletException Se si verifica un'eccezione durante il processing
+   *                          del filtro.
+   * @throws IOException      Se si verifica un'eccezione di I/O durante il
+   *                          processing del filtro.
+   */
   @Override
-  protected void doFilterInternal(HttpServletRequest request,
-      HttpServletResponse response,
-      FilterChain filterChain) throws ServletException, IOException {
-
-    // Get JWT token from HTTP request
+  protected void doFilterInternal(@NonNull HttpServletRequest request,
+      @NonNull HttpServletResponse response,
+      @NonNull FilterChain filterChain) throws ServletException, IOException {
     String token = getTokenFromRequest(request);
-
-    // Validate Token
     if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-      // get username from token
       String username = jwtTokenProvider.getUsernameFromToken(token);
-
       UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
           userDetails,
           null,
           userDetails.getAuthorities());
-
       authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
-
     filterChain.doFilter(request, response);
   }
 
-  // Extract the token from the request header
+  /**
+   * Estrae il token dall'header Authorization della richiesta HTTP.
+   *
+   * @param request La richiesta HTTP da cui estrarre il token.
+   * @return Il token estratto dalla richiesta HTTP o null se non è presente.
+   */
   private String getTokenFromRequest(HttpServletRequest request) {
     String bearerToken = request.getHeader("Authorization");
-
     if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
       return bearerToken.substring(7, bearerToken.length());
     }
-
     return null;
   }
 }

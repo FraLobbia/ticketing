@@ -25,27 +25,29 @@ public class AuthController {
   @Autowired
   private AccountService accountService;
 
-  // Build Login REST API
+  /**
+   * @param loginDto un oggetto {@link LoginDTO} contenente i dati necessari per
+   *                 il login.
+   * @return Un oggetto {@link ResponseEntity} contenente il token di
+   *         autenticazione
+   */
   @PostMapping("/login")
   public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDto) {
-
-    // 01 - Receive the token from AuthService
     String token = authService.login(loginDto);
-
-    // 02 - Set the token as a response using JwtAuthResponse Dto class
     AuthResponseDTO authResponseDto = new AuthResponseDTO();
     authResponseDto.setAccessToken(token);
-
-    // 03 - Return the response to the user
     return ResponseEntity.status(HttpStatus.OK).body(authResponseDto);
-
   }
 
+  /**
+   * @param registrationDto Un oggetto {@link AccountRegistrationDTO} contenente i
+   *                        dati necessari per registrare un nuovo account.
+   * @return Un oggetto {@link ResponseEntity} contenente l'account creato o un
+   *         errore HTTP.
+   */
   @PostMapping("/register")
   public ResponseEntity<Account> register(@RequestBody AccountRegistrationDTO registrationDto) {
-
     Account createdAccount = accountService.createAccount(registrationDto);
-
     if (createdAccount == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }

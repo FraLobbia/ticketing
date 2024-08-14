@@ -36,11 +36,27 @@ public class AccountController {
     return accountService.getAllAccounts();
   }
 
+  /**
+   * Get account by id
+   * 
+   * @param id
+   * @return un oggetto {@link ResponseEntity} contenente l'account cercato o un
+   *         errore HTTP.
+   */
   @GetMapping("/{id}")
   public ResponseEntity<Account> getAccountById(@PathVariable Long id) {
     return ResponseEntity.of(accountService.getAccountById(id));
   }
 
+  /**
+   * Update account
+   * 
+   * @param id
+   * @param accountDetails
+   * @return un oggetto {@link ResponseEntity} contenente l'account aggiornato o
+   *         un
+   *         errore HTTP.
+   */
   @PutMapping("/{id}")
   public ResponseEntity<?> updateAccount(@PathVariable Long id, @RequestBody Account accountDetails) {
 
@@ -70,6 +86,13 @@ public class AccountController {
     return ResponseEntity.ok(response);
   }
 
+  /**
+   * Delete account
+   * 
+   * @param id
+   * @return un oggetto {@link ResponseEntity} contenente un messaggio di successo
+   *         o un errore HTTP.
+   */
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteAccount(@PathVariable Long id) {
     if (accountService.deleteAccount(id)) {

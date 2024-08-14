@@ -25,6 +25,9 @@ import com.backend.security.JwtAuthenticationFilter;
 
 import lombok.AllArgsConstructor;
 
+/**
+ * Questa classe definisce la configurazione di sicurezza dell'applicazione.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -34,16 +37,41 @@ public class SecurityConfig {
   private final JwtAuthenticationEntryPoint authenticationEntryPoint;
   private final JwtAuthenticationFilter authenticationFilter;
 
-  @Bean
-  public static PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
-  }
+  // /**
+  // * Configura l'AuthenticationManagerBuilder.
+  // *
+  // * @param auth L'oggetto AuthenticationManagerBuilder rappresenta il
+  // generatore
+  // * di autenticazione
+  // * @throws Exception Se si verifica un errore durante la configurazione
+  // */
+  // @Autowired
+  // public void configureGlobal(AuthenticationManagerBuilder auth) throws
+  // Exception {
+  // auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+  // }
 
+  /**
+   * Configura l'AuthenticationManager.
+   *
+   * @param configuration L'oggetto AuthenticationConfiguration rappresenta la
+   *                      configurazione dell'autenticazione
+   * @return L'AuthenticationManager configurato
+   * @throws Exception Se si verifica un errore durante la configurazione
+   */
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
     return configuration.getAuthenticationManager();
   }
 
+  /**
+   * Configura il filtro di sicurezza.
+   *
+   * @param http L'oggetto HttpSecurity rappresenta la configurazione di sicurezza
+   * @return Il filtro di sicurezza configurato
+   * @throws Exception Se si verifica un errore durante la configurazione del
+   *                   filtro
+   */
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.csrf(csrf -> csrf.disable())
@@ -54,15 +82,17 @@ public class SecurityConfig {
           authorize.anyRequest().authenticated();
         })
         .httpBasic(Customizer.withDefaults());
-
     http.exceptionHandling(exception -> exception
         .authenticationEntryPoint(authenticationEntryPoint));
-
     http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
     return http.build();
   }
 
+  /**
+   * Configura le impostazioni CORS per consentire le richieste dal frontend.
+   *
+   * @return La configurazione CORS
+   */
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
@@ -70,9 +100,18 @@ public class SecurityConfig {
     configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(Arrays.asList("*"));
     configuration.setAllowCredentials(true);
-
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);
     return source;
+  }
+
+  /**
+   * Configura l'PasswordEncoder per la codifica delle password.
+   *
+   * @return L'oggetto PasswordEncoder configurato
+   */
+  @Bean
+  public static PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
   }
 }
