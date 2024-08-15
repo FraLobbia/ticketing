@@ -92,7 +92,9 @@ export class AuthService {
     try {
       const decodedToken: any = jwtDecode(token);
       console.log('Decoded token:', decodedToken);
-      return decodedToken && decodedToken.userId ? decodedToken.userId : null;
+      return decodedToken && decodedToken.idAccount
+        ? decodedToken.idAccount
+        : null;
     } catch (error) {
       console.error('Error decoding token', error);
       return null;

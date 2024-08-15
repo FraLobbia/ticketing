@@ -1,47 +1,59 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../../../core/services/auth.service';
-
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Ticket } from '../../../../shared/models/ticket.model';
+import { TicketService } from '../../services/ticket.service';
+import { TicketStatus } from '../../../../shared/models/ticket.model';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit {
-  constructor(private authService: AuthService) {}
+  // costruttore
+  constructor(private ticketService: TicketService) {}
 
-  private id!: string | null;
+  // variabili
+  tickets: Ticket[] = [];
+  TicketStatus = TicketStatus;
+  displayedColumns: string[] = [
+    'id',
+    'title',
+    'status',
+    'account',
+    'createdAt',
+    'actions',
+  ];
+
+  dataSource: MatTableDataSource<Ticket> = new MatTableDataSource();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
-    // Assicurati di utilizzare authService solo dopo che è stato inizializzato
-    const id = this.getId();
-    console.log('User ID:', id);
+    this.ticketService.getAllTickets().subscribe((tickets: Ticket[]) => {
+      this.tickets = tickets;
+      this.dataSource = new MatTableDataSource(tickets);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
-  getId(): string | null {
-    const token = this.authService.getToken();
-    console.log('Token:', token);
-    this.id = this.authService.getUserIdFromToken(token!);
-    return this.id;
+  getStatusClass(status: TicketStatus): string {
+    switch (status) {
+      case TicketStatus.OPEN:
+        return 'status-open';
+      case TicketStatus.IN_PROGRESS:
+        return 'status-in-progress';
+      case TicketStatus.CLOSED:
+        return 'status-closed';
+      default:
+        return '';
+    }
   }
 
-  tickets = [
-    {
-      id: 1,
-      title: 'Problema con il server',
-      description: 'Il server non risponde alle richieste HTTP',
-      status: 'In lavorazione',
-    },
-    {
-      id: 2,
-      title: 'Errore di autenticazione',
-      description: "Impossibile accedere all'applicazione",
-      status: 'Chiuso',
-    },
-    {
-      id: 3,
-      title: 'Problema con il database',
-      description: 'Impossibile connettersi al database',
-      status: 'In lavorazione',
-    },
-  ];
+  viewTicket(id: number): void {
+    // Implementa la navigazione al dettaglio del ticket
+  }
 }

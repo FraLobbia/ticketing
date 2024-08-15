@@ -19,39 +19,6 @@
     >
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Status</mat-label>
-    <mat-select formControlName="status">
-      <mat-option *ngFor="let status of statuses" [value]="status">{{
-        status
-      }}</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Account ID</mat-label>
-    <input
-      matInput
-      formControlName="account.id"
-      placeholder="ID dell'account"
-    />
-    <mat-error *ngIf="ticketForm.get('account.id')!.invalid"
-      >Account ID obbligatorio</mat-error
-    >
-  </mat-form-field>
-
-  <mat-form-field appearance="fill">
-    <mat-label>Username</mat-label>
-    <input
-      matInput
-      formControlName="account.username"
-      placeholder="Nome utente"
-    />
-    <mat-error *ngIf="ticketForm.get('account.username')!.invalid"
-      >Username obbligatorio</mat-error
-    >
-  </mat-form-field>
-
   <button
     mat-raised-button
     color="primary"

@@ -2,17 +2,21 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CreateTicketComponent } from './components/create-ticket/create-ticket.component';
+import { TicketDetailsComponent } from './components/ticket-details/ticket-details.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: DashboardComponent, // Componente di default per i ticket
+    component: DashboardComponent,
   },
   {
     path: 'create',
-    component: CreateTicketComponent, // Componente per creare un nuovo ticket
+    component: CreateTicketComponent,
   },
-  // Altre rotte per i ticket
+  {
+    path: ':id',
+    component: TicketDetailsComponent,
+  },
 ];
 
 @NgModule({

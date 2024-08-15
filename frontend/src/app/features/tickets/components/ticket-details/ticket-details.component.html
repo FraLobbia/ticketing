@@ -1,0 +1,39 @@
+<mat-card class="ticket-detail-card">
+  <mat-card-header>
+    <mat-card-title>{{ ticket.title }}</mat-card-title>
+    <mat-card-subtitle
+      >Status:
+      <span [ngClass]="getStatusClass(ticket.status)">{{
+        ticket.status
+      }}</span></mat-card-subtitle
+    >
+  </mat-card-header>
+
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item>
+        <mat-icon matListIcon>description</mat-icon>
+        <h4 matLine>Description</h4>
+        <p matLine>{{ ticket.description }}</p>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item>
+        <mat-icon matListIcon>person</mat-icon>
+        <h4 matLine>Assigned to</h4>
+        <p matLine>{{ ticket.account.username }}</p>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item>
+        <mat-icon matListIcon>calendar_today</mat-icon>
+        <h4 matLine>Created At</h4>
+        <p matLine>{{ ticket.createdAt | date : "short" }}</p>
+      </mat-list-item>
+      <mat-divider></mat-divider>
+      <mat-list-item>
+        <mat-icon matListIcon>update</mat-icon>
+        <h4 matLine>Updated At</h4>
+        <p matLine>{{ ticket.updatedAt | date : "short" }}</p>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>
