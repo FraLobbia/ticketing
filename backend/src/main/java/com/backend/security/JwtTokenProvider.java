@@ -38,7 +38,7 @@ public class JwtTokenProvider {
     }
   }
 
-  private final long jwtExpirationDate = 3600000; // 1h = 3600s e 3600*1000 = 3600000 milliseconds
+  private final long jwtExpirationDate = 3600000 * 24 * 7; // 1h = 3600s e 3600*1000 = 3600000 milliseconds
 
   /**
    * Genera un token JWT per l'utente autenticato.
