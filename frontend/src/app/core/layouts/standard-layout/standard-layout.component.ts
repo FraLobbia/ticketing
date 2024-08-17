@@ -1,8 +1,22 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-admin-layout',
+  selector: 'standard-layout',
   templateUrl: './standard-layout.component.html',
-  styleUrl: './standard-layout.component.scss',
+  styleUrls: ['./standard-layout.component.scss'],
 })
-export class StandardLayoutComponent {}
+export class StandardLayoutComponent {
+  isSidebarVisible: boolean = true;
+  sideBarWidth: number = 250;
+
+  constructor() {}
+
+  toggleSidebar(): void {
+    this.isSidebarVisible = !this.isSidebarVisible;
+    if (!this.isSidebarVisible) {
+      this.sideBarWidth = 0;
+    } else {
+      this.sideBarWidth = 250;
+    }
+  }
+}

@@ -21,12 +21,12 @@ export class SidebarComponent {
       path: '/tickets',
       isActive: false,
     },
-    {
-      title: 'Apri Nuovo Ticket',
-      icon: 'add_circle',
-      path: '/tickets/create',
-      isActive: false,
-    },
+    // {
+    //   title: 'Apri Nuovo Ticket',
+    //   icon: 'add_circle',
+    //   path: '/tickets/create',
+    //   isActive: false,
+    // },
     // Aggiungi qui altre voci di menu per moduli protetti
   ];
 

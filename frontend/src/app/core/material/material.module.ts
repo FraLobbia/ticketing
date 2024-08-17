@@ -11,7 +11,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
-
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTabsModule } from '@angular/material/tabs';
 const materialModules = [
   MatFormFieldModule,
   MatSelectModule,
@@ -31,6 +32,8 @@ const materialModules = [
   MatCardModule,
   MatPaginatorModule,
   MatSortModule,
+  MatExpansionModule,
+  MatTabsModule,
 ];
 
 @NgModule({

@@ -1,0 +1,63 @@
+.layout {
+  display: flex;
+  height: 100vh; // Assicura che il layout occupi l'intera altezza della finestra
+}
+
+.sidebar {
+  height: 100vh;
+  background-color: #f4f4f4;
+  position: relative;
+  transition: width 0.3s;
+}
+
+.header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #232e3e;
+  color: white;
+  padding-inline: 1rem;
+
+  div {
+    display: flex;
+    align-items: center;
+  }
+
+  mat-icon {
+    color: white;
+  }
+
+  .header-bar__title {
+    margin-inline-start: 1rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:hover {
+      color: #f44336;
+    }
+  }
+}
+
+#new-ticket {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #f44336;
+  color: white;
+  padding: 0.5rem 1rem;
+  margin-inline: 2rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #d32f2f;
+  }
+}
+
+.container {
+  padding: 0;
+  margin: 0;
+  min-width: 100%;
+}

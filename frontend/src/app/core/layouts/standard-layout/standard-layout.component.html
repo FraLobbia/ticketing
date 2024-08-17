@@ -1,7 +1,10 @@
-<app-header-bar></app-header-bar>
+<app-header-bar (toggleSidebar)="toggleSidebar()"></app-header-bar>
 <div class="layout">
-  <app-sidebar></app-sidebar>
-  <div class="content">
+  <div class="sidebar" id="sidebar" *ngIf="isSidebarVisible">
+    <app-sidebar [ngStyle]="{ 'width.px': sideBarWidth }"></app-sidebar>
+    <div class="resizer" id="resizer"></div>
+  </div>
+  <div class="content" [ngStyle]="{ 'margin-left.px': sideBarWidth }">
     <router-outlet></router-outlet>
   </div>
 </div>

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.model.Account;
+import com.backend.model.DTO.AccountResponseDTO;
 import com.backend.model.DTO.AuthResponseDTO;
 import com.backend.model.DTO.LoginDTO;
 import com.backend.service.AccountService;
@@ -32,7 +33,7 @@ public class AccountController {
   private AuthService authService;
 
   @GetMapping
-  public List<Account> getAllAccounts() {
+  public List<AccountResponseDTO> getAllAccounts() {
     return accountService.getAllAccounts();
   }
 
@@ -44,7 +45,7 @@ public class AccountController {
    *         errore HTTP.
    */
   @GetMapping("/{id}")
-  public ResponseEntity<Account> getAccountById(@PathVariable Long id) {
+  public ResponseEntity<AccountResponseDTO> getAccountById(@PathVariable Long id) {
     return ResponseEntity.of(accountService.getAccountById(id));
   }
 

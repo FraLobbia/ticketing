@@ -1,0 +1,16 @@
+<div class="side-bar">
+  <ul>
+    <li
+      *ngFor="let item of menuItems"
+      class="menu-item"
+      [ngClass]="{ 'menu-item-active': item.isActive }"
+      routerLinkActive="menu-item-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <a [routerLink]="item.path" (click)="toggleActive(item)">
+        <i class="material-icons">{{ item.icon }}</i>
+        <span class="menu-title">{{ item.title }}</span>
+      </a>
+    </li>
+  </ul>
+</div>

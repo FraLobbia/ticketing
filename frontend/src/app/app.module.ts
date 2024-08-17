@@ -8,9 +8,9 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { MaterialModule } from './core/material/material.module';
 import { RouterModule } from '@angular/router';
-import { TicketModule } from './features/tickets/ticket.module';
+import { FeaturesModule } from './features/features.module';
 
-const featuresModules = [CoreModule, SharedModule, TicketModule];
+const myModules = [CoreModule, SharedModule, FeaturesModule];
 
 @NgModule({
   declarations: [AppComponent],
@@ -20,18 +20,9 @@ const featuresModules = [CoreModule, SharedModule, TicketModule];
     RouterModule,
     HttpClientModule,
     MaterialModule,
-    ...featuresModules,
+    ...myModules,
   ],
   providers: [provideAnimationsAsync()],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
-
-//                                                       _           _
-//                                                      | |         | |
-//    __ _   _ __    _ __        _ __ ___     ___     __| |  _   _  | |   ___
-//   / _` | | '_ \  | '_ \      | '_ ` _ \   / _ \   / _` | | | | | | |  / _ \
-//  | (_| | | |_) | | |_) |  _  | | | | | | | (_) | | (_| | | |_| | | | |  __/
-//   \__,_| | .__/  | .__/  (_) |_| |_| |_|  \___/   \__,_|  \__,_| |_|  \___|
-//          | |     | |
-//          |_|     |_|

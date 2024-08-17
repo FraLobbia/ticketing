@@ -5,16 +5,19 @@ import java.util.Optional;
 
 import com.backend.model.Account;
 import com.backend.model.DTO.AccountRegistrationDTO;
+import com.backend.model.DTO.AccountResponseDTO;
 
 public interface AccountService {
 
-  List<Account> getAllAccounts();
+  List<AccountResponseDTO> getAllAccounts();
 
-  Optional<Account> getAccountById(Long id);
+  Optional<AccountResponseDTO> getAccountById(Long id);
 
-  Account createAccount(AccountRegistrationDTO account);
+  AccountResponseDTO createAccount(AccountRegistrationDTO account);
 
   Optional<Account> updateAccount(Long id, Account accountDetails);
 
   boolean deleteAccount(Long id);
+
+  AccountResponseDTO convertToDTO(Account account);
 }
