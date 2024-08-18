@@ -37,7 +37,6 @@ export class SingleTicketPageComponent {
     this.route.params.subscribe((params) => {
       this.id = +params['id'];
       this.ticketService.getTicketById(this.id).subscribe((data: Ticket) => {
-        console.log('Ticket:', data);
         this.ticket = data;
       });
     });

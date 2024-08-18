@@ -6,10 +6,6 @@ import { Ticket, TicketStatus } from '../../../../shared/models/ticket.model';
   templateUrl: './ticket-overview.component.html',
   styleUrls: ['./ticket-overview.component.scss'], // Corretto da styleUrl a styleUrls
 })
-export class TicketOverviewComponent implements OnInit {
+export class TicketOverviewComponent {
   @Input() ticket: Ticket | undefined;
-
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
 }

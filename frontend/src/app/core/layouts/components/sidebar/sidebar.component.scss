@@ -41,3 +41,28 @@ ul {
     font-size: 16px;
   }
 }
+
+mat-divider {
+  margin-block: 10px;
+}
+
+mat-card {
+  margin-block: 10px;
+  cursor: pointer;
+  &:hover {
+    background-color: #acacac;
+  }
+  mat-card-header {
+    padding-block-start: 5px;
+    align-items: center;
+    justify-content: space-between;
+    mat-icon:hover {
+      color: #007bff;
+    }
+  }
+}
+
+.selected-ticket {
+  background-color: #007bff;
+  color: white;
+}

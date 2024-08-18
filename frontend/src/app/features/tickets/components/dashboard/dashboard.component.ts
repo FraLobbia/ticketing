@@ -24,7 +24,6 @@ export class DashboardComponent implements OnInit {
     'status',
     'account',
     'createdAt',
-    'actions',
   ];
 
   dataSource: MatTableDataSource<Ticket> = new MatTableDataSource();
@@ -54,5 +53,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  viewTicket(id: number): void {}
+  addTicketToSidebar(ticket: Ticket): void {
+    this.ticketService.addViewingTicket(ticket.id!);
+  }
 }

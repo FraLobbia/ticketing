@@ -1,12 +1,11 @@
 <mat-toolbar color="primary" class="header-bar">
   <div>
     <button
-      appHoverHighlight
       mat-icon-button
       class="header-bar__menu-button"
       (click)="onToggleSidebar()"
     >
-      <mat-icon>menu</mat-icon>
+      <mat-icon class="hover-color">menu</mat-icon>
     </button>
 
     <span [routerLink]="'/tickets'" class="header-bar__title">Ticketing</span>
@@ -19,7 +18,7 @@
       <span class="menu-title">Apri nuovo ticket</span>
     </button>
     <button mat-icon-button class="header-bar__user-button" (click)="logout()">
-      <mat-icon>logout</mat-icon>
+      <mat-icon class="hover-color">logout</mat-icon>
     </button>
   </div>
 </mat-toolbar>
