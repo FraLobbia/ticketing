@@ -9,8 +9,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.backend.model.Account;
-import com.backend.model.DTO.AccountRegistrationDTO;
-import com.backend.model.DTO.AccountResponseDTO;
+import com.backend.model.DTO.request.AccountRegistrationDTO;
+import com.backend.model.DTO.response.AccountResponseDTO;
 import com.backend.model.Enum.RoleEnum;
 import com.backend.model.Role;
 import com.backend.repository.AccountRepository;

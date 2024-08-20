@@ -11,7 +11,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class SingleTicketPageComponent {
   // Variabili
-  ticket: Ticket | undefined;
+  ticket!: Ticket;
   ticketStatus = TicketStatus;
   ticketStatusKeys: string[] = []; // Array per i valori enum
   id: number | undefined;
@@ -23,7 +23,7 @@ export class SingleTicketPageComponent {
     private fb: FormBuilder
   ) {
     this.ticketForm = this.fb.group({
-      status: this.ticket?.status,
+      status: '',
     });
   }
 
@@ -38,10 +38,18 @@ export class SingleTicketPageComponent {
       this.id = +params['id'];
       this.ticketService.getTicketById(this.id).subscribe((data: Ticket) => {
         this.ticket = data;
+        this.updateForm();
       });
     });
   }
 
+  updateForm(): void {
+    if (this.ticket) {
+      this.ticketForm.patchValue({
+        status: this.ticket.status,
+      });
+    }
+  }
   getStatusClass(status: any): string {
     switch (status) {
       case TicketStatus.OPEN:

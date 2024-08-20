@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.backend.model.Account;
-import com.backend.model.DTO.AccountRegistrationDTO;
-import com.backend.model.DTO.AccountResponseDTO;
+import com.backend.model.DTO.request.AccountRegistrationDTO;
+import com.backend.model.DTO.response.AccountResponseDTO;
 
 public interface AccountService {
 

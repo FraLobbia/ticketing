@@ -26,7 +26,7 @@ export class CreateTicketComponent implements OnInit {
       title: ['', Validators.required],
       description: ['', Validators.required],
       status: TicketStatus.OPEN,
-      accountId: this.authService.getUserIdFromToken(token!),
+      accountId: this.authService.getUserIdFromToken(),
       createdAt: new Date(),
       updatedAt: new Date(),
     });

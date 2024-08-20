@@ -1,1 +1,6 @@
-<p>ticket-correspondence works!</p>
+<app-comment-form
+  *ngIf="ticket"
+  [ticketId]="ticket.id"
+  (commentAdded)="onCommentAdded()"
+></app-comment-form>
+<app-comment-list *ngIf="ticket" [ticketId]="ticket.id"></app-comment-list>

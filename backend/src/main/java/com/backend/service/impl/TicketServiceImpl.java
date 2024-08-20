@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.backend.model.Account;
-import com.backend.model.DTO.AccountResponseDTO;
-import com.backend.model.DTO.TicketRequestDto;
-import com.backend.model.DTO.TicketResponseDto;
+import com.backend.model.DTO.request.TicketRequestDto;
+import com.backend.model.DTO.response.AccountResponseDTO;
+import com.backend.model.DTO.response.TicketResponseDto;
 import com.backend.model.Ticket;
 import com.backend.repository.AccountRepository;
 import com.backend.repository.TicketRepository;

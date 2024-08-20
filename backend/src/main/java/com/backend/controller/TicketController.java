@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.model.DTO.TicketRequestDto;
-import com.backend.model.DTO.TicketResponseDto;
+import com.backend.model.DTO.request.TicketRequestDto;
+import com.backend.model.DTO.response.TicketResponseDto;
 import com.backend.service.TicketService;
 
 @RestController

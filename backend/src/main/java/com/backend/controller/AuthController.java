@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.model.DTO.AccountRegistrationDTO;
-import com.backend.model.DTO.AccountResponseDTO;
-import com.backend.model.DTO.AuthResponseDTO;
-import com.backend.model.DTO.LoginDTO;
+import com.backend.model.DTO.request.AccountRegistrationDTO;
+import com.backend.model.DTO.request.LoginDTO;
+import com.backend.model.DTO.response.AccountResponseDTO;
+import com.backend.model.DTO.response.AuthResponseDTO;
 import com.backend.service.AccountService;
 import com.backend.service.AuthService;
 

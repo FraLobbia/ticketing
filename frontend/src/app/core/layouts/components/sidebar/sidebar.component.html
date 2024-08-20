@@ -8,7 +8,7 @@
         routerLinkActive="menu-item-active"
         [routerLinkActiveOptions]="{ exact: true }"
       >
-        <a [routerLink]="item.path" (click)="toggleActive(item)">
+        <a [routerLink]="item.path" (click)="isMenuItemSelected(item)">
           <i class="material-icons">{{ item.icon }}</i>
           <span class="menu-title">{{ item.title }}</span>
         </a>
@@ -17,19 +17,21 @@
   </nav>
   <mat-divider></mat-divider>
   <div class="tickets-container">
-    <div class="tickets-list">
-      <mat-card
-        appearance="outlined"
-        *ngFor="let ticket of viewingTickets"
-        [ngClass]="{ 'selected-ticket': isSelectedTicket(ticket.id!) }"
-        [routerLink]="['/tickets', ticket.id]"
-      >
-        <mat-card-header>
+    <mat-card
+      appearance="outlined"
+      *ngFor="let ticket of viewingTickets"
+      [ngClass]="{ 'selected-ticket': isSelectedTicket(ticket.id!) }"
+      [routerLink]="['/tickets', ticket.id]"
+    >
+      <mat-card-header>
+        <div>
           <mat-card-title>{{ ticket.title }}</mat-card-title>
           <mat-card-subtitle>{{ ticket.status }}</mat-card-subtitle>
+        </div>
+        <div>
           <mat-icon (click)="removeViewingTicket(ticket.id!)">cancel</mat-icon>
-        </mat-card-header>
-      </mat-card>
-    </div>
+        </div>
+      </mat-card-header>
+    </mat-card>
   </div>
 </div>

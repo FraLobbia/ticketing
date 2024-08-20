@@ -1,0 +1,18 @@
+<mat-card *ngIf="comments.length > 0; else noComments">
+  <ul>
+    <li *ngFor="let comment of comments">
+      <mat-icon matListIcon>comment</mat-icon>
+      <div matLine>{{ comment.content }}</div>
+      <div matLine>
+        <small>{{ comment.createdAt | date : "short" }}</small>
+      </div>
+    </li>
+  </ul>
+</mat-card>
+<ng-template #noComments>
+  <mat-card>
+    <mat-card-content>
+      <p>Non ci sono commenti</p>
+    </mat-card-content>
+  </mat-card>
+</ng-template>

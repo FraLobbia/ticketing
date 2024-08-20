@@ -9,6 +9,8 @@ import { TicketRoutingModule } from './tickets-routing.module';
 import { TicketCorrespondenceComponent } from './components/ticket-correspondence/ticket-correspondence.component';
 import { SingleTicketPageComponent } from './components/single-ticket-page/single-ticket-page.component';
 import { TicketOverviewComponent } from './components/ticket-overview/ticket-overview.component';
+import { CommentFormComponent } from './components/comment-form/comment-form.component';
+import { CommentListComponent } from './components/comment-list/comment-list.component';
 
 const ticketComponents = [
   DashboardComponent,
@@ -16,6 +18,8 @@ const ticketComponents = [
   TicketOverviewComponent,
   TicketCorrespondenceComponent,
   SingleTicketPageComponent,
+  CommentFormComponent,
+  CommentListComponent,
 ];
 
 @NgModule({
@@ -24,6 +28,8 @@ const ticketComponents = [
     TicketOverviewComponent,
     TicketCorrespondenceComponent,
     SingleTicketPageComponent,
+    CommentFormComponent,
+    CommentListComponent,
   ],
   imports: [
     CommonModule,

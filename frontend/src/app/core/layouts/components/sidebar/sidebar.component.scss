@@ -19,6 +19,9 @@ ul {
     .material-icons {
       color: white;
     }
+    &:hover {
+      background-color: #0056b3;
+    }
   }
   a {
     text-decoration: none;
@@ -26,10 +29,6 @@ ul {
     width: 100%;
     display: flex;
     align-items: center;
-
-    &:hover {
-      background-color: #0056b3;
-    }
   }
 
   .material-icons {
@@ -56,6 +55,10 @@ mat-card {
     padding-block-start: 5px;
     align-items: center;
     justify-content: space-between;
+    display: flex;
+    & > div:nth-child(2) {
+      margin-right: auto;
+    }
     mat-icon:hover {
       color: #007bff;
     }
