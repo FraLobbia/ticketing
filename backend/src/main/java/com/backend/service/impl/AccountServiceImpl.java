@@ -2,13 +2,15 @@ package com.backend.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.backend.model.Account;
-import com.backend.model.DTO.AccountRegistrationDTO;
+import com.backend.model.DTO.request.AccountRegistrationDTO;
+import com.backend.model.DTO.response.AccountResponseDTO;
 import com.backend.model.Enum.RoleEnum;
 import com.backend.model.Role;
 import com.backend.repository.AccountRepository;
@@ -27,18 +29,46 @@ public class AccountServiceImpl implements AccountService {
   @Autowired
   private PasswordEncoder passwordEncoder;
 
+  /**
+   * Ottiene tutti gli account dal database.
+   *
+   * @return una lista di oggetti Account {@link Account}.
+   */
   @Override
-  public List<Account> getAllAccounts() {
-    return accountRepository.findAll();
+  public List<AccountResponseDTO> getAllAccounts() {
+    List<Account> accounts = accountRepository.findAll();
+    return accounts.stream().map(this::convertToDTO).collect(Collectors.toList());
   }
 
+  /**
+   * Ottiene un account dal database in base all'ID fornito e lo mappa in un
+   * oggetto AccountResponseDTO.
+   *
+   * @param id L'ID dell'account da ottenere.
+   * @return un oggetto AccountResponseDTO {@link AccountResponseDTO} contenente
+   *         l'account richiesto o vuoto se non esiste.
+   */
   @Override
-  public Optional<Account> getAccountById(Long id) {
-    return accountRepository.findById(id);
+  public Optional<AccountResponseDTO> getAccountById(Long id) {
+    Optional<Account> account = accountRepository.findById(id);
+    return account.map(this::convertToDTO);
   }
 
+  /**
+   * Crea un nuovo account nel database con i dettagli forniti nel DTO di
+   * registrazione dell'account. Se l'email è già in uso, viene lanciata
+   * un'eccezione. Se l'account non può essere creato, viene lanciata
+   * un'eccezione. Se l'account viene creato con successo, viene restituito
+   * l'account creato.
+   *
+   * @param accountRegistrationDTO The account registration data containing the
+   *                               account details.
+   * @return The created account.
+   * @throws RuntimeException If the email is already in use or if there is an
+   *                          error creating the account.
+   */
   @Override
-  public Account createAccount(AccountRegistrationDTO accountRegistrationDTO) {
+  public AccountResponseDTO createAccount(AccountRegistrationDTO accountRegistrationDTO) {
     String email = accountRegistrationDTO.getEmail();
 
     if (accountRepository.existsByEmail(email)) {
@@ -59,7 +89,7 @@ public class AccountServiceImpl implements AccountService {
     account.getRoles().add(userRole);
     try {
       accountRepository.save(account);
-      return account;
+      return convertToDTO(account);
     } catch (Exception e) {
       throw new RuntimeException("Error: Account not created.");
     }
@@ -88,5 +118,21 @@ public class AccountServiceImpl implements AccountService {
       accountRepository.delete(account);
       return true;
     }).orElse(false);
+  }
+
+  @Override
+  public AccountResponseDTO convertToDTO(Account account) {
+    AccountResponseDTO dto = new AccountResponseDTO();
+    dto.setId(account.getId());
+    dto.setName(account.getName());
+    dto.setSurname(account.getSurname());
+    dto.setEmail(account.getEmail());
+    dto.setRoles(account.getRoles().stream()
+        .map(role -> role.getName().toString()) // Converti RoleEnum in String
+        .collect(Collectors.toSet()));
+    // Supponiamo che tu abbia un metodo per convertire il byte array dell'immagine
+    // in un URL:
+    // dto.setProfilePictureUrl(convertToUrl(account.getProfilePicture()));
+    return dto;
   }
 }

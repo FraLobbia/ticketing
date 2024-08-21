@@ -1,0 +1,37 @@
+<div class="side-bar">
+  <nav>
+    <ul>
+      <li
+        *ngFor="let item of menuItems"
+        class="menu-item"
+        [ngClass]="{ 'menu-item-active': item.isActive }"
+        routerLinkActive="menu-item-active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <a [routerLink]="item.path" (click)="isMenuItemSelected(item)">
+          <i class="material-icons">{{ item.icon }}</i>
+          <span class="menu-title">{{ item.title }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <mat-divider></mat-divider>
+  <div class="tickets-container">
+    <mat-card
+      appearance="outlined"
+      *ngFor="let ticket of viewingTickets"
+      [ngClass]="{ 'selected-ticket': isSelectedTicket(ticket.id!) }"
+      [routerLink]="['/tickets', ticket.id]"
+    >
+      <mat-card-header>
+        <div>
+          <mat-card-title>{{ ticket.title }}</mat-card-title>
+          <mat-card-subtitle>{{ ticket.status }}</mat-card-subtitle>
+        </div>
+        <div>
+          <mat-icon (click)="removeViewingTicket(ticket.id!)">cancel</mat-icon>
+        </div>
+      </mat-card-header>
+    </mat-card>
+  </div>
+</div>

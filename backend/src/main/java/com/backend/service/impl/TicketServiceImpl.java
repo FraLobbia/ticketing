@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.backend.model.Account;
-import com.backend.model.DTO.TicketRequestDto;
-import com.backend.model.DTO.TicketResponseDto;
+import com.backend.model.DTO.request.TicketRequestDto;
+import com.backend.model.DTO.response.AccountResponseDTO;
+import com.backend.model.DTO.response.TicketResponseDto;
 import com.backend.model.Ticket;
 import com.backend.repository.AccountRepository;
 import com.backend.repository.TicketRepository;
+import com.backend.service.AccountService;
 import com.backend.service.TicketService;
 
 @Service
@@ -22,6 +24,9 @@ public class TicketServiceImpl implements TicketService {
 
   @Autowired
   private AccountRepository accountRepository;
+
+  @Autowired
+  private AccountService accountService;
 
   /**
    * Crea un nuovo ticket nel database con i dettagli forniti nel
@@ -118,13 +123,19 @@ public class TicketServiceImpl implements TicketService {
    * @return un TicketResponseDto che contiene i dettagli del ticket.
    */
   private TicketResponseDto mapToDto(Ticket ticket) {
-    return new TicketResponseDto(
-        ticket.getId(),
-        ticket.getTitle(),
-        ticket.getDescription(),
-        ticket.getStatus(),
-        ticket.getAccount().getId(),
-        ticket.getCreatedAt(),
-        ticket.getUpdatedAt());
+    TicketResponseDto dto = new TicketResponseDto();
+    dto.setId(ticket.getId());
+    dto.setTitle(ticket.getTitle());
+    dto.setDescription(ticket.getDescription());
+    dto.setStatus(ticket.getStatus());
+    dto.setCreatedAt(ticket.getCreatedAt());
+    dto.setUpdatedAt(ticket.getUpdatedAt());
+
+    Long idAccount = ticket.getAccount().getId();
+    Account account = accountRepository.findById(idAccount)
+        .orElseThrow(() -> new RuntimeException("Account not found"));
+    AccountResponseDTO accountDto = accountService.convertToDTO(account);
+    dto.setAccount(accountDto);
+    return dto;
   }
 }

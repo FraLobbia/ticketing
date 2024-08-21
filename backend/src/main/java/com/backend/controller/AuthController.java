@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.backend.model.Account;
-import com.backend.model.DTO.AccountRegistrationDTO;
-import com.backend.model.DTO.AuthResponseDTO;
-import com.backend.model.DTO.LoginDTO;
+import com.backend.model.DTO.request.AccountRegistrationDTO;
+import com.backend.model.DTO.request.LoginDTO;
+import com.backend.model.DTO.response.AccountResponseDTO;
+import com.backend.model.DTO.response.AuthResponseDTO;
 import com.backend.service.AccountService;
 import com.backend.service.AuthService;
 
@@ -46,8 +46,8 @@ public class AuthController {
    *         errore HTTP.
    */
   @PostMapping("/register")
-  public ResponseEntity<Account> register(@RequestBody AccountRegistrationDTO registrationDto) {
-    Account createdAccount = accountService.createAccount(registrationDto);
+  public ResponseEntity<AccountResponseDTO> register(@RequestBody AccountRegistrationDTO registrationDto) {
+    AccountResponseDTO createdAccount = accountService.createAccount(registrationDto);
     if (createdAccount == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }

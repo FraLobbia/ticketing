@@ -88,9 +88,10 @@ export class AuthService {
    * Recupera l'ID utente dal token di autenticazione.
    *  @param token - Token di autenticazione
    * @returns ID utente, o null se non è possibile decodificare il token
-   */ getUserIdFromToken(token: string): string | null {
+   */ getUserIdFromToken(): string | null {
     try {
-      const decodedToken: any = jwtDecode(token);
+      const token = this.getToken();
+      const decodedToken: any = jwtDecode(token!);
       console.log('Decoded token:', decodedToken);
       return decodedToken && decodedToken.idAccount
         ? decodedToken.idAccount

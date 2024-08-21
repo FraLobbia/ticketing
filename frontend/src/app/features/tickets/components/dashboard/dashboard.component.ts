@@ -5,6 +5,7 @@ import { TicketStatus } from '../../../../shared/models/ticket.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -12,7 +13,7 @@ import { MatSort } from '@angular/material/sort';
 })
 export class DashboardComponent implements OnInit {
   // costruttore
-  constructor(private ticketService: TicketService) {}
+  constructor(private ticketService: TicketService, private router: Router) {}
 
   // variabili
   tickets: Ticket[] = [];
@@ -23,7 +24,6 @@ export class DashboardComponent implements OnInit {
     'status',
     'account',
     'createdAt',
-    'actions',
   ];
 
   dataSource: MatTableDataSource<Ticket> = new MatTableDataSource();
@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  viewTicket(id: number): void {
-    // Implementa la navigazione al dettaglio del ticket
+  addTicketToSidebar(ticket: Ticket): void {
+    this.ticketService.addViewingTicket(ticket.id!);
   }
 }

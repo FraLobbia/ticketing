@@ -6,12 +6,31 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CreateTicketComponent } from './components/create-ticket/create-ticket.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TicketRoutingModule } from './tickets-routing.module';
-import { TicketDetailsComponent } from './components/ticket-details/ticket-details.component';
+import { TicketCorrespondenceComponent } from './components/ticket-correspondence/ticket-correspondence.component';
+import { SingleTicketPageComponent } from './components/single-ticket-page/single-ticket-page.component';
+import { TicketOverviewComponent } from './components/ticket-overview/ticket-overview.component';
+import { CommentFormComponent } from './components/comment-form/comment-form.component';
+import { CommentListComponent } from './components/comment-list/comment-list.component';
 
-const ticketComponents = [DashboardComponent, CreateTicketComponent];
+const ticketComponents = [
+  DashboardComponent,
+  CreateTicketComponent,
+  TicketOverviewComponent,
+  TicketCorrespondenceComponent,
+  SingleTicketPageComponent,
+  CommentFormComponent,
+  CommentListComponent,
+];
 
 @NgModule({
-  declarations: [...ticketComponents, TicketDetailsComponent],
+  declarations: [
+    ...ticketComponents,
+    TicketOverviewComponent,
+    TicketCorrespondenceComponent,
+    SingleTicketPageComponent,
+    CommentFormComponent,
+    CommentListComponent,
+  ],
   imports: [
     CommonModule,
     MaterialModule,

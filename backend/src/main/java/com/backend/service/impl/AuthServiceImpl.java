@@ -7,7 +7,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.backend.model.DTO.LoginDTO;
+import com.backend.model.DTO.request.LoginDTO;
 import com.backend.security.JwtTokenProvider;
 import com.backend.service.AuthService;
 

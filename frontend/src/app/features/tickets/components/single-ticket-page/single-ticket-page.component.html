@@ -1,0 +1,36 @@
+<mat-card *ngIf="ticket" class="ticket-detail-card">
+  <mat-card-header>
+    <mat-card-title>{{ ticket.title }}</mat-card-title>
+  </mat-card-header>
+</mat-card>
+
+<form
+  *ngIf="ticket"
+  [formGroup]="ticketForm"
+  (ngSubmit)="onSubmit()"
+  class="rounded-select"
+>
+  <mat-form-field>
+    <mat-label>Ticket Status</mat-label>
+    <mat-select
+      formControlName="status"
+      [ngClass]="getStatusClass(ticketForm.get('status')?.value)"
+    >
+      <mat-option *ngFor="let status of ticketStatusKeys" [value]="status">
+        <span [ngClass]="getStatusClass(status)">
+          {{ status }}
+        </span>
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-raised-button color="primary" type="submit">Salva</button>
+</form>
+
+<mat-tab-group>
+  <mat-tab label="Overview">
+    <app-ticket-overview [ticket]="ticket"></app-ticket-overview>
+  </mat-tab>
+  <mat-tab label="Commenti">
+    <app-ticket-correspondence [ticket]="ticket"></app-ticket-correspondence>
+  </mat-tab>
+</mat-tab-group>

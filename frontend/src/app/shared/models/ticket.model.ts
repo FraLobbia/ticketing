@@ -1,13 +1,9 @@
+import { Account } from './account.model';
+
 export enum TicketStatus {
   OPEN = 'OPEN',
   IN_PROGRESS = 'IN_PROGRESS',
   CLOSED = 'CLOSED',
-}
-
-export interface Account {
-  id: number;
-  username: string;
-  // Aggiungi altre proprietà rilevanti dell'Account
 }
 
 export interface Ticket {

@@ -2,8 +2,8 @@ package com.backend.service;
 
 import java.util.List;
 
-import com.backend.model.DTO.TicketRequestDto;
-import com.backend.model.DTO.TicketResponseDto;
+import com.backend.model.DTO.request.TicketRequestDto;
+import com.backend.model.DTO.response.TicketResponseDto;
 
 /**
  * TicketService

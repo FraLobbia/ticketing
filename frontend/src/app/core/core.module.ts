@@ -7,11 +7,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoginModule } from './login-register-components/login/login.module';
 import { RegisterModule } from './login-register-components/register/register.module';
 import { LayoutsModule } from './layouts/layouts.module';
+import { RouterModule } from '@angular/router';
+import { MaterialModule } from './material/material.module';
 
-const modules = [LoginModule, RegisterModule, LayoutsModule];
+const myModules = [LoginModule, RegisterModule, LayoutsModule, MaterialModule];
 
 @NgModule({
-  imports: [CommonModule, ReactiveFormsModule, ...modules],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, ...myModules],
   providers: [
     AuthService,
     {
@@ -21,7 +23,7 @@ const modules = [LoginModule, RegisterModule, LayoutsModule];
     },
   ],
   declarations: [],
-  exports: [...modules],
+  exports: [...myModules],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

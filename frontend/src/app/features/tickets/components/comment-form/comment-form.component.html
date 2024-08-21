@@ -1,0 +1,30 @@
+<form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Scrivi qui il tuo commento...</mat-label>
+    <textarea
+      matInput
+      formControlName="content"
+      placeholder="Scrivi qui il tuo commento..."
+      rows="5"
+    ></textarea>
+    <mat-error
+      *ngIf="
+        commentForm.get('content')?.invalid &&
+        commentForm.get('content')?.touched
+      "
+    >
+      Il commento è richiesto
+    </mat-error>
+  </mat-form-field>
+  <button
+    mat-raised-button
+    color="primary"
+    type="submit"
+    class="full-width"
+    [disabled]="commentForm.invalid"
+  >
+    Commenta
+  </button>
+</form>
+
+<mat-divider></mat-divider>

@@ -2,10 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthLayoutComponent } from './core/layouts/auth-layout/auth-layout.component';
 import { StandardLayoutComponent } from './core/layouts/standard-layout/standard-layout.component';
-import { LoginComponent } from './core/login-register-components/login/login.component';
-import { RegisterComponent } from './core/login-register-components/register/register.component';
 import { AuthGuard } from './core/guards/auth.guard';
-import { NotFound404Component } from './shared/components/not-found-404/not-found-404.component';
 
 const routes: Routes = [
   {

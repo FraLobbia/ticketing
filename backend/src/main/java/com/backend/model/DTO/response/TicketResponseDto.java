@@ -1,4 +1,4 @@
-package com.backend.model.DTO;
+package com.backend.model.DTO.response;
 
 import java.time.LocalDateTime;
 
@@ -18,7 +18,7 @@ public class TicketResponseDto {
     private String title;
     private String description;
     private TicketStatus status;
-    private Long accountId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private AccountResponseDTO account;
 }

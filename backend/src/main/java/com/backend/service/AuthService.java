@@ -1,6 +1,6 @@
 package com.backend.service;
 
-import com.backend.model.DTO.LoginDTO;
+import com.backend.model.DTO.request.LoginDTO;
 
 public interface AuthService {
 

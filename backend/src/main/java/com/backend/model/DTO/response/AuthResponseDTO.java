@@ -1,4 +1,4 @@
-package com.backend.model.DTO;
+package com.backend.model.DTO.response;
 
 import lombok.Data;
 
