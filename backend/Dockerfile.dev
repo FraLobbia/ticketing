@@ -5,16 +5,16 @@ FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
 
 # Copia il file pom.xml e scarica le dipendenze
-COPY pom.xml ./
+COPY ./ticketing/backend/pom.xml ./
 RUN mvn dependency:go-offline
 
 # Copia il file .env nella directory di lavoro
-COPY ../.env .env
+COPY ./ticketing/.env .env
 
 # Copia il resto dei file dell'applicazione
-COPY src ./src
+COPY ./ticketing/backend/src ./src
 
 # Comando per eseguire l'applicazione in modalità sviluppo
-CMD ["mvn", "spring-boot:run"] 
+CMD ["mvn", "spring-boot:run"]
 #mvn spring-boot:run permette di eseguire direttamente dal codice sorgente senza dover prima creare un file JAR eseguibile
 

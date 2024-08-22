@@ -12,13 +12,11 @@ services:
             - ./frontend/package-lock.json:/app/package-lock.json
         networks:
             - ticketing-network
-        env_file:
-            - .env
 
     backend:
         build:
-            context: ./backend
-            dockerfile: Dockerfile.dev
+            context: .. # contesto di build diverso per poter utilizzare un unico file .env esterno a frontend e backend
+            dockerfile: ./ticketing/backend/Dockerfile.dev
         environment:
             - SPRING_DATASOURCE_URL=${SPRING_DATASOURCE_URL}
             - SPRING_DATASOURCE_USERNAME=${SPRING_DATASOURCE_USERNAME}
@@ -33,8 +31,6 @@ services:
             - ./backend/src/main/resources/application.properties:/app/src/main/resources/application.properties
         networks:
             - ticketing-network
-        env_file:
-            - .env
 
     mysql:
         image: mysql:8.0
