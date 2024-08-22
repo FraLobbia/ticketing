@@ -2,9 +2,12 @@ package com.backend.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.backend.model.DTO.request.CommentRequestDTO;
 import com.backend.model.DTO.response.CommentResponseDTO;
 
+@Service
 public interface CommentService {
   /**
    * Crea un commento associato ad un account e ad un ticket.

@@ -1,7 +1,10 @@
 package com.backend.service;
 
+import org.springframework.stereotype.Service;
+
 import com.backend.model.DTO.request.LoginDTO;
 
+@Service
 public interface AuthService {
 
   /**

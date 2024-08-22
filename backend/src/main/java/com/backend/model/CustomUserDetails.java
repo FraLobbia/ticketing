@@ -1,4 +1,4 @@
-package com.backend.security;
+package com.backend.model;
 
 import java.util.Collection;
 
@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.backend.model.Account;
-
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Implementazione dell'interfaccia UserDetails di Spring Security per
+ * personalizzare l'oggetto UserDetails con i dati dell'utente specifici
+ * dell'applicazione. Es: ID, email, ruoli, ecc.
+ * 
+ */
 @Getter
 @Setter
 public class CustomUserDetails implements UserDetails {
@@ -22,8 +26,7 @@ public class CustomUserDetails implements UserDetails {
   private String email;
   private String password;
 
-  private Collection<? extends GrantedAuthority> authorities;
-  // Altri campi
+  private Collection<? extends GrantedAuthority> authorities; // TODO
 
   // Costruttore che accetta un oggetto Account
   public CustomUserDetails(Account account) {
@@ -54,5 +57,4 @@ public class CustomUserDetails implements UserDetails {
     return email;
   }
 
-  // Implementazione degli altri metodi di UserDetails
 }

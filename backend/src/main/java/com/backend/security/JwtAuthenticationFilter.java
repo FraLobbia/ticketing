@@ -6,11 +6,12 @@ import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import com.backend.service.CustomUserDetailsService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,10 +23,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final JwtTokenProvider jwtTokenProvider;
 
-  private final UserDetailsService userDetailsService;
+  private final CustomUserDetailsService userDetailsService;
 
   // Costruttore della classe JwtAuthenticationFilter.
-  public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService userDetailsService) {
+  public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, CustomUserDetailsService userDetailsService) {
     this.jwtTokenProvider = jwtTokenProvider;
     this.userDetailsService = userDetailsService;
   }
@@ -47,8 +48,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NonNull FilterChain filterChain) throws ServletException, IOException {
     String token = getTokenFromRequest(request);
     if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-      String username = jwtTokenProvider.getUsernameFromToken(token);
-      UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+      String email = jwtTokenProvider.getUsernameFromToken(token);
+      // UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+      UserDetails userDetails = userDetailsService.loadUserByEmail(email);
       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
           userDetails,
           null,

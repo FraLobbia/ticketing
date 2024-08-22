@@ -9,7 +9,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.backend.model.CustomUserDetails;
+
 import io.github.cdimascio.dotenv.Dotenv;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -103,9 +106,9 @@ public class JwtTokenProvider {
           .parseSignedClaims(token);
 
       return true;
-    } catch (Exception e) {
+    } catch (JwtException | IllegalArgumentException e) {
       // Qui puoi gestire le eccezioni specifiche per token non validi
-      System.out.println("Error: " + e.getMessage());
+      System.out.println("Errore di validazione token: " + e.getMessage());
       return false;
     }
   }

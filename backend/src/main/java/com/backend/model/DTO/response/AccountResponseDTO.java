@@ -17,7 +17,7 @@ public class AccountResponseDTO {
   private String name;
   private String surname;
   private String email;
-  private Set<String> roles; // Qui consideriamo di esporre solo i nomi dei ruoli
+  private Set<String> roles; // Qui considero di esporre solo i nomi dei ruoli
   // private Optional<String> profilePictureUrl; // Potremmo voler esporre l'URL
   // dell'immagine profilo piuttosto che
   // l'array di

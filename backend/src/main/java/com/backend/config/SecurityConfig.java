@@ -37,20 +37,6 @@ public class SecurityConfig {
   private final JwtAuthenticationEntryPoint authenticationEntryPoint;
   private final JwtAuthenticationFilter authenticationFilter;
 
-  // /**
-  // * Configura l'AuthenticationManagerBuilder.
-  // *
-  // * @param auth L'oggetto AuthenticationManagerBuilder rappresenta il
-  // generatore
-  // * di autenticazione
-  // * @throws Exception Se si verifica un errore durante la configurazione
-  // */
-  // @Autowired
-  // public void configureGlobal(AuthenticationManagerBuilder auth) throws
-  // Exception {
-  // auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-  // }
-
   /**
    * Configura l'AuthenticationManager.
    *

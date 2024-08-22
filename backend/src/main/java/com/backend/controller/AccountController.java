@@ -61,7 +61,7 @@ public class AccountController {
   @PutMapping("/{id}")
   public ResponseEntity<?> updateAccount(@PathVariable Long id, @RequestBody Account accountDetails) {
 
-    // TODO: Implement the updateAccount method, QUESTO NON FUNZIONA
+    // TODO:
 
     Optional<Account> updatedAccount = accountService.updateAccount(id, accountDetails);
 

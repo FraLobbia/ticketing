@@ -2,6 +2,8 @@ package com.backend.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.backend.model.DTO.request.TicketRequestDto;
 import com.backend.model.DTO.response.TicketResponseDto;
 
@@ -10,6 +12,7 @@ import com.backend.model.DTO.response.TicketResponseDto;
  * 
  * @see Implementazione => com.backend.service.impl.TicketServiceImpl
  */
+@Service
 public interface TicketService {
 
   /**
