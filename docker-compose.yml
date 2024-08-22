@@ -12,6 +12,8 @@ services:
             - ./frontend/package-lock.json:/app/package-lock.json
         networks:
             - ticketing-network
+        env_file:
+            - .env
 
     backend:
         build:
@@ -28,9 +30,11 @@ services:
         volumes:
             - ./backend/src:/app/src
             - ./backend/pom.xml:/app/pom.xml
-              - ./backend/application.properties:/app/src/main/resources/application.properties
+            - ./backend/src/main/resources/application.properties:/app/src/main/resources/application.properties
         networks:
             - ticketing-network
+        env_file:
+            - .env
 
     mysql:
         image: mysql:8.0
@@ -40,7 +44,7 @@ services:
             - MYSQL_USER=${MYSQL_USER}
             - MYSQL_PASSWORD=${MYSQL_PASSWORD}
         ports:
-            - "3300:3306"
+            - "3300:3306" # 3300 per evitare conflitti con mysql locale
         volumes:
             - ./mysql-data:/var/lib/mysql
         networks:

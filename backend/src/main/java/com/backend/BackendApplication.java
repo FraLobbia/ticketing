@@ -1,7 +1,5 @@
 package com.backend;
 
-import org.hibernate.HibernateException;
-import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -19,11 +17,6 @@ public class BackendApplication {
 	public static void main(String[] args) {
 
 		try {
-			Configuration configuration = new Configuration();
-			configuration.configure("hibernate.cfg.xml");
-			configuration.buildSessionFactory();
-		} catch (HibernateException e) {
-			logger.error("HibernateException occurred", e);
 		} catch (Exception e) {
 			logger.error("Exception occurred", e);
 		}
