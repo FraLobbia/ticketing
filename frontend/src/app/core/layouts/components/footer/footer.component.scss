@@ -1,0 +1,31 @@
+.footer {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 0;
+  text-align: center;
+
+  .container {
+    margin: 0 auto;
+    padding: 0 5px;
+  }
+
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+
+  .footer-nav {
+    margin-top: 10px;
+
+    a {
+      color: #fff;
+      margin: 0 10px;
+      text-decoration: none;
+      font-size: 14px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

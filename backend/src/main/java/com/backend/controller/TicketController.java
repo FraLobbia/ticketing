@@ -1,11 +1,12 @@
 package com.backend.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.backend.model.DTO.request.TicketRequestDto;
 import com.backend.model.DTO.response.TicketResponseDto;
@@ -33,8 +35,17 @@ public class TicketController {
    * @return TicketResponseDto Il ticket creato.
    */
   @PostMapping
-  public TicketResponseDto createTicket(@RequestBody TicketRequestDto ticketRequestDto) {
-    return ticketService.createTicket(ticketRequestDto);
+  public ResponseEntity<TicketResponseDto> createTicket(@RequestBody TicketRequestDto ticketRequestDto) {
+    TicketResponseDto ticket = ticketService.createTicket(ticketRequestDto);
+    if (ticket == null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+    URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+        .path("/{id}")
+        .buildAndExpand(ticket.getId())
+        .toUri();
+
+    return ResponseEntity.created(location).body(ticket);
   }
 
   /**
@@ -44,8 +55,12 @@ public class TicketController {
    * @return TicketResponseDto Il ticket con l'ID specificato.
    */
   @GetMapping("/{id}")
-  public TicketResponseDto getTicketById(@PathVariable Long id) {
-    return ticketService.getTicketById(id);
+  public ResponseEntity<TicketResponseDto> getTicketById(@PathVariable Long id) {
+    TicketResponseDto ticket = ticketService.getTicketById(id);
+    if (ticket == null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+    return ResponseEntity.ok(ticket);
   }
 
   /**
@@ -54,8 +69,12 @@ public class TicketController {
    * @return List<TicketResponseDto> Una lista di tutti i ticket.
    */
   @GetMapping
-  public List<TicketResponseDto> getAllTickets() {
-    return ticketService.getAllTickets();
+  public ResponseEntity<List<TicketResponseDto>> getAllTickets() {
+    List<TicketResponseDto> tickets = ticketService.getAllTickets();
+    if (tickets == null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+    return ResponseEntity.ok(tickets);
   }
 
   /**
@@ -67,18 +86,25 @@ public class TicketController {
    * @return TicketResponseDto Il ticket aggiornato.
    */
   @PutMapping("/{id}")
-  public TicketResponseDto updateTicket(@PathVariable Long id, @RequestBody TicketRequestDto ticketRequestDto) {
-    return ticketService.updateTicket(id, ticketRequestDto);
+  public ResponseEntity<TicketResponseDto> updateTicket(@PathVariable Long id,
+      @RequestBody TicketRequestDto ticketRequestDto) {
+    TicketResponseDto updatedTicket = ticketService.updateTicket(id, ticketRequestDto);
+    if (updatedTicket == null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+    return ResponseEntity.ok(updatedTicket);
   }
 
   /**
    * Cancella un ticket tramite il suo ID.
    *
    * @param id L'ID del ticket da cancellare.
+   * @return void
    */
   @DeleteMapping("/{id}")
-  public void deleteTicket(@PathVariable Long id) {
+  public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
     ticketService.deleteTicket(id);
+    return ResponseEntity.noContent().build();
   }
 
   /**
@@ -88,15 +114,29 @@ public class TicketController {
    * @return List<TicketResponseDto> Una lista di ticket con gli ID specificati.
    */
   @GetMapping("/viewing-tickets")
-  public List<TicketResponseDto> getViewingTickets(String ids) {
-    List<Long> ticketIds = Arrays.stream(ids.split(","))
-        .map(Long::parseLong)
-        .collect(Collectors.toList());
-
-    List<TicketResponseDto> tickets = new ArrayList<>();
-    for (Long ticketId : ticketIds) {
-      tickets.add(ticketService.getTicketById(ticketId));
+  public ResponseEntity<List<TicketResponseDto>> getViewingTickets(String ids) {
+    List<TicketResponseDto> tickets = ticketService.getTicketsByIds(ids);
+    if (tickets == null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
-    return tickets;
+    return ResponseEntity.ok(tickets);
+  }
+
+  /**
+   * Aggiorna lo stato di un ticket.
+   *
+   * @param id     L'ID del ticket da aggiornare.
+   * @param status Il nuovo stato del ticket.
+   * @return TicketResponseDto Il ticket aggiornato.
+   */
+  @PutMapping("/status/{id}")
+  public ResponseEntity<TicketResponseDto> updateTicketStatus(@PathVariable Long id,
+      @RequestBody Map<String, String> status) {
+    String statusString = status.get("status");
+    TicketResponseDto updatedTicket = ticketService.updateTicketStatus(id, statusString);
+    if (updatedTicket == null) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+    }
+    return ResponseEntity.ok(updatedTicket);
   }
 }

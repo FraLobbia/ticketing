@@ -1,3 +1,5 @@
+import { Account } from './account.model';
+
 export interface CommentRequestDto {
   content: string;
   createdAt: Date;
@@ -7,7 +9,7 @@ export interface CommentRequestDto {
 
 export interface CommentResponseDto {
   id: number;
-  accountId: number;
   content: string;
   createdAt: Date;
+  author: Account;
 }

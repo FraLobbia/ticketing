@@ -66,4 +66,26 @@ public interface TicketService {
    * @return void
    */
   void deleteTicket(Long id);
+
+  /**
+   * Restituisce una lista di ticket in base agli id forniti.
+   * 
+   * @see implementazione =>
+   *      com.backend.service.impl.TicketServiceImpl#getTicketsByIds
+   * @param ids
+   * @return List<TicketResponseDto> con i dettagli dei ticket richiesti.
+   */
+  List<TicketResponseDto> getTicketsByIds(String ids);
+
+  /**
+   * Aggiorna lo stato di un ticket in base all'id fornito.
+   * 
+   * @see implementazione =>
+   *      com.backend.service.impl.TicketServiceImpl#updateTicketStatus
+   * @param id
+   * @param status
+   * @return boolean
+   */
+  TicketResponseDto updateTicketStatus(Long id, String status);
+
 }

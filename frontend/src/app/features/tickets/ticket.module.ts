@@ -11,6 +11,7 @@ import { SingleTicketPageComponent } from './components/single-ticket-page/singl
 import { TicketOverviewComponent } from './components/ticket-overview/ticket-overview.component';
 import { CommentFormComponent } from './components/comment-form/comment-form.component';
 import { CommentListComponent } from './components/comment-list/comment-list.component';
+import { SharedModule } from '../../shared/shared.module';
 
 const ticketComponents = [
   DashboardComponent,
@@ -36,6 +37,7 @@ const ticketComponents = [
     MaterialModule,
     ReactiveFormsModule,
     TicketRoutingModule,
+    SharedModule,
   ],
   exports: [...ticketComponents],
 })

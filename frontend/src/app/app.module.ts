@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,7 +9,10 @@ import { SharedModule } from './shared/shared.module';
 import { MaterialModule } from './core/material/material.module';
 import { RouterModule } from '@angular/router';
 import { FeaturesModule } from './features/features.module';
+import { registerLocaleData } from '@angular/common';
+import localeIt from '@angular/common/locales/it';
 
+registerLocaleData(localeIt);
 const myModules = [CoreModule, SharedModule, FeaturesModule];
 
 @NgModule({
@@ -22,7 +25,10 @@ const myModules = [CoreModule, SharedModule, FeaturesModule];
     MaterialModule,
     ...myModules,
   ],
-  providers: [provideAnimationsAsync()],
+  providers: [
+    provideAnimationsAsync(),
+    { provide: LOCALE_ID, useValue: 'it-IT' },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

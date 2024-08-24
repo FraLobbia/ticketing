@@ -94,8 +94,6 @@ export class TicketService {
     return this.http.get<Ticket[]>(`${this.baseUrl}/viewing-tickets`, {
       params: { ids: ticketIds.join(',') },
     });
-
-    //return new Observable();
   }
 
   /**
@@ -108,5 +106,9 @@ export class TicketService {
     this.getViewingTicketsFromDb().subscribe((updatedTickets) => {
       this.viewingTicketsSubject.next(updatedTickets);
     });
+  }
+
+  updateTicketStatus(id: number, status: string): Observable<Ticket> {
+    return this.http.put<Ticket>(`${this.baseUrl}/status/${id}`, { status });
   }
 }

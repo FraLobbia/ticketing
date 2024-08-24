@@ -1,6 +1,9 @@
 package com.backend.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,7 @@ import com.backend.model.Account;
 import com.backend.model.DTO.request.TicketRequestDto;
 import com.backend.model.DTO.response.AccountResponseDTO;
 import com.backend.model.DTO.response.TicketResponseDto;
+import com.backend.model.Enum.TicketStatus;
 import com.backend.model.Ticket;
 import com.backend.repository.AccountRepository;
 import com.backend.repository.TicketRepository;
@@ -117,6 +121,28 @@ public class TicketServiceImpl implements TicketService {
   }
 
   /**
+   * Ottiene una lista di ticket in base agli id forniti in formato stringa,
+   * divisi da virgole. Dopodiché mappa ogni ticket in un TicketResponseDto e li
+   * restituisce come una lista.
+   *
+   * @param ids una stringa di id separati da virgole
+   * @return una lista di TicketResponseDto che contiene i dettagli dei ticket
+   *         richiesti
+   */
+  @Override
+  public List<TicketResponseDto> getTicketsByIds(String ids) {
+    List<Long> ticketIds = Arrays.stream(ids.split(","))
+        .map(Long::parseLong)
+        .collect(Collectors.toList());
+
+    List<TicketResponseDto> tickets = new ArrayList<>();
+    for (Long ticketId : ticketIds) {
+      tickets.add(getTicketById(ticketId));
+    }
+    return tickets;
+  }
+
+  /**
    * Mappa un Ticket in un TicketResponseDto.
    *
    * @param ticket Il ticket da mappare.
@@ -137,5 +163,49 @@ public class TicketServiceImpl implements TicketService {
     AccountResponseDTO accountDto = accountService.convertToDTO(account);
     dto.setAccount(accountDto);
     return dto;
+  }
+
+  /**
+   * Converte un ticket in un TicketResponseDto.
+   * 
+   * @param ticket Il ticket da convertire.
+   * @return un TicketResponseDto che contiene i dettagli del ticket.
+   */
+  private TicketResponseDto convertToDTO(Ticket ticket) {
+    TicketResponseDto dto = new TicketResponseDto();
+    dto.setId(ticket.getId());
+    dto.setTitle(ticket.getTitle());
+    dto.setDescription(ticket.getDescription());
+    dto.setStatus(ticket.getStatus());
+    dto.setCreatedAt(ticket.getCreatedAt());
+    dto.setUpdatedAt(ticket.getUpdatedAt());
+    return dto;
+  }
+
+  /**
+   * Aggiorna lo stato di un ticket nel database.
+   *
+   * @param id     l'id del ticket da aggiornare
+   * @param status il nuovo stato del ticket
+   * @return true se l'aggiornamento è andato a buon fine, false altrimenti
+   */
+  @Override
+  public TicketResponseDto updateTicketStatus(Long id, String status) {
+    try {
+      Optional<Ticket> optionalTicket = ticketRepository.findById(id);
+      if (optionalTicket.isEmpty()) {
+        System.out.println("Ticket non trovato");
+        return null;
+      }
+      Ticket ticket = optionalTicket.get();
+      TicketStatus ticketStatus;
+      ticketStatus = TicketStatus.valueOf(status.toUpperCase());
+      ticket.setStatus(ticketStatus);
+      ticketRepository.save(ticket);
+      return convertToDTO(ticket);
+    } catch (Exception e) {
+      System.out.println(e);
+      return null;
+    }
   }
 }

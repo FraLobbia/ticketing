@@ -1,6 +1,6 @@
 .layout {
   display: flex;
-  height: 100vh;
+  height: 90vh;
 }
 
 app-sidebar {
@@ -12,7 +12,7 @@ app-sidebar {
 
 .content {
   overflow-y: auto; /* Abilita lo scorrimento verticale */
-  height: 100vh; /* Assicura che il contenuto occupi l'intera altezza disponibile */
+  //height: 100vh; /* Assicura che il contenuto occupi l'intera altezza disponibile */
 }
 
 app-header-bar {

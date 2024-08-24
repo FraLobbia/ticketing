@@ -10,13 +10,18 @@ import { FormBuilder, FormGroup } from '@angular/forms';
   styleUrl: './single-ticket-page.component.scss',
 })
 export class SingleTicketPageComponent {
-  // Variabili
+  /**
+   * Variabili
+   */
   ticket!: Ticket;
   ticketStatus = TicketStatus;
-  ticketStatusKeys: string[] = []; // Array per i valori enum
+  ticketStatusKeys: TicketStatus[] = []; // Array per i valori enum
   id: number | undefined;
   ticketForm: FormGroup;
 
+  /**
+   * Costruttore
+   */
   constructor(
     private ticketService: TicketService,
     private route: ActivatedRoute,
@@ -27,13 +32,8 @@ export class SingleTicketPageComponent {
     });
   }
 
-  onSubmit(): void {
-    console.log('Form Submitted', this.ticketForm.value);
-    // Qui puoi chiamare il servizio per inviare il form al backend
-  }
-
   ngOnInit(): void {
-    this.ticketStatusKeys = Object.keys(this.ticketStatus);
+    this.ticketStatusKeys = Object.keys(this.ticketStatus) as TicketStatus[];
     this.route.params.subscribe((params) => {
       this.id = +params['id'];
       this.ticketService.getTicketById(this.id).subscribe((data: Ticket) => {
@@ -50,16 +50,16 @@ export class SingleTicketPageComponent {
       });
     }
   }
-  getStatusClass(status: any): string {
-    switch (status) {
-      case TicketStatus.OPEN:
-        return 'status-open';
-      case TicketStatus.IN_PROGRESS:
-        return 'status-in-progress';
-      case TicketStatus.CLOSED:
-        return 'status-closed';
-      default:
-        return '';
+
+  onChangeStatus(): void {
+    if (this.ticketForm.valid) {
+      console.log(this.ticketForm.value.status);
+
+      this.ticketService
+        .updateTicketStatus(this.id!, this.ticketForm.value.status)
+        .subscribe((data: Ticket) => {
+          this.ticket = data;
+        });
     }
   }
 }

@@ -13,6 +13,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 const materialModules = [
   MatFormFieldModule,
   MatSelectModule,
@@ -34,6 +35,7 @@ const materialModules = [
   MatSortModule,
   MatExpansionModule,
   MatTabsModule,
+  MatTooltipModule,
 ];
 
 @NgModule({

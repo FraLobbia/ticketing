@@ -44,6 +44,8 @@ export class DashboardComponent implements OnInit {
     switch (status) {
       case TicketStatus.OPEN:
         return 'status-open';
+      case TicketStatus.PENDING:
+        return 'status-pending';
       case TicketStatus.IN_PROGRESS:
         return 'status-in-progress';
       case TicketStatus.CLOSED:
@@ -55,5 +57,13 @@ export class DashboardComponent implements OnInit {
 
   addTicketToSidebar(ticket: Ticket): void {
     this.ticketService.addViewingTicket(ticket.id!);
+  }
+
+  applyFilter(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target) {
+      const filterValue = target.value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
+    }
   }
 }

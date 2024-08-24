@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.backend.model.Account;
 import com.backend.model.Comment;
 import com.backend.model.DTO.request.CommentRequestDTO;
+import com.backend.model.DTO.response.AccountResponseDTO;
 import com.backend.model.DTO.response.CommentResponseDTO;
 import com.backend.model.Ticket;
 import com.backend.repository.AccountRepository;
@@ -36,19 +37,28 @@ public class CommentServiceImpl implements CommentService {
    * @throws RuntimeException se l'account o il ticket non esistono.
    */
   @Override
-  public CommentResponseDTO createComment(CommentRequestDTO commentRequestDTOCommentRequestDTO) {
+  public CommentResponseDTO createComment(CommentRequestDTO commentRequestDTO) {
     Comment comment = new Comment();
-    comment.setContent(commentRequestDTOCommentRequestDTO.getContent());
-    comment.setCreatedAt(commentRequestDTOCommentRequestDTO.getCreatedAt());
-    Account account = accountRepository.findById(commentRequestDTOCommentRequestDTO.getAccountId())
+    comment.setContent(commentRequestDTO.getContent());
+    comment.setCreatedAt(commentRequestDTO.getCreatedAt());
+    Account account = accountRepository.findById(commentRequestDTO.getAccountId())
         .orElseThrow(() -> new RuntimeException("Account not found"));
-    Ticket ticket = this.ticketRepository.findById(commentRequestDTOCommentRequestDTO.getTicketId())
+    Ticket ticket = this.ticketRepository.findById(commentRequestDTO.getTicketId())
         .orElseThrow(() -> new RuntimeException("Ticket not found"));
     comment.setAccount(account);
     comment.setTicket(ticket);
     commentRepository.save(comment);
-    CommentResponseDTO commentResponseDTO = new CommentResponseDTO(comment.getId(), comment.getContent(),
-        comment.getCreatedAt());
+    CommentResponseDTO commentResponseDTO = CommentResponseDTO.builder()
+        .id(comment.getId())
+        .content(comment.getContent())
+        .createdAt(comment.getCreatedAt())
+        .author(AccountResponseDTO.builder()
+            .id(account.getId())
+            .name(account.getName())
+            .surname(account.getSurname())
+            .email(account.getEmail())
+            .build())
+        .build();
     return commentResponseDTO;
   }
 
@@ -79,7 +89,18 @@ public class CommentServiceImpl implements CommentService {
     comment.setContent(commentRequestDTOCommentRequestDTO.getContent());
     comment.setCreatedAt(commentRequestDTOCommentRequestDTO.getCreatedAt());
     commentRepository.save(comment);
-    return new CommentResponseDTO(comment.getId(), comment.getContent(), comment.getCreatedAt());
+    CommentResponseDTO commentResponseDTO = CommentResponseDTO.builder()
+        .id(comment.getId())
+        .content(comment.getContent())
+        .createdAt(comment.getCreatedAt())
+        .author(AccountResponseDTO.builder()
+            .id(comment.getAccount().getId())
+            .name(comment.getAccount().getName())
+            .surname(comment.getAccount().getSurname())
+            .email(comment.getAccount().getEmail())
+            .build())
+        .build();
+    return commentResponseDTO;
   }
 
   /**
@@ -99,10 +120,17 @@ public class CommentServiceImpl implements CommentService {
    * @return
    */
   private static CommentResponseDTO toDto(Comment comment) {
-    return new CommentResponseDTO(
-        comment.getId(),
-        comment.getContent(),
-        comment.getCreatedAt());
+    return CommentResponseDTO.builder()
+        .id(comment.getId())
+        .content(comment.getContent())
+        .createdAt(comment.getCreatedAt())
+        .author(AccountResponseDTO.builder()
+            .id(comment.getAccount().getId())
+            .name(comment.getAccount().getName())
+            .surname(comment.getAccount().getSurname())
+            .email(comment.getAccount().getEmail())
+            .build())
+        .build();
   }
 
   /**

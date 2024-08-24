@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from '../core/material/material.module';
 import { NotFound404Component } from './components/not-found-404/not-found-404.component';
+import { StatusClassDirective } from './directives/status-class.directive';
 
 const sharedComponents = [
   CommonModule,
@@ -13,9 +14,11 @@ const sharedComponents = [
   MaterialModule,
 ];
 
+const sharedDirectives = [StatusClassDirective];
+
 @NgModule({
-  declarations: [NotFound404Component],
+  declarations: [NotFound404Component, ...sharedDirectives],
   imports: [sharedComponents],
-  exports: [...sharedComponents],
+  exports: [...sharedComponents, ...sharedDirectives],
 })
 export class SharedModule {}

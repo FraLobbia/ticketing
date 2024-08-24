@@ -8,13 +8,21 @@ import { HeaderBarComponent } from './components/header-bar/header-bar.component
 import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { MaterialModule } from '../material/material.module';
 import { RouterModule } from '@angular/router';
+import { FooterComponent } from './components/footer/footer.component';
+import { SharedModule } from '../../shared/shared.module';
 
 const layouts = [StandardLayoutComponent, AuthLayoutComponent];
 const myLayoutComponents = [HeaderBarComponent, SidebarComponent];
 
 @NgModule({
-  declarations: [...layouts, ...myLayoutComponents],
-  imports: [CommonModule, RouterModule, LayoutsRoutingModule, MaterialModule],
+  declarations: [...layouts, ...myLayoutComponents, FooterComponent],
+  imports: [
+    CommonModule,
+    RouterModule,
+    LayoutsRoutingModule,
+    MaterialModule,
+    SharedModule,
+  ],
   exports: [...layouts, ...myLayoutComponents],
 })
 export class LayoutsModule {}

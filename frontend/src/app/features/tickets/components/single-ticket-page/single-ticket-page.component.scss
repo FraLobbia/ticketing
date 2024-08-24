@@ -1,6 +1,6 @@
 mat-card {
-  margin-bottom: 2rem;
   padding: 1.5rem;
+  margin-bottom: 0.5rem;
   mat-card-title {
     font-size: 1.5rem;
     margin-bottom: 1rem;
@@ -10,25 +10,19 @@ mat-card {
   }
 }
 
+mat-divider {
+  margin-block: 0.5rem;
+}
+
 form {
   display: flex;
   gap: 1rem;
+  justify-content: start;
   button {
     margin-top: 1rem;
   }
 }
 
-.mat-mdc-select {
-}
-
-.status-open {
-  color: teal;
-}
-
-.status-in-progress {
-  color: orangered;
-}
-
-.status-closed {
-  color: darkgreen;
+mat-select {
+  width: 200px;
 }

@@ -27,7 +27,7 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       const loginData: LoginModel = this.loginForm.value;
       this.authService.login(loginData).subscribe(
-        () => this.router.navigate(['/dashboard']),
+        () => this.router.navigate(['/tickets']),
         (error) => console.error('Login failed', error)
       );
     }

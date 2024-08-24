@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Ticket, TicketStatus } from '../../../../shared/models/ticket.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { TicketService } from '../../services/ticket.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ticket-create',
@@ -16,7 +17,8 @@ export class CreateTicketComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private tickerService: TicketService
+    private ticketService: TicketService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -35,8 +37,9 @@ export class CreateTicketComponent implements OnInit {
   onSubmit(): void {
     if (this.ticketForm.valid) {
       const newTicket: Ticket = this.ticketForm.value;
-      this.tickerService.createTicket(newTicket).subscribe((ticket) => {
-        console.log('Ticket created:', ticket);
+      this.ticketService.createTicket(newTicket).subscribe((ticket) => {
+        console.info('Ticket created:', ticket);
+        this.router.navigate(['/tickets']);
       });
     }
   }

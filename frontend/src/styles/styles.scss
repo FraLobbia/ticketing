@@ -39,5 +39,52 @@ $container-max-widths: (
   }
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.status-open {
+  background-color: teal;
+  @extend .badge;
+  @extend .badge-pill;
+}
+
+.status-pending {
+  background-color: #ba6262;
+  @extend .badge;
+  @extend .badge-pill;
+}
+
+.status-in-progress {
+  background-color: rgb(214, 140, 2);
+  @extend .badge;
+  @extend .badge-pill;
+}
+
+.status-closed {
+  background-color: green;
+  @extend .badge;
+  @extend .badge-pill;
+}
+
+.badge {
+  display: inline-block; // Rende l'elemento inline, ma permette di impostare larghezza e altezza
+  padding: 0.25em 0.5em; // Aggiunge spaziatura interna per dare forma al badge
+  font-size: 0.75em; // Riduce la dimensione del testo
+  font-weight: 700; // Imposta il testo in grassetto
+  color: white;
+  //background-color: #fffcfc; // Colore di sfondo
+  border-radius: 0.25rem; // Bordi arrotondati per il badge
+  text-align: center; // Allinea il testo al centro
+  vertical-align: middle; // Allinea verticalmente al centro
+  line-height: 1; // Imposta l'altezza della linea a 1 per un allineamento corretto
+}
+
+.badge-pill {
+  border-radius: 10rem; // Arrotonda il badge a forma di "pillola"
+}

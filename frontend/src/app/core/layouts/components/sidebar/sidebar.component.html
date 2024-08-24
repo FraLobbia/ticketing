@@ -26,7 +26,11 @@
       <mat-card-header>
         <div>
           <mat-card-title>{{ ticket.title }}</mat-card-title>
-          <mat-card-subtitle>{{ ticket.status }}</mat-card-subtitle>
+          <mat-card-subtitle>
+            <span class="status" [appStatusClass]="ticket.status">
+              {{ ticket.status }}
+            </span>
+          </mat-card-subtitle>
         </div>
         <div>
           <mat-icon (click)="removeViewingTicket(ticket.id!)">cancel</mat-icon>

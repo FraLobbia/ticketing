@@ -1,10 +1,31 @@
 <mat-card *ngIf="comments.length > 0; else noComments">
   <ul>
     <li *ngFor="let comment of comments">
-      <mat-icon matListIcon>comment</mat-icon>
+      <div
+        id="author"
+        (mouseenter)="onMouseEnter(comment.id)"
+        (mouseleave)="onMouseLeave()"
+      >
+        <mat-icon matListIcon>comment</mat-icon>
+        <strong>{{ comment.author.name }} {{ comment.author.surname }}</strong>
+        <mat-card *ngIf="showTooltip === comment.id" class="tooltip-card">
+          <div>
+            Autore: {{ comment.author.name }} {{ comment.author.surname }}
+          </div>
+          <div>
+            Email:
+            <a href="mailto:{{ comment.author.email }}">{{
+              comment.author.email
+            }}</a>
+          </div>
+        </mat-card>
+      </div>
+
       <div matLine>{{ comment.content }}</div>
       <div matLine>
-        <small>{{ comment.createdAt | date : "short" }}</small>
+        <small>{{
+          comment.createdAt | date : "EEEE, d MMMM, y, h:mm a"
+        }}</small>
       </div>
     </li>
   </ul>
