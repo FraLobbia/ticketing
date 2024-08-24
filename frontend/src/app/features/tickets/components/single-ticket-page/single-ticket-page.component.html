@@ -1,17 +1,33 @@
 <mat-card *ngIf="ticket" class="ticket-detail-card">
-  <form *ngIf="ticket" [formGroup]="ticketForm">
-    <mat-select
-      [appStatusClass]="ticketForm.get('status')?.value"
-      formControlName="status"
-      (selectionChange)="onChangeStatus()"
-    >
-      <mat-option *ngFor="let status of ticketStatusKeys" [value]="status">
-        <span [appStatusClass]="status">
-          {{ status }}
-        </span>
-      </mat-option>
-    </mat-select>
-  </form>
+  <div class="header-wrapper">
+    <div>
+      <p>
+        <strong>Creato da: </strong>{{ ticket.account.name }}
+        {{ ticket.account.surname }}
+      </p>
+      <p>
+        <strong>Creato il: </strong
+        >{{ ticket.createdAt | date : "EEEE, MMMM d, y, h:mm a" }}
+      </p>
+      <p>
+        <strong> Aggiornato il: </strong>
+        {{ ticket.updatedAt | date : "EEEE, MMMM d, y, h:mm a" }}
+      </p>
+    </div>
+    <form *ngIf="ticket" [formGroup]="ticketForm">
+      <mat-select
+        [appStatusClass]="ticketForm.get('status')?.value"
+        formControlName="status"
+        (selectionChange)="onChangeStatus()"
+      >
+        <mat-option *ngFor="let status of ticketStatusKeys" [value]="status">
+          <span [appStatusClass]="status">
+            {{ status }}
+          </span>
+        </mat-option>
+      </mat-select>
+    </form>
+  </div>
   <mat-divider></mat-divider>
   <mat-card-header>
     <mat-card-title>{{ ticket.title }}</mat-card-title>

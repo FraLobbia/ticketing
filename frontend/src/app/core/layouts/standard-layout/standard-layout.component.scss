@@ -1,6 +1,8 @@
 .layout {
   display: flex;
   height: 90vh;
+
+  background-color: #ffe8cc;
 }
 
 app-sidebar {
@@ -24,5 +26,5 @@ app-header-bar {
 .content {
   flex-grow: 1;
   padding: 20px;
-  background-color: #f5f5f5;
+  background-color: #fff4e5;
 }

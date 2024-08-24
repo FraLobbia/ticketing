@@ -1,27 +1,5 @@
 <mat-card *ngIf="ticket" class="ticket-detail-card">
   <mat-card-content>
     <p>{{ ticket.description }}</p>
-
-    <mat-divider></mat-divider>
-
-    <mat-accordion>
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-description> Dettagli creazione </mat-panel-description>
-        </mat-expansion-panel-header>
-        <p>
-          <strong>Creato da: </strong>{{ ticket.account.name }}
-          {{ ticket.account.surname }}
-        </p>
-        <p>
-          <strong>Creato il: </strong
-          >{{ ticket.createdAt | date : "EEEE, MMMM d, y, h:mm a" }}
-        </p>
-        <p>
-          <strong> Aggiornato il: </strong>
-          {{ ticket.updatedAt | date : "EEEE, MMMM d, y, h:mm a" }}
-        </p>
-      </mat-expansion-panel>
-    </mat-accordion>
   </mat-card-content>
 </mat-card>

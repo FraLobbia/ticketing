@@ -6,6 +6,7 @@ ul {
 
 .menu-item {
   padding: 10px 20px;
+  justify-content: center;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -13,14 +14,14 @@ ul {
   &.menu-item-active,
   &.active {
     /* Classe aggiunta da routerLinkActive */
-    background-color: #007bff;
+    background-color: #ff7961;
     color: white;
 
     .material-icons {
       color: white;
     }
     &:hover {
-      background-color: #0056b3;
+      background-color: #acacac;
     }
   }
   a {
@@ -37,12 +38,12 @@ ul {
   }
 
   .menu-title {
-    font-size: 16px;
+    font-size: 1.5rem;
   }
 }
 
 mat-divider {
-  margin-block: 10px;
+  margin-bottom: 10px;
 }
 
 mat-card {
@@ -70,7 +71,7 @@ mat-card {
 }
 
 .selected-ticket {
-  background-color: #007bff;
+  background-color: #ff7961;
   color: white;
 }
 
