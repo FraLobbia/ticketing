@@ -12,11 +12,6 @@ app-sidebar {
   z-index: 1000;
 }
 
-.content {
-  overflow-y: auto; /* Abilita lo scorrimento verticale */
-  //height: 100vh; /* Assicura che il contenuto occupi l'intera altezza disponibile */
-}
-
 app-header-bar {
   position: sticky;
   top: 0;
@@ -24,6 +19,7 @@ app-header-bar {
 }
 
 .content {
+  overflow-y: auto; /* Abilita lo scorrimento verticale */
   flex-grow: 1;
   padding: 20px;
   background-color: #fff4e5;

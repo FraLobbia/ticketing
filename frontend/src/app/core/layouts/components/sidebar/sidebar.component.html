@@ -1,4 +1,5 @@
 <div class="side-bar">
+  <h5>Sezioni</h5>
   <nav>
     <ul>
       <li
@@ -17,8 +18,8 @@
   </nav>
   <mat-divider></mat-divider>
   <div class="tickets-container">
+    <h5>Ticket in visione</h5>
     <mat-card
-      appearance="outlined"
       *ngFor="let ticket of viewingTickets"
       [ngClass]="{ 'selected-ticket': isSelectedTicket(ticket.id!) }"
       [routerLink]="['/tickets', ticket.id]"

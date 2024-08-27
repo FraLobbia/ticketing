@@ -2,6 +2,9 @@ ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
+  li {
+    border-radius: 20px;
+  }
 }
 
 .menu-item {
@@ -14,7 +17,7 @@ ul {
   &.menu-item-active,
   &.active {
     /* Classe aggiunta da routerLinkActive */
-    background-color: #ff7961;
+    background-color: #232e3e;
     color: white;
 
     .material-icons {
@@ -34,7 +37,7 @@ ul {
 
   .material-icons {
     margin-right: 10px;
-    color: #007bff;
+    color: #232e3e;
   }
 
   .menu-title {
@@ -71,10 +74,14 @@ mat-card {
 }
 
 .selected-ticket {
-  background-color: #ff7961;
+  background-color: #232e3e;
   color: white;
 }
 
 .status {
   margin-bottom: 5px;
+}
+h5 {
+  margin-left: 10px;
+  font-weight: 500 !important;
 }

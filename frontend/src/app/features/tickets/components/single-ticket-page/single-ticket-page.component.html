@@ -1,5 +1,6 @@
 <mat-card *ngIf="ticket" class="ticket-detail-card">
   <div class="header-wrapper">
+    <!-- info apertura modifica ticket -->
     <div>
       <p>
         <strong>Creato da: </strong>{{ ticket.account.name }}
@@ -14,6 +15,7 @@
         {{ ticket.updatedAt | date : "EEEE, MMMM d, y, h:mm a" }}
       </p>
     </div>
+    <!-- selezione status -->
     <form *ngIf="ticket" [formGroup]="ticketForm">
       <mat-select
         [appStatusClass]="ticketForm.get('status')?.value"
@@ -29,12 +31,15 @@
     </form>
   </div>
   <mat-divider></mat-divider>
+  <!-- titolo ticket -->
   <mat-card-header>
     <mat-card-title>{{ ticket.title }}</mat-card-title>
   </mat-card-header>
 </mat-card>
 
-<mat-tab-group>
+<!-- tab -->
+
+<mat-tab-group color="warn">
   <mat-tab label="Overview">
     <app-ticket-overview [ticket]="ticket"></app-ticket-overview>
   </mat-tab>

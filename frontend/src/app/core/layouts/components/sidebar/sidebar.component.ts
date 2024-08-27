@@ -30,6 +30,24 @@ export class SidebarComponent implements OnInit {
     //   path: '/tickets/create',
     //   isActive: false,
     // },
+    {
+      title: 'Ticket di oggi',
+      icon: 'calendar_month',
+      path: 'today',
+      isActive: false,
+    },
+    {
+      title: 'In pending',
+      icon: 'pending_actions',
+      path: 'pending',
+      isActive: false,
+    },
+    {
+      title: 'Impostazioni',
+      icon: 'settings',
+      path: 'settings',
+      isActive: false,
+    },
     // Aggiungi qui altre voci di menu
   ];
 

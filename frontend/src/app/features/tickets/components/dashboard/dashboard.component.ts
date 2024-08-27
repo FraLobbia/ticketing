@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Ticket } from '../../../../shared/models/ticket.model';
 import { TicketService } from '../../services/ticket.service';
 import { TicketStatus } from '../../../../shared/models/ticket.model';
@@ -18,13 +18,7 @@ export class DashboardComponent implements OnInit {
   // variabili
   tickets: Ticket[] = [];
   TicketStatus = TicketStatus;
-  displayedColumns: string[] = [
-    'id',
-    'title',
-    'status',
-    'account',
-    'createdAt',
-  ];
+  displayedColumns: string[] = ['title', 'status', 'account', 'createdAt'];
 
   dataSource: MatTableDataSource<Ticket> = new MatTableDataSource();
 
@@ -40,18 +34,16 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  getStatusClass(status: TicketStatus): string {
-    switch (status) {
-      case TicketStatus.OPEN:
-        return 'status-open';
-      case TicketStatus.PENDING:
-        return 'status-pending';
-      case TicketStatus.IN_PROGRESS:
-        return 'status-in-progress';
-      case TicketStatus.CLOSED:
-        return 'status-closed';
-      default:
-        return '';
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    this.updateDisplayedColumns(); // Aggiorna le colonne al ridimensionamento della finestra
+  }
+
+  updateDisplayedColumns(): void {
+    if (window.innerWidth < 900) {
+      this.displayedColumns = ['title', 'status'];
+    } else {
+      this.displayedColumns = ['title', 'status', 'account', 'createdAt'];
     }
   }
 

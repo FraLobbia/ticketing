@@ -11,6 +11,7 @@ import { RouterModule } from '@angular/router';
 import { FeaturesModule } from './features/features.module';
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 
 registerLocaleData(localeIt);
 const myModules = [CoreModule, SharedModule, FeaturesModule];
@@ -28,6 +29,10 @@ const myModules = [CoreModule, SharedModule, FeaturesModule];
   providers: [
     provideAnimationsAsync(),
     { provide: LOCALE_ID, useValue: 'it-IT' },
+    {
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+      useValue: { appearance: 'outline' },
+    },
   ],
   bootstrap: [AppComponent],
 })

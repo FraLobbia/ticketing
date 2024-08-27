@@ -4,7 +4,9 @@
     <app-sidebar [ngStyle]="{ 'width.px': sideBarWidth }"></app-sidebar>
   </div>
   <div class="content" [ngStyle]="{ 'margin-left.px': sideBarWidth }">
-    <router-outlet></router-outlet>
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
   </div>
 </div>
 <app-footer></app-footer>

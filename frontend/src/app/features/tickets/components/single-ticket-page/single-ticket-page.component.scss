@@ -3,7 +3,8 @@ mat-card {
   margin-bottom: 0.5rem;
   background-color: #ffe8cc;
   mat-card-title {
-    font-size: 1.5rem;
+    font-size: 2rem;
+    font-weight: 900;
   }
   mat-form-field {
     width: 200px;
@@ -35,4 +36,16 @@ mat-select {
   p {
     margin: 0;
   }
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+    gap: 0.5rem;
+    overflow: hidden;
+  }
+}
+
+mat-tab {
+  padding: 1rem;
+  background-color: #f0f0f0;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
 }

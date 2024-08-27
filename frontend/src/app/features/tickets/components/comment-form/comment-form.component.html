@@ -1,5 +1,5 @@
 <form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
-  <mat-form-field appearance="outline" class="full-width">
+  <mat-form-field>
     <mat-label>Scrivi qui il tuo commento...</mat-label>
     <textarea
       matInput
@@ -16,15 +16,7 @@
       Il commento è richiesto
     </mat-error>
   </mat-form-field>
-  <button
-    mat-raised-button
-    color="primary"
-    type="submit"
-    class="full-width"
-    [disabled]="commentForm.invalid"
-  >
-    Commenta
-  </button>
+  <button type="submit" [disabled]="commentForm.invalid">Commenta</button>
 </form>
 
 <mat-divider></mat-divider>

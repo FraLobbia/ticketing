@@ -1,6 +1,6 @@
 .dashboard-container {
-  padding: 20px;
-  table {
+  table,
+  mat-paginator {
     background-color: #ffe8cc;
   }
 }
@@ -26,4 +26,10 @@ mat-form-field {
 
 td.center-text {
   text-align: center;
+}
+
+@media (max-width: 700px) {
+  .hide-column-under-700 {
+    display: none;
+  }
 }

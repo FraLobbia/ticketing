@@ -1,30 +1,26 @@
-<form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
-  <mat-form-field appearance="fill">
-    <mat-label>Titolo</mat-label>
-    <input matInput formControlName="title" placeholder="Titolo del ticket" />
-    <mat-error *ngIf="ticketForm.get('title')!.invalid"
-      >Titolo obbligatorio</mat-error
-    >
-  </mat-form-field>
+<mat-card>
+  <mat-card-title>Crea un nuovo ticket</mat-card-title>
+  <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Titolo</mat-label>
+      <input matInput formControlName="title" placeholder="Titolo del ticket" />
+      <mat-error *ngIf="ticketForm.get('title')!.invalid"
+        >Titolo obbligatorio</mat-error
+      >
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Descrizione</mat-label>
-    <textarea
-      matInput
-      formControlName="description"
-      placeholder="Descrizione del ticket"
-    ></textarea>
-    <mat-error *ngIf="ticketForm.get('description')!.invalid"
-      >Descrizione obbligatoria</mat-error
-    >
-  </mat-form-field>
+    <mat-form-field>
+      <mat-label>Descrizione</mat-label>
+      <textarea
+        matInput
+        formControlName="description"
+        placeholder="Descrizione del ticket"
+      ></textarea>
+      <mat-error *ngIf="ticketForm.get('description')!.invalid"
+        >Descrizione obbligatoria</mat-error
+      >
+    </mat-form-field>
 
-  <button
-    mat-raised-button
-    color="primary"
-    type="submit"
-    [disabled]="ticketForm.invalid"
-  >
-    Crea Ticket
-  </button>
-</form>
+    <button type="submit" [disabled]="ticketForm.invalid">Crea Ticket</button>
+  </form>
+</mat-card>

@@ -21,9 +21,7 @@ $container-max-widths: (
   width: 100%;
   padding-right: var(--bs-gutter-x, 0.75rem);
   padding-left: var(--bs-gutter-x, 0.75rem);
-  margin-right: auto;
-  margin-left: auto;
-
+  margin-inline: auto;
   @if $max-width != null {
     max-width: $max-width;
   }
@@ -73,6 +71,7 @@ body {
 }
 
 .badge {
+  width: 100px;
   display: inline-block; // Rende l'elemento inline, ma permette di impostare larghezza e altezza
   padding: 0.25em 0.5em; // Aggiunge spaziatura interna per dare forma al badge
   font-size: 0.75em; // Riduce la dimensione del testo

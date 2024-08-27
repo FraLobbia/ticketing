@@ -1,6 +1,5 @@
 package com.backend.controller;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.backend.model.DTO.request.TicketRequestDto;
 import com.backend.model.DTO.response.TicketResponseDto;
@@ -40,12 +38,7 @@ public class TicketController {
     if (ticket == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
-    URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-        .path("/{id}")
-        .buildAndExpand(ticket.getId())
-        .toUri();
-
-    return ResponseEntity.created(location).body(ticket);
+    return ResponseEntity.status(201).body(ticket);
   }
 
   /**
