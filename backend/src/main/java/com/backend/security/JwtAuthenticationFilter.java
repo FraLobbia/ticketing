@@ -48,16 +48,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       @NonNull FilterChain filterChain) throws ServletException, IOException {
     String token = getTokenFromRequest(request);
     if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
+
       String email = jwtTokenProvider.getUsernameFromToken(token);
-      // UserDetails userDetails = userDetailsService.loadUserByUsername(email);
       UserDetails userDetails = userDetailsService.loadUserByEmail(email);
+
+      // Crea un'istanza di UsernamePasswordAuthenticationToken
       UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
           userDetails,
           null,
           userDetails.getAuthorities());
+
+      // Imposta i dettagli dell'utente autenticato nella richiesta.
       authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+      // Imposta l'utente autenticato nel contesto di sicurezza.
       SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
+    // Passa la richiesta e la risposta alla catena di filtri successiva.
     filterChain.doFilter(request, response);
   }
 

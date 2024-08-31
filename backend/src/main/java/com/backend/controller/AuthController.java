@@ -1,6 +1,5 @@
 package com.backend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,11 +18,20 @@ import com.backend.service.AuthService;
 @RequestMapping("/auth")
 public class AuthController {
 
-  @Autowired
-  private AuthService authService;
+  /**
+   * Servizi iniettati
+   */
+  private final AuthService authService;
 
-  @Autowired
-  private AccountService accountService;
+  private final AccountService accountService;
+
+  /**
+   * Costruttore
+   */
+  public AuthController(AuthService authService, AccountService accountService) {
+    this.authService = authService;
+    this.accountService = accountService;
+  }
 
   /**
    * @param loginDto un oggetto {@link LoginDTO} contenente i dati necessari per

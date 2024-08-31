@@ -2,18 +2,20 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
 import { CommentResponseDto } from '../../../../shared/models/comment.model';
 import { CommentService } from '../../services/comment.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-comment-list',
   templateUrl: './comment-list.component.html',
   styleUrls: ['./comment-list.component.scss'],
 })
-export class CommentListComponent implements OnInit, OnChanges {
+export class CommentListComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Variabili
    */
@@ -21,11 +23,15 @@ export class CommentListComponent implements OnInit, OnChanges {
   comments: CommentResponseDto[] = [];
   sortOrder: 'asc' | 'desc' = 'desc';
   showTooltip: number | null = null;
+  private subscriptions: Subscription[] = [];
 
   /**
    * Costruttore
    */
   constructor(private commentService: CommentService) {}
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
 
   ngOnInit(): void {
     this.loadComments();
@@ -41,12 +47,13 @@ export class CommentListComponent implements OnInit, OnChanges {
    */
   loadComments() {
     console.log('carica commenti');
-    this.commentService
+    const getCommentsSub = this.commentService
       .getCommentsByTicketId(this.ticketId!)
       .subscribe((comments) => {
         this.comments = comments;
         this.sortComments();
       });
+    this.subscriptions.push(getCommentsSub);
   }
 
   /**

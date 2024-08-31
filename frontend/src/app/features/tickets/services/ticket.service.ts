@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 import { Ticket } from '../../../shared/models/ticket.model';
 
 @Injectable({
@@ -109,6 +109,13 @@ export class TicketService {
   }
 
   updateTicketStatus(id: number, status: string): Observable<Ticket> {
-    return this.http.put<Ticket>(`${this.baseUrl}/status/${id}`, { status });
+    return this.http
+      .put<Ticket>(`${this.baseUrl}/status/${id}`, { status })
+      .pipe(
+        tap((updatedTicket: Ticket) => {
+          // Aggiorna i viewingTickets
+          this.updateViewingTicketsSubject();
+        })
+      );
   }
 }

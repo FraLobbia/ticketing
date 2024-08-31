@@ -1,4 +1,10 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Ticket } from '../../../../shared/models/ticket.model';
 import { TicketService } from '../../services/ticket.service';
 import { TicketStatus } from '../../../../shared/models/ticket.model';
@@ -6,19 +12,24 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   // costruttore
   constructor(private ticketService: TicketService, private router: Router) {}
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
 
   // variabili
   tickets: Ticket[] = [];
   TicketStatus = TicketStatus;
   displayedColumns: string[] = ['title', 'status', 'account', 'createdAt'];
+  private subscriptions: Subscription[] = [];
 
   dataSource: MatTableDataSource<Ticket> = new MatTableDataSource();
 
@@ -26,12 +37,15 @@ export class DashboardComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
 
   ngOnInit(): void {
-    this.ticketService.getAllTickets().subscribe((tickets: Ticket[]) => {
-      this.tickets = tickets;
-      this.dataSource = new MatTableDataSource(tickets);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+    const getTicketsSub = this.ticketService
+      .getAllTickets()
+      .subscribe((tickets: Ticket[]) => {
+        this.tickets = tickets;
+        this.dataSource = new MatTableDataSource(tickets);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
+    this.subscriptions.push(getTicketsSub);
   }
 
   @HostListener('window:resize', ['$event'])

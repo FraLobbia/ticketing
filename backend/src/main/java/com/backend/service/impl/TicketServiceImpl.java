@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.backend.model.Account;
@@ -23,14 +22,24 @@ import com.backend.service.TicketService;
 @Service
 public class TicketServiceImpl implements TicketService {
 
-  @Autowired
-  private TicketRepository ticketRepository;
+  /**
+   * Dependency injections
+   */
+  private final TicketRepository ticketRepository;
 
-  @Autowired
-  private AccountRepository accountRepository;
+  private final AccountRepository accountRepository;
 
-  @Autowired
-  private AccountService accountService;
+  private final AccountService accountService;
+
+  /**
+   * Costruttore
+   */
+  public TicketServiceImpl(TicketRepository ticketRepository, AccountRepository accountRepository,
+      AccountService accountService) {
+    this.ticketRepository = ticketRepository;
+    this.accountRepository = accountRepository;
+    this.accountService = accountService;
+  }
 
   /**
    * Crea un nuovo ticket nel database con i dettagli forniti nel
@@ -179,6 +188,7 @@ public class TicketServiceImpl implements TicketService {
     dto.setStatus(ticket.getStatus());
     dto.setCreatedAt(ticket.getCreatedAt());
     dto.setUpdatedAt(ticket.getUpdatedAt());
+    dto.setAccount(accountService.convertToDTO(ticket.getAccount()));
     return dto;
   }
 
@@ -198,9 +208,12 @@ public class TicketServiceImpl implements TicketService {
         return null;
       }
       Ticket ticket = optionalTicket.get();
+      Account account = ticket.getAccount();
       TicketStatus ticketStatus;
       ticketStatus = TicketStatus.valueOf(status.toUpperCase());
       ticket.setStatus(ticketStatus);
+      ticket.setAccount(account);
+
       ticketRepository.save(ticket);
       return convertToDTO(ticket);
     } catch (Exception e) {

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,19 +25,33 @@ import com.backend.service.AuthService;
 @RequestMapping("/accounts")
 public class AccountController {
 
-  @Autowired
-  private AccountService accountService;
+  /**
+   * Servizi iniettati
+   */
+  private final AccountService accountService;
 
-  @Autowired
-  private AuthService authService;
+  private final AuthService authService;
 
+  /**
+   * Costruttore
+   */
+  public AccountController(AccountService accountService, AuthService authService) {
+    this.accountService = accountService;
+    this.authService = authService;
+  }
+
+  /**
+   * Ottieni tutti gli account
+   * 
+   * @return
+   */
   @GetMapping
   public List<AccountResponseDTO> getAllAccounts() {
     return accountService.getAllAccounts();
   }
 
   /**
-   * Get account by id
+   * Ottieni account per ID
    * 
    * @param id
    * @return un oggetto {@link ResponseEntity} contenente l'account cercato o un
@@ -61,7 +74,7 @@ public class AccountController {
   @PutMapping("/{id}")
   public ResponseEntity<?> updateAccount(@PathVariable Long id, @RequestBody Account accountDetails) {
 
-    // TODO:
+    // TODO: da rivedere
 
     Optional<Account> updatedAccount = accountService.updateAccount(id, accountDetails);
 

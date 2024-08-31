@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,19 +22,28 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import com.backend.security.JwtAuthenticationEntryPoint;
 import com.backend.security.JwtAuthenticationFilter;
 
-import lombok.AllArgsConstructor;
-
 /**
  * Questa classe definisce la configurazione di sicurezza dell'applicazione.
  */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@AllArgsConstructor
 public class SecurityConfig {
 
+  /**
+   * Dipendenze
+   */
   private final JwtAuthenticationEntryPoint authenticationEntryPoint;
   private final JwtAuthenticationFilter authenticationFilter;
+
+  /**
+   * Costruttore
+   */
+  public SecurityConfig(JwtAuthenticationEntryPoint authenticationEntryPoint,
+      JwtAuthenticationFilter authenticationFilter) {
+    this.authenticationEntryPoint = authenticationEntryPoint;
+    this.authenticationFilter = authenticationFilter;
+  };
 
   /**
    * Configura l'AuthenticationManager.
@@ -60,17 +68,27 @@ public class SecurityConfig {
    */
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http.csrf(csrf -> csrf.disable())
-        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+    /**
+     * Configurazione richieste HTTP:
+     */
+    http.csrf(csrf -> csrf.disable()) // disattivato a causa dell'utilizzo di JWT
+        .cors(cors -> cors.configurationSource(corsConfigurationSource())) // configurazione CORS (più sotto)
         .authorizeHttpRequests(authorize -> {
-          authorize.requestMatchers("/auth/**", "/accountsgrf").permitAll(); // Assicurati che il percorso sia corretto
+          authorize.requestMatchers("/auth/**").permitAll();
           authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
           authorize.anyRequest().authenticated();
-        })
-        .httpBasic(Customizer.withDefaults());
+        });
+
+    /**
+     * Configurazione eccezioni con authenticationEntryPoint:
+     */
     http.exceptionHandling(exception -> exception
         .authenticationEntryPoint(authenticationEntryPoint));
+    /**
+     * Configurazione filtro di autenticazione:
+     */
     http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
     return http.build();
   }
 

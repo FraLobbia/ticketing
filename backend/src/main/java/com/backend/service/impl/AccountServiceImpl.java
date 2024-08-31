@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +19,24 @@ import com.backend.service.AccountService;
 @Service
 public class AccountServiceImpl implements AccountService {
 
-  @Autowired
-  private AccountRepository accountRepository;
+  /**
+   * Dependency Injections
+   */
+  private final AccountRepository accountRepository;
 
-  @Autowired
-  private RoleRepository roleRepository;
+  private final RoleRepository roleRepository;
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  private final PasswordEncoder passwordEncoder;
+
+  /**
+   * Costruttore
+   */
+  public AccountServiceImpl(AccountRepository accountRepository, RoleRepository roleRepository,
+      PasswordEncoder passwordEncoder) {
+    this.accountRepository = accountRepository;
+    this.roleRepository = roleRepository;
+    this.passwordEncoder = passwordEncoder;
+  }
 
   /**
    * Ottiene tutti gli account dal database.

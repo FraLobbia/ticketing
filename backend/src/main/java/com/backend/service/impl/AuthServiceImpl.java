@@ -1,6 +1,5 @@
 package com.backend.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,10 +13,19 @@ import com.backend.service.AuthService;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-  @Autowired
-  private AuthenticationManager authenticationManager;
-  @Autowired
-  private JwtTokenProvider jwtTokenProvider;
+  /**
+   * Dependency Injections
+   */
+  private final AuthenticationManager authenticationManager;
+  private final JwtTokenProvider jwtTokenProvider;
+
+  /**
+   * Costruttore
+   */
+  public AuthServiceImpl(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    this.authenticationManager = authenticationManager;
+    this.jwtTokenProvider = jwtTokenProvider;
+  }
 
   /**
    * Login

@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
-import { LoginModel, RegisterModel } from '../../shared/models/auth.model';
+import {
+  JwtPayload,
+  LoginModel,
+  RegisterModel,
+} from '../../shared/models/auth.model';
 import { Router } from '@angular/router';
 import { LoginResponseModel } from '../../shared/models/auth.model';
 import { jwtDecode } from 'jwt-decode';
+import { Account } from '../../shared/models/account.model';
 
 @Injectable({
   providedIn: 'root',
@@ -40,12 +45,12 @@ export class AuthService {
    *  @param email - Email utente
    *  @param password - Password
    * @returns Observable contenente la risposta del server
-   */ register(userData: RegisterModel): Observable<any> {
+   */ register(userData: RegisterModel): Observable<Account> {
     const url = `${this.url}/register`;
     const body = { userData };
     return this.http
-      .post(url, body)
-      .pipe(catchError(this.handleError<any>('register')));
+      .post<Account>(url, body)
+      .pipe(catchError(this.handleError<Account>('register')));
   }
 
   /**
@@ -88,10 +93,11 @@ export class AuthService {
    * Recupera l'ID utente dal token di autenticazione.
    *  @param token - Token di autenticazione
    * @returns ID utente, o null se non è possibile decodificare il token
-   */ getUserIdFromToken(): string | null {
+   */ getUserIdFromToken(): number | null {
     try {
       const token = this.getToken();
-      const decodedToken: any = jwtDecode(token!);
+      if (!token) return null;
+      const decodedToken: JwtPayload = jwtDecode(token);
       console.log('Decoded token:', decodedToken);
       return decodedToken && decodedToken.idAccount
         ? decodedToken.idAccount
@@ -108,7 +114,7 @@ export class AuthService {
    *  @param result - Valore opzionale da restituire come risultato dell'osservabile
    * @returns Funzione che restituisce un osservabile
    */ private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
+    return (error: Error): Observable<T> => {
       console.error(`${operation} failed: ${error.message}`);
       return of(result as T);
     };

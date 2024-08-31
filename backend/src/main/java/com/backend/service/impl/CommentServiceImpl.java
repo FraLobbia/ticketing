@@ -3,7 +3,6 @@ package com.backend.service.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.backend.model.Account;
@@ -20,14 +19,24 @@ import com.backend.service.CommentService;
 @Service
 public class CommentServiceImpl implements CommentService {
 
-  @Autowired
-  private CommentRepository commentRepository;
+  /**
+   * Dependency injections
+   */
+  private final CommentRepository commentRepository;
 
-  @Autowired
-  private AccountRepository accountRepository;
+  private final AccountRepository accountRepository;
 
-  @Autowired
-  private TicketRepository ticketRepository;
+  private final TicketRepository ticketRepository;
+
+  /**
+   * Costruttore
+   */
+  public CommentServiceImpl(CommentRepository commentRepository, AccountRepository accountRepository,
+      TicketRepository ticketRepository) {
+    this.commentRepository = commentRepository;
+    this.accountRepository = accountRepository;
+    this.ticketRepository = ticketRepository;
+  }
 
   /**
    * Crea un commento associato ad un account e ad un ticket.

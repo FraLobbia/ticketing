@@ -1,15 +1,23 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommentService } from '../../services/comment.service';
 import { CommentRequestDto } from '../../../../shared/models/comment.model';
 import { AuthService } from '../../../../core/services/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-comment-form',
   templateUrl: './comment-form.component.html',
   styleUrls: ['./comment-form.component.scss'],
 })
-export class CommentFormComponent implements OnInit {
+export class CommentFormComponent implements OnInit, OnDestroy {
   /**
    * Input per ricevere l'id del ticket e dell'account dal parent component
    */
@@ -20,6 +28,7 @@ export class CommentFormComponent implements OnInit {
   @Output() commentAdded = new EventEmitter<void>();
 
   commentForm: FormGroup;
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -29,6 +38,9 @@ export class CommentFormComponent implements OnInit {
     this.commentForm = this.fb.group({
       content: ['', Validators.required],
     });
+  }
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
   ngOnInit(): void {
     console.log(this.ticketId);
@@ -49,10 +61,13 @@ export class CommentFormComponent implements OnInit {
         accountId: +accountId,
       };
 
-      this.commentService.createComment(newComment).subscribe(() => {
-        this.commentAdded.emit(); // Notifica il parent component dell'aggiunta di un commento
-        this.commentForm.reset(); // Reset del form
-      });
+      const createCommentSub = this.commentService
+        .createComment(newComment)
+        .subscribe(() => {
+          this.commentAdded.emit(); // Notifica il parent component dell'aggiunta di un commento
+          this.commentForm.reset(); // Reset del form
+        });
+      this.subscriptions.push(createCommentSub);
     } else console.error('Form is not valid');
   }
 }

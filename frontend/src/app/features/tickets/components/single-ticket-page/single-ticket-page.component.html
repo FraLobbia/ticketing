@@ -10,10 +10,10 @@
         <strong>Creato il: </strong
         >{{ ticket.createdAt | date : "EEEE, MMMM d, y, h:mm a" }}
       </p>
-      <p>
+      <!-- <p>
         <strong> Aggiornato il: </strong>
         {{ ticket.updatedAt | date : "EEEE, MMMM d, y, h:mm a" }}
-      </p>
+      </p> -->
     </div>
     <!-- selezione status -->
     <form *ngIf="ticket" [formGroup]="ticketForm">

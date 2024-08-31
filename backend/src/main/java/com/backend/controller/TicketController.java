@@ -3,7 +3,6 @@ package com.backend.controller;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,8 +22,17 @@ import com.backend.service.TicketService;
 @RequestMapping("/api/tickets")
 public class TicketController {
 
-  @Autowired
-  private TicketService ticketService;
+  /**
+   * Servizi iniettati
+   */
+  private final TicketService ticketService;
+
+  /**
+   * Costruttore
+   */
+  public TicketController(TicketService ticketService) {
+    this.ticketService = ticketService;
+  }
 
   /**
    * Crea un nuovo ticket basato sul TicketRequestDto fornito.
