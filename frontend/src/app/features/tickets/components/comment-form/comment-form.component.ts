@@ -17,19 +17,18 @@ import { Subscription } from 'rxjs';
   templateUrl: './comment-form.component.html',
   styleUrls: ['./comment-form.component.scss'],
 })
-export class CommentFormComponent implements OnInit, OnDestroy {
+export class CommentFormComponent implements OnDestroy {
   /**
-   * Input per ricevere l'id del ticket e dell'account dal parent component
+   * Variabili
    */
-  @Input() ticketId!: number | undefined;
-  /**
-   * Evento emesso al parent quando un commento viene aggiunto
-   */
-  @Output() commentAdded = new EventEmitter<void>();
-
+  @Input() ticketId!: number | undefined; //Input per ricevere l'id del ticket e dell'account dal parent component
+  @Output() commentAdded = new EventEmitter<void>(); //Evento emesso al parent quando un commento viene aggiunto
   commentForm: FormGroup;
   private subscriptions: Subscription[] = [];
 
+  /**
+   * Costruttore
+   */
   constructor(
     private fb: FormBuilder,
     private commentService: CommentService,
@@ -39,20 +38,23 @@ export class CommentFormComponent implements OnInit, OnDestroy {
       content: ['', Validators.required],
     });
   }
+  /**
+   * Metodo per distruggere le sottoscrizioni al destroy del componente
+   */
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
-  ngOnInit(): void {
-    console.log(this.ticketId);
-  }
 
+  /**
+   * Metodo per inviare il commento al server
+   */
   onSubmit() {
     const accountId = this.authService.getUserIdFromToken();
     if (!accountId) {
       console.error('Account id not found');
-
       return;
     }
+
     if (this.commentForm.valid && accountId && this.ticketId) {
       const newComment: CommentRequestDto = {
         content: this.commentForm.value.content,
@@ -60,7 +62,6 @@ export class CommentFormComponent implements OnInit, OnDestroy {
         ticketId: this.ticketId, //TODO
         accountId: +accountId,
       };
-
       const createCommentSub = this.commentService
         .createComment(newComment)
         .subscribe(() => {

@@ -19,23 +19,28 @@ import { Subscription } from 'rxjs';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  // costruttore
+  /**
+   * Variabili
+   */
+  tickets: Ticket[] = [];
+  TicketStatus = TicketStatus;
+  displayedColumns: string[] = ['title', 'status', 'account', 'createdAt'];
+  private subscriptions: Subscription[] = [];
+  dataSource: MatTableDataSource<Ticket> = new MatTableDataSource();
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  /**
+   * costruttore
+   */
   constructor(private ticketService: TicketService, private router: Router) {}
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
-  // variabili
-  tickets: Ticket[] = [];
-  TicketStatus = TicketStatus;
-  displayedColumns: string[] = ['title', 'status', 'account', 'createdAt'];
-  private subscriptions: Subscription[] = [];
-
-  dataSource: MatTableDataSource<Ticket> = new MatTableDataSource();
-
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
-
+  /**
+   * Inizializza il componente
+   */
   ngOnInit(): void {
     const getTicketsSub = this.ticketService
       .getAllTickets()
@@ -48,11 +53,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.subscriptions.push(getTicketsSub);
   }
 
+  /**
+   * Evento di resize della finestra
+   */
   @HostListener('window:resize', ['$event'])
   onResize(event: Event): void {
     this.updateDisplayedColumns(); // Aggiorna le colonne al ridimensionamento della finestra
   }
 
+  /**
+   * Aggiorna le colonne visualizzate in base alla larghezza della finestra
+   */
   updateDisplayedColumns(): void {
     if (window.innerWidth < 900) {
       this.displayedColumns = ['title', 'status'];
@@ -61,10 +72,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Metodo per aggiungere un ticket alla sidebar
+   */
   addTicketToSidebar(ticket: Ticket): void {
     this.ticketService.addViewingTicket(ticket.id!);
   }
 
+  /**
+   * Metodo per filtrare i ticket nella tabella material
+   */
   applyFilter(event: Event): void {
     const target = event.target as HTMLInputElement;
     if (target) {

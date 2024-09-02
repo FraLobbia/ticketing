@@ -15,13 +15,12 @@ export class SingleTicketPageComponent implements OnDestroy {
    * Variabili
    */
   ticket!: Ticket;
-  ticketStatus = TicketStatus;
   ticketStatusKeys: TicketStatus[] = []; // Array per i valori enum
   id: number | undefined;
-  ticketForm: FormGroup;
+  statusForm: FormGroup; // Select form per cambiare lo stato del ticket
   private subscriptions: Subscription[] = [];
-
   @Output() statusChanged = new EventEmitter<Ticket>();
+
   /**
    * Costruttore
    */
@@ -30,17 +29,22 @@ export class SingleTicketPageComponent implements OnDestroy {
     private route: ActivatedRoute,
     private fb: FormBuilder
   ) {
-    this.ticketForm = this.fb.group({
+    this.statusForm = this.fb.group({
       status: '',
     });
   }
+  /**
+   * Metodo per distruggere le sottoscrizioni al destroy del componente
+   */
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
+  /**
+   * Inizializza il componente
+   */
   ngOnInit(): void {
-    this.ticketStatusKeys = Object.keys(this.ticketStatus) as TicketStatus[];
-
+    this.ticketStatusKeys = Object.keys(TicketStatus) as TicketStatus[];
     const getIdFromRouteSub = this.route.params.subscribe((params) => {
       this.id = +params['id'];
       const getTicketSub = this.ticketService
@@ -54,26 +58,27 @@ export class SingleTicketPageComponent implements OnDestroy {
     this.subscriptions.push(getIdFromRouteSub);
   }
 
+  /**
+   * Aggiorna il form con lo stato attuale del ticket.
+   */
   updateForm(): void {
     if (this.ticket) {
-      this.ticketForm.patchValue({
+      this.statusForm.patchValue({
         status: this.ticket.status,
       });
     }
   }
 
+  /**
+   * Evento per cambiare lo stato del ticket.
+   * Si iscrive anche al servizio per aggiornare la lista dei ticket visualizzati.
+   */
   onChangeStatus(): void {
-    if (this.ticketForm.valid) {
-      console.log(this.ticketForm.value.status);
-
-      this.ticketService
-        .updateTicketStatus(this.id!, this.ticketForm.value.status)
-        .subscribe((data: Ticket) => {
-          this.ticket = data;
-          this.ticketService
-            .getViewingTicketsFromDb()
-            .subscribe((tickets) => {});
-        });
-    }
+    this.ticketService
+      .updateTicketStatus(this.id!, this.statusForm.value.status)
+      .subscribe((data: Ticket) => {
+        this.ticket = data;
+        this.ticketService.getViewingTicketsFromDb().subscribe((tickets) => {});
+      });
   }
 }

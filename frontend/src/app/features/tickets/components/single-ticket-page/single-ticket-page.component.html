@@ -16,9 +16,9 @@
       </p> -->
     </div>
     <!-- selezione status -->
-    <form *ngIf="ticket" [formGroup]="ticketForm">
+    <form *ngIf="ticket" [formGroup]="statusForm">
       <mat-select
-        [appStatusClass]="ticketForm.get('status')?.value"
+        [appStatusClass]="statusForm.get('status')?.value"
         formControlName="status"
         (selectionChange)="onChangeStatus()"
       >
@@ -40,7 +40,7 @@
 <!-- tab -->
 
 <mat-tab-group color="warn">
-  <mat-tab label="Overview">
+  <mat-tab label="Panoramica">
     <app-ticket-overview [ticket]="ticket"></app-ticket-overview>
   </mat-tab>
   <mat-tab label="Commenti">

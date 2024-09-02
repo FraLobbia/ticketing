@@ -7,5 +7,8 @@ import { Ticket, TicketStatus } from '../../../../shared/models/ticket.model';
   styleUrls: ['./ticket-overview.component.scss'], // Corretto da styleUrl a styleUrls
 })
 export class TicketOverviewComponent {
+  /**
+   * Variabili
+   */
   @Input() ticket: Ticket | undefined;
 }

@@ -24,9 +24,15 @@ interface MenuItem {
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent implements OnInit, OnDestroy {
+  /**
+   * Variabili
+   */
   private subscriptions: Subscription[] = [];
   viewingTickets: Ticket[] = [];
 
+  /**
+   * Menu di navigazione
+   */
   menuItems = [
     {
       title: 'Dashboard',
@@ -55,7 +61,9 @@ export class SidebarComponent implements OnInit, OnDestroy {
     // Aggiungi qui altre voci di menu
   ];
 
-  // costruttore
+  /**
+   * costruttore
+   */
   constructor(private router: Router, private ticketService: TicketService) {}
 
   ngOnInit(): void {

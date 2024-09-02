@@ -33,10 +33,16 @@ export class CommentListComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
+  /**
+   * Inizializza il componente
+   */
   ngOnInit(): void {
     this.loadComments();
   }
 
+  /**
+   * Ricarica i commenti quando avviene un cambiamento. es: nuovo commento.
+   */
   ngOnChanges(changes: SimpleChanges): void {
     this.loadComments();
   }

@@ -10,8 +10,17 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
+  /**
+   * Costruttore
+   */
   constructor(private authService: AuthService) {}
 
+  /**
+   *
+   * @param req: la richiesta HTTP
+   * @param next: il prossimo gestore
+   * @returns Observable<HttpEvent<any>>
+   */
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
