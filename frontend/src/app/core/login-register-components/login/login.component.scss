@@ -46,7 +46,9 @@ button:disabled {
 p {
   text-align: center;
   margin-top: 20px;
-  a {
+  span {
     color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
   }
 }

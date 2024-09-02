@@ -38,7 +38,7 @@ const routes: Routes = [
             './core/login-register-components/register/register.module'
           ).then((m) => m.RegisterModule),
       },
-      // Aggiungi altre rotte per l'autenticazione (es. register, forgot-password)
+      // Aggiungi altre rotte per l'autenticazione (es. forgot-password)
     ],
   },
 ];

@@ -38,7 +38,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       // Simula la registrazione inviando i dati al servizio di autenticazione
       this.authService.register(registrationData).subscribe(
         (response) => {
-          // Successo: reindirizza l'utente al login o alla dashboard
+          // Successo: reindirizza l'utente al login
           this.router.navigate(['/auth/login']);
         },
         (error) => {

@@ -45,9 +45,14 @@ export class AuthService {
    *  @param email - Email utente
    *  @param password - Password
    * @returns Observable contenente la risposta del server
-   */ register(userData: RegisterModel): Observable<Account> {
-    const url = `${this.url}/register`;
-    const body = { userData };
+   */ register({
+    name,
+    surname,
+    email,
+    password,
+  }: RegisterModel): Observable<Account> {
+    const url = `${this.url}/auth/register`;
+    const body = { name, surname, email, password };
     return this.http
       .post<Account>(url, body)
       .pipe(catchError(this.handleError<Account>('register')));

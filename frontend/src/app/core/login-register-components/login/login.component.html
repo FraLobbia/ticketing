@@ -16,7 +16,9 @@
     </div>
     <button type="submit" [disabled]="loginForm.invalid">Login</button>
     <p>
-      <a href="http://">Non sei registrato? Registrati qui.</a>
+      <span routerLink="/auth/register"
+        >Non sei registrato? Registrati qui.</span
+      >
     </p>
   </form>
 </div>
