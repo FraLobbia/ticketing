@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommentResponseDto } from '../../../../shared/models/comment.model';
 import { CommentService } from '../../services/comment.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-comment-list',
@@ -23,15 +23,11 @@ export class CommentListComponent implements OnInit, OnChanges, OnDestroy {
   comments: CommentResponseDto[] = [];
   sortOrder: 'asc' | 'desc' = 'desc';
   showTooltip: number | null = null;
-  private subscriptions: Subscription[] = [];
 
   /**
    * Costruttore
    */
   constructor(private commentService: CommentService) {}
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
 
   /**
    * Inizializza il componente
@@ -59,7 +55,6 @@ export class CommentListComponent implements OnInit, OnChanges, OnDestroy {
         this.comments = comments;
         this.sortComments();
       });
-    this.subscriptions.push(getCommentsSub);
   }
 
   /**
@@ -87,5 +82,14 @@ export class CommentListComponent implements OnInit, OnChanges, OnDestroy {
   }
   onMouseLeave(): void {
     this.showTooltip = null;
+  }
+
+  /**
+   * Destroy del componente e delle sottoscrizioni
+   */
+  destroy$ = new Subject<void>();
+  ngOnDestroy(): void {
+    this.destroy$.next(); // Emissione del segnale per interrompere le sottoscrizioni
+    this.destroy$.complete();
   }
 }

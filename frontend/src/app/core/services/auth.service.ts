@@ -4,12 +4,12 @@ import { Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import {
-  JwtPayload,
-  LoginModel,
-  RegisterModel,
-} from '../../shared/models/auth.model';
+  IJwtPayload,
+  ILogin,
+  IRegister,
+} from '../../shared/interfaces/auth.interface';
 import { Router } from '@angular/router';
-import { LoginResponseModel } from '../../shared/models/auth.model';
+import { ILoginResponse } from '../../shared/interfaces/auth.interface';
 import { jwtDecode } from 'jwt-decode';
 import { Account } from '../../shared/models/account.model';
 
@@ -29,12 +29,12 @@ export class AuthService {
    *  @param email - Email utente
    *  @param password - Password
    * @returns Observable contenente la risposta del server
-   */ login({ email, password }: LoginModel): Observable<LoginResponseModel> {
+   */ login({ email, password }: ILogin): Observable<ILoginResponse> {
     const url = `${this.url}/auth/login`;
     const body = { email, password };
-    return this.http.post<LoginResponseModel>(url, body).pipe(
+    return this.http.post<ILoginResponse>(url, body).pipe(
       tap((response) => this.setToken(response.accessToken)), // Salva il token
-      catchError(this.handleError<LoginResponseModel>('login'))
+      catchError(this.handleError<ILoginResponse>('login'))
     );
   }
 
@@ -50,7 +50,7 @@ export class AuthService {
     surname,
     email,
     password,
-  }: RegisterModel): Observable<Account> {
+  }: IRegister): Observable<Account> {
     const url = `${this.url}/auth/register`;
     const body = { name, surname, email, password };
     return this.http
@@ -102,7 +102,7 @@ export class AuthService {
     try {
       const token = this.getToken();
       if (!token) return null;
-      const decodedToken: JwtPayload = jwtDecode(token);
+      const decodedToken: IJwtPayload = jwtDecode(token);
       console.log('Decoded token:', decodedToken);
       return decodedToken && decodedToken.idAccount
         ? decodedToken.idAccount

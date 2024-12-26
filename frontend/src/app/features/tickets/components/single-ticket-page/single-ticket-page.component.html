@@ -20,7 +20,7 @@
       <mat-select
         [appStatusClass]="statusForm.get('status')?.value"
         formControlName="status"
-        (selectionChange)="onChangeStatus()"
+        (selectionChange)="handleStatusChange()"
       >
         <mat-option *ngFor="let status of ticketStatusKeys" [value]="status">
           <span [appStatusClass]="status">

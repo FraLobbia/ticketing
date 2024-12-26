@@ -4,7 +4,7 @@ import { Ticket, TicketStatus } from '../../../../shared/models/ticket.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { TicketService } from '../../services/ticket.service';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-ticket-create',
@@ -17,7 +17,6 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
    */
   ticketForm!: FormGroup;
   statuses = Object.values(TicketStatus); // Enum values for the dropdown
-  private subscriptions: Subscription[] = [];
 
   /**
    * Costruttore
@@ -34,6 +33,13 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
    * Crea il form per la creazione di un nuovo ticket
    */
   ngOnInit(): void {
+    this.initializeForm();
+  }
+
+  /**
+   * Inizializza il form per la creazione di un nuovo ticket
+   */
+  initializeForm(): void {
     this.ticketForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
@@ -42,13 +48,6 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-  }
-
-  /**
-   * Metodo per distruggere le sottoscrizioni al destroy del componente
-   */
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   /**
@@ -62,5 +61,14 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
         this.router.navigate(['/tickets']);
       });
     }
+  }
+
+  /**
+   * Destroy del componente e delle sottoscrizioni
+   */
+  destroy$ = new Subject<void>();
+  ngOnDestroy(): void {
+    this.destroy$.next(); // Emissione del segnale per interrompere le sottoscrizioni
+    this.destroy$.complete();
   }
 }

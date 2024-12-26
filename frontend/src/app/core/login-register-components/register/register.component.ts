@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -11,16 +11,12 @@ import { Subscription } from 'rxjs';
 })
 export class RegisterComponent implements OnInit, OnDestroy {
   registerForm!: FormGroup;
-  private subscriptions: Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
   ) {}
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
@@ -47,5 +43,14 @@ export class RegisterComponent implements OnInit, OnDestroy {
         }
       );
     }
+  }
+
+  /**
+   * Destroy del componente e delle sottoscrizioni
+   */
+  destroy$ = new Subject<void>();
+  ngOnDestroy(): void {
+    this.destroy$.next(); // Emissione del segnale per interrompere le sottoscrizioni
+    this.destroy$.complete();
   }
 }

@@ -21,6 +21,19 @@ export class TicketService {
    */
   viewingTickets$ = this.viewingTicketsSubject.asObservable();
 
+  /**
+   * Aggiorna i ticket visualizzati nel localStorage e nel BehaviorSubject.
+   * Metodo chiamato ogni volta che viene aggiunto o rimosso un ticket dalla sidebar.
+   * Necessario per mantenere aggiornati i ticket visualizzati nella sidebar in tempo reale.
+   * @returns void
+   */
+  public updateViewingTicketsSubject(): void {
+    // Cambiato da private a public
+    this.getViewingTicketsFromDB().subscribe((updatedTickets) => {
+      this.viewingTicketsSubject.next(updatedTickets);
+    });
+  }
+
   createTicket(ticket: Ticket): Observable<Ticket> {
     return this.http.post<Ticket>(`${this.baseUrl}`, ticket);
   }
@@ -88,23 +101,13 @@ export class TicketService {
    *
    * @returns Ticket[]
    */
-  getViewingTicketsFromDb(): Observable<Ticket[]> {
-    const ticketIds = this.getViewingTicketsIdFromLocalStorage();
-    console.log('getViewingTicketsFromDb', ticketIds);
+  getViewingTicketsFromDB(): Observable<Ticket[]> {
+    const ticketIds: number[] = this.getViewingTicketsIdFromLocalStorage();
+    console.group('Ottengo i viewing ticket dal DB');
+    console.table(ticketIds);
+    console.groupEnd();
     return this.http.get<Ticket[]>(`${this.baseUrl}/viewing-tickets`, {
       params: { ids: ticketIds.join(',') },
-    });
-  }
-
-  /**
-   * Aggiorna i ticket visualizzati nel localStorage e nel BehaviorSubject.
-   * Metodo chiamato ogni volta che viene aggiunto o rimosso un ticket dalla sidebar.
-   * Necessario per mantenere aggiornati i ticket visualizzati nella sidebar in tempo reale.
-   * @returns void
-   */
-  private updateViewingTicketsSubject(): void {
-    this.getViewingTicketsFromDb().subscribe((updatedTickets) => {
-      this.viewingTicketsSubject.next(updatedTickets);
     });
   }
 

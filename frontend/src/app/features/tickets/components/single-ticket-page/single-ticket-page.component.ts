@@ -3,7 +3,7 @@ import { Ticket, TicketStatus } from '../../../../shared/models/ticket.model';
 import { TicketService } from '../../services/ticket.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-single-ticket-page',
@@ -14,11 +14,10 @@ export class SingleTicketPageComponent implements OnDestroy {
   /**
    * Variabili
    */
-  ticket!: Ticket;
+  ticket: Ticket | undefined;
   ticketStatusKeys: TicketStatus[] = []; // Array per i valori enum
   id: number | undefined;
-  statusForm: FormGroup; // Select form per cambiare lo stato del ticket
-  private subscriptions: Subscription[] = [];
+  statusForm: FormGroup = new FormGroup({});
   @Output() statusChanged = new EventEmitter<Ticket>();
 
   /**
@@ -28,34 +27,38 @@ export class SingleTicketPageComponent implements OnDestroy {
     private ticketService: TicketService,
     private route: ActivatedRoute,
     private fb: FormBuilder
-  ) {
-    this.statusForm = this.fb.group({
-      status: '',
-    });
-  }
-  /**
-   * Metodo per distruggere le sottoscrizioni al destroy del componente
-   */
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
+  ) {}
 
   /**
    * Inizializza il componente
    */
   ngOnInit(): void {
+    this.id = +this.route.snapshot.params['id'];
     this.ticketStatusKeys = Object.keys(TicketStatus) as TicketStatus[];
-    const getIdFromRouteSub = this.route.params.subscribe((params) => {
-      this.id = +params['id'];
-      const getTicketSub = this.ticketService
-        .getTicketById(this.id)
-        .subscribe((data: Ticket) => {
-          this.ticket = data;
-          this.updateForm();
-        });
-      this.subscriptions.push(getTicketSub);
+    this.initializeForm();
+    this.fetchTicketData();
+  }
+
+  /**
+   * Ottiene i dati del ticket
+   */
+  fetchTicketData(): void {
+    this.ticketService
+      .getTicketById(this.id!)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: Ticket) => {
+        this.ticket = data;
+        this.updateForm();
+      });
+  }
+
+  /**
+   * Inizializza il form per lo stato del ticket
+   */
+  initializeForm(): void {
+    this.statusForm = this.fb.group({
+      status: '',
     });
-    this.subscriptions.push(getIdFromRouteSub);
   }
 
   /**
@@ -73,12 +76,21 @@ export class SingleTicketPageComponent implements OnDestroy {
    * Evento per cambiare lo stato del ticket.
    * Si iscrive anche al servizio per aggiornare la lista dei ticket visualizzati.
    */
-  onChangeStatus(): void {
+  handleStatusChange(): void {
     this.ticketService
       .updateTicketStatus(this.id!, this.statusForm.value.status)
       .subscribe((data: Ticket) => {
         this.ticket = data;
-        this.ticketService.getViewingTicketsFromDb().subscribe((tickets) => {});
+        this.ticketService.getViewingTicketsFromDB().subscribe((tickets) => {});
       });
+  }
+
+  /**
+   * Destroy del componente e delle sottoscrizioni
+   */
+  destroy$ = new Subject<void>();
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

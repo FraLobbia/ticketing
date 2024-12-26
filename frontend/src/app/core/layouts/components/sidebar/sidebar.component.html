@@ -9,7 +9,7 @@
         routerLinkActive="menu-item-active"
         [routerLinkActiveOptions]="{ exact: true }"
       >
-        <a [routerLink]="item.path" (click)="isMenuItemSelected(item)">
+        <a [routerLink]="item.path" (click)="handleMenuNavigation(item)">
           <i class="material-icons">{{ item.icon }}</i>
           <span class="menu-title">{{ item.title }}</span>
         </a>

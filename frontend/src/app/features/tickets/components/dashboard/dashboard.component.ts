@@ -12,7 +12,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -24,8 +24,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
    */
   tickets: Ticket[] = [];
   TicketStatus = TicketStatus;
-  displayedColumns: string[] = ['title', 'status', 'account', 'createdAt'];
-  private subscriptions: Subscription[] = [];
+  displayedColumns: string[] = ['title', 'status', 'createdBy', 'createdAt'];
+
   dataSource: MatTableDataSource<Ticket> = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -34,23 +34,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
    * costruttore
    */
   constructor(private ticketService: TicketService, private router: Router) {}
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
 
   /**
    * Inizializza il componente
    */
   ngOnInit(): void {
-    const getTicketsSub = this.ticketService
+    this.loadTickets();
+  }
+
+  /**
+   * Carica i ticket dal servizio
+   */
+  private loadTickets(): void {
+    this.ticketService
       .getAllTickets()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((tickets: Ticket[]) => {
         this.tickets = tickets;
         this.dataSource = new MatTableDataSource(tickets);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
-    this.subscriptions.push(getTicketsSub);
   }
 
   /**
@@ -68,7 +72,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (window.innerWidth < 900) {
       this.displayedColumns = ['title', 'status'];
     } else {
-      this.displayedColumns = ['title', 'status', 'account', 'createdAt'];
+      this.displayedColumns = ['title', 'status', 'createdBy', 'createdAt'];
     }
   }
 
@@ -88,5 +92,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const filterValue = target.value;
       this.dataSource.filter = filterValue.trim().toLowerCase();
     }
+  }
+
+  /**
+   * Destroy del componente e delle sottoscrizioni
+   */
+  destroy$ = new Subject<void>();
+  ngOnDestroy(): void {
+    this.destroy$.next(); // Emissione del segnale per interrompere le sottoscrizioni
+    this.destroy$.complete();
   }
 }

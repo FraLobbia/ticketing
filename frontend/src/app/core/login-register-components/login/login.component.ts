@@ -2,8 +2,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { LoginModel } from '../../../shared/models/auth.model';
-import { Subscription } from 'rxjs';
+import { ILogin } from '../../../shared/interfaces/auth.interface';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +12,6 @@ import { Subscription } from 'rxjs';
 })
 export class LoginComponent implements OnDestroy {
   loginForm: FormGroup;
-  private subscriptions: Subscription[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -24,18 +23,23 @@ export class LoginComponent implements OnDestroy {
       password: ['', Validators.required],
     });
   }
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
-  }
 
   onSubmit(): void {
     if (this.loginForm.valid) {
-      const loginData: LoginModel = this.loginForm.value;
+      const loginData: ILogin = this.loginForm.value;
       const loginSub = this.authService.login(loginData).subscribe(
         () => this.router.navigate(['/tickets']),
         (error) => console.error('Login failed', error)
       );
-      this.subscriptions.push(loginSub);
     }
+  }
+
+  /**
+   * Destroy del componente e delle sottoscrizioni
+   */
+  destroy$ = new Subject<void>();
+  ngOnDestroy(): void {
+    this.destroy$.next(); // Emissione del segnale per interrompere le sottoscrizioni
+    this.destroy$.complete();
   }
 }

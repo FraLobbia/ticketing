@@ -1,22 +1,10 @@
-import {
-  Component,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Ticket } from '../../../../shared/models/ticket.model';
 import { TicketService } from '../../../../features/tickets/services/ticket.service';
-import { Subscription } from 'rxjs';
-
-interface MenuItem {
-  path: string;
-  title: string;
-  icon: string;
-  isActive: boolean;
-}
+import { Subject, takeUntil } from 'rxjs';
+import { MENU_ITEMS } from '../../../../shared/constants/menu.constants';
+import { IMenuItem } from '../../../../shared/interfaces/menu-item.interface';
 
 @Component({
   selector: 'app-sidebar',
@@ -25,108 +13,74 @@ interface MenuItem {
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   /**
-   * Variabili
+   * Proprietà
    */
-  private subscriptions: Subscription[] = [];
   viewingTickets: Ticket[] = [];
-
-  /**
-   * Menu di navigazione
-   */
-  menuItems = [
-    {
-      title: 'Dashboard',
-      icon: 'dashboard',
-      path: '/tickets',
-      isActive: false,
-    },
-    {
-      title: 'Ticket di oggi',
-      icon: 'calendar_month',
-      path: 'today',
-      isActive: false,
-    },
-    {
-      title: 'In pending',
-      icon: 'pending_actions',
-      path: 'pending',
-      isActive: false,
-    },
-    {
-      title: 'Impostazioni',
-      icon: 'settings',
-      path: 'settings',
-      isActive: false,
-    },
-    // Aggiungi qui altre voci di menu
-  ];
+  menuItems: IMenuItem[] = MENU_ITEMS;
 
   /**
    * costruttore
    */
   constructor(private router: Router, private ticketService: TicketService) {}
-
+  /**
+   * Inizializza il componente
+   * 1. Chiama il metodo per aggiornare i ticket visualizzati 'updateViewingTicketsSubject'
+   * 2. Sottoscrizione al subject per ricevere i ticket visualizzati ogni volta che cambiano
+   */
   ngOnInit(): void {
-    const ticketFromDbSubscription = this.ticketService
-      .getViewingTicketsFromDb() // Inizializza i viewingTickets della sidebar con i ticket già presenti nel local storage
+    this.ticketService['updateViewingTicketsSubject']();
+    this.subscribeToViewingTickets();
+  }
+
+  /**
+   * Sottoscrizione al subject per ricevere i ticket visualizzati ogni volta che cambiano
+   */
+  private subscribeToViewingTickets(): void {
+    this.ticketService.viewingTickets$
+      .pipe(takeUntil(this.destroy$))
       .subscribe((tickets: Ticket[]) => {
         this.viewingTickets = tickets;
       });
-
-    /**
-     * Sottoscrizione all'observable viewingTickets$ del servizio TicketService per riflettere in tempo reale i cambiamenti nei viewingTickets. Essenziale non fermarlo con take(1) altrimenti non riceveremo più aggiornamenti.
-     */
-    const viewingTicketsSubscription =
-      this.ticketService.viewingTickets$.subscribe((tickets: Ticket[]) => {
-        this.viewingTickets = tickets;
-      });
-
-    // Aggiungi le sottoscrizioni all'array subscriptions per poterle eliminare in ngOnDestroy
-    this.subscriptions.push(
-      ticketFromDbSubscription,
-      viewingTicketsSubscription
-    );
   }
 
   /**
-   * Permette di verificare se un menu item è selezionato e quindi visualizzato.
-   *
-   * @param selectedItem - Il menu item selezionato
-   * @returns void
+   * Gestisce la navigazione tra le voci del menu e rende attiva solo la voce cliccata
+   * @param clickedItem - La voce del menu cliccata e verso la quale si vuole navigare
    */
-  isMenuItemSelected(selectedItem: MenuItem): void {
-    this.menuItems.forEach((item) => (item.isActive = false));
-    selectedItem.isActive = true;
-    this.router.navigate([selectedItem.path]);
+  handleMenuNavigation(clickedItem: IMenuItem): void {
+    this.menuItems = this.menuItems.map((item) => ({
+      ...item,
+      isActive: item.path === clickedItem.path,
+    }));
+    this.router.navigate([clickedItem.path]);
   }
 
   /**
-   * Permette di verificare se un ticket è selezionato e quindi visualizzato controllando l'url corrente.
-   * @param id
-   * @returns true se il ticket è selezionato, altrimenti false
+   * Restituisce true se il ticket è selezionato, altrimenti false
+   * Lo confronta con l'url attuale per determinare se il ticket è quello visualizzato al momento nella pagina
+   * @param id - id del ticket da confrontare con l'url attuale
+   * @returns boolean
    */
   isSelectedTicket(id: number): boolean {
-    const currentPath = this.router.url;
-    if (currentPath === '/tickets/' + id) {
-      return true;
-    }
-    return false;
+    return this.router.url === '/tickets/' + id;
   }
 
   /**
-   * Rimuove un ticket dalla sidebar
+   * Gestisce la rimozione di un ticket dai ticket visualizzati nella sidebar
    *
-   * @param ticketId - id del ticket da rimuovere
+   * @param id - id del ticket da rimuovere
    * @returns void
    */
-  removeViewingTicket(ticketId: number): void {
-    this.ticketService.removeViewingTicket(ticketId);
+  removeViewingTicket(id: number): void {
+    this.ticketService.removeViewingTicket(id);
   }
 
   /**
-   * Metodo che viene chiamato quando il componente viene distrutto. Serve per eliminare tutte le sottoscrizioni agli observable.
+   * Destroy del componente e delle sottoscrizioni
    */
+  destroy$ = new Subject<void>();
   ngOnDestroy(): void {
-    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
+    this.destroy$.next(); // Emissione del segnale per interrompere le sottoscrizioni
+    this.destroy$.complete();
   }
 }

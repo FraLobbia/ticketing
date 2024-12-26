@@ -10,7 +10,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommentService } from '../../services/comment.service';
 import { CommentRequestDto } from '../../../../shared/models/comment.model';
 import { AuthService } from '../../../../core/services/auth.service';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-comment-form',
@@ -24,7 +24,6 @@ export class CommentFormComponent implements OnDestroy {
   @Input() ticketId!: number | undefined; //Input per ricevere l'id del ticket e dell'account dal parent component
   @Output() commentAdded = new EventEmitter<void>(); //Evento emesso al parent quando un commento viene aggiunto
   commentForm: FormGroup;
-  private subscriptions: Subscription[] = [];
 
   /**
    * Costruttore
@@ -37,12 +36,6 @@ export class CommentFormComponent implements OnDestroy {
     this.commentForm = this.fb.group({
       content: ['', Validators.required],
     });
-  }
-  /**
-   * Metodo per distruggere le sottoscrizioni al destroy del componente
-   */
-  ngOnDestroy(): void {
-    this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
   /**
@@ -68,7 +61,15 @@ export class CommentFormComponent implements OnDestroy {
           this.commentAdded.emit(); // Notifica il parent component dell'aggiunta di un commento
           this.commentForm.reset(); // Reset del form
         });
-      this.subscriptions.push(createCommentSub);
     } else console.error('Form is not valid');
+  }
+
+  /**
+   * Destroy del componente e delle sottoscrizioni
+   */
+  destroy$ = new Subject<void>();
+  ngOnDestroy(): void {
+    this.destroy$.next(); // Emissione del segnale per interrompere le sottoscrizioni
+    this.destroy$.complete();
   }
 }
