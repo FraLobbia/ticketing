@@ -1,6 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Ticket, TicketStatus } from '../../../../shared/models/ticket.model';
+import {
+  Ticket,
+  TicketStatusEnum,
+} from '../../../../shared/models/ticket.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { TicketService } from '../../services/ticket.service';
 import { Router } from '@angular/router';
@@ -16,7 +19,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
    * Variabili
    */
   ticketForm!: FormGroup;
-  statuses = Object.values(TicketStatus); // Enum values for the dropdown
+  statuses = Object.values(TicketStatusEnum); // Enum values for the dropdown
 
   /**
    * Costruttore
@@ -43,7 +46,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
     this.ticketForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
-      status: TicketStatus.OPEN,
+      status: TicketStatusEnum.OPEN,
       accountId: this.authService.getUserIdFromToken(),
       createdAt: new Date(),
       updatedAt: new Date(),

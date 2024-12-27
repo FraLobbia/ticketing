@@ -1,9 +1,13 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { Ticket, TicketStatus } from '../../../../shared/models/ticket.model';
+import {
+  Ticket,
+  TicketStatusEnum,
+} from '../../../../shared/models/ticket.model';
 import { TicketService } from '../../services/ticket.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, Subscription, takeUntil } from 'rxjs';
+import { getTicketStatusEnumValue } from '../../../../shared/utility/string-editor.utility';
 
 @Component({
   selector: 'app-single-ticket-page',
@@ -15,9 +19,10 @@ export class SingleTicketPageComponent implements OnDestroy {
    * Variabili
    */
   ticket: Ticket | undefined;
-  ticketStatusKeys: TicketStatus[] = []; // Array per i valori enum
+  ticketStatusKeys: string[] = []; // Array per i valori enum
   id: number | undefined;
   statusForm: FormGroup = new FormGroup({});
+  getTicketStatusEnumValue = getTicketStatusEnumValue;
   @Output() statusChanged = new EventEmitter<Ticket>();
 
   /**
@@ -33,10 +38,12 @@ export class SingleTicketPageComponent implements OnDestroy {
    * Inizializza il componente
    */
   ngOnInit(): void {
-    this.id = +this.route.snapshot.params['id'];
-    this.ticketStatusKeys = Object.keys(TicketStatus) as TicketStatus[];
-    this.initializeForm();
-    this.fetchTicketData();
+    this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
+      this.id = +params['id'];
+      this.ticketStatusKeys = Object.keys(TicketStatusEnum);
+      this.initializeForm();
+      this.fetchTicketData();
+    });
   }
 
   /**

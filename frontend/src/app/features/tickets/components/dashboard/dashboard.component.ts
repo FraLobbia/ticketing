@@ -7,12 +7,13 @@ import {
 } from '@angular/core';
 import { Ticket } from '../../../../shared/models/ticket.model';
 import { TicketService } from '../../services/ticket.service';
-import { TicketStatus } from '../../../../shared/models/ticket.model';
+import { TicketStatusEnum } from '../../../../shared/models/ticket.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subject, Subscription, takeUntil } from 'rxjs';
+import { getTicketStatusEnumValue } from '../../../../shared/utility/string-editor.utility';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -20,12 +21,18 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   /**
-   * Variabili
+   * Property
    */
   tickets: Ticket[] = [];
-  TicketStatus = TicketStatus;
-  displayedColumns: string[] = ['title', 'status', 'createdBy', 'createdAt'];
-
+  availableStatus = Object.values(TicketStatusEnum);
+  displayedColumns: string[] = [
+    'id',
+    'title',
+    'status',
+    'createdBy',
+    'createdAt',
+  ];
+  getTicketStatusEnumValue = getTicketStatusEnumValue;
   dataSource: MatTableDataSource<Ticket> = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -33,7 +40,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   /**
    * costruttore
    */
-  constructor(private ticketService: TicketService, private router: Router) {}
+  constructor(private ticketService: TicketService) {}
 
   /**
    * Inizializza il componente
@@ -73,6 +80,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.displayedColumns = ['title', 'status'];
     } else {
       this.displayedColumns = ['title', 'status', 'createdBy', 'createdAt'];
+    }
+  }
+
+  applyStatusFilter(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    if (target) {
+      const filterValue = target.value;
+      this.dataSource.filter = filterValue.trim().toLowerCase();
     }
   }
 

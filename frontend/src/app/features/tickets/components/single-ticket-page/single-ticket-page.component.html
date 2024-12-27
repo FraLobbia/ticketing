@@ -24,7 +24,7 @@
       >
         <mat-option *ngFor="let status of ticketStatusKeys" [value]="status">
           <span [appStatusClass]="status">
-            {{ status }}
+            {{ getTicketStatusEnumValue(status) }}
           </span>
         </mat-option>
       </mat-select>

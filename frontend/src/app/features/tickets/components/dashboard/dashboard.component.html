@@ -1,22 +1,33 @@
 <div class="dashboard-container">
   <!-- Campo di ricerca -->
   <mat-form-field>
-    <mat-label>Cerca</mat-label>
+    <mat-label>Filtra</mat-label>
     <input
       matInput
       (keyup)="applyFilter($event)"
-      placeholder="Cerca nella tabella"
+      placeholder="Filtra nella tabella"
     />
+    <mat-select
+      placeholder="Stato"
+      (selectionChange)="applyStatusFilter($event.value)"
+    >
+      <mat-option *ngFor="let status of availableStatus" [value]="status">
+        {{ status }}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
 
   <!-- tabella -->
   <div class="table-container">
     <table mat-table [dataSource]="dataSource" matSort>
+      <!-- Header Row -->
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
       <!-- ID Column -->
-      <!-- <ng-container matColumnDef="id">
+      <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
         <td mat-cell *matCellDef="let ticket">{{ ticket.id }}</td>
-      </ng-container> -->
+      </ng-container>
 
       <!-- Title Column -->
       <ng-container matColumnDef="title">
@@ -28,9 +39,9 @@
       <ng-container matColumnDef="status">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
         <td class="center-text" mat-cell *matCellDef="let ticket">
-          <span [appStatusClass]="ticket.status">
-            {{ ticket.status }}
-          </span>
+          <span [appStatusClass]="ticket.status">{{
+            getTicketStatusEnumValue(ticket.status)
+          }}</span>
         </td>
       </ng-container>
 
@@ -38,18 +49,21 @@
       <ng-container matColumnDef="createdBy">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Account</th>
         <td mat-cell *matCellDef="let ticket">
-          {{ ticket.account.name }} {{ ticket.account.surname }}
+          {{ ticket.account.name }} <br />
+          {{ ticket.account.surname }}
         </td>
       </ng-container>
 
       <!-- CreatedAt Column -->
       <ng-container matColumnDef="createdAt">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Created At</th>
-        <td mat-cell *matCellDef="let ticket">{{ ticket.createdAt | date }}</td>
+        <td mat-cell *matCellDef="let ticket">
+          {{ ticket.createdAt | date : "EEEE" }}
+          <br />
+          {{ ticket.createdAt | date : "dd MMMM yyyy" }}
+        </td>
       </ng-container>
 
-      <!-- Header Row -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <!-- Data Rows -->
       <tr
         [routerLink]="'/tickets/' + ticket.id"

@@ -1,17 +1,17 @@
 import { Account } from './account.model';
 
-export enum TicketStatus {
-  OPEN = 'OPEN',
-  IN_PROGRESS = 'IN_PROGRESS',
-  PENDING = 'PENDING',
-  CLOSED = 'CLOSED',
+export enum TicketStatusEnum {
+  OPEN = 'Aperto',
+  IN_PROGRESS = 'In lavorazione',
+  PENDING = 'In attesa',
+  CLOSED = 'Chiuso',
 }
 
 export interface Ticket {
   id?: number;
   title: string;
   description: string;
-  status: TicketStatus;
+  status: TicketStatusEnum;
   account: Account;
   createdAt: Date;
   updatedAt: Date;

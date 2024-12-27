@@ -5,13 +5,13 @@ import {
   OnChanges,
   Renderer2,
 } from '@angular/core';
-import { TicketStatus } from '../models/ticket.model';
+import { TicketStatusEnum } from '../models/ticket.model';
 
 @Directive({
   selector: '[appStatusClass]',
 })
 export class StatusClassDirective implements OnChanges {
-  @Input() appStatusClass!: TicketStatus;
+  @Input() appStatusClass!: TicketStatusEnum | string;
 
   constructor(private el: ElementRef, private renderer: Renderer2) {}
 
@@ -19,32 +19,22 @@ export class StatusClassDirective implements OnChanges {
     this.updateClass(this.appStatusClass);
   }
 
-  private updateClass(status: TicketStatus): void {
-    // Rimuovi le classi esistenti
-    this.renderer.removeClass(this.el.nativeElement, 'status-open');
-    this.renderer.removeClass(this.el.nativeElement, 'status-pending');
-    this.renderer.removeClass(this.el.nativeElement, 'status-in-progress');
-    this.renderer.removeClass(this.el.nativeElement, 'status-closed');
+  /**
+   * Aggiorna la classe CSS dell'elemento in base allo stato.
+   * @param status Lo stato del ticket.
+   */
+  private updateClass(status: TicketStatusEnum | string): void {
+    // Rimuove le classi CSS esistenti (solo quelle relative allo stato)
+    Object.keys(TicketStatusEnum).forEach((key) => {
+      const className = `status-${key.toLowerCase()}`;
+      this.renderer.removeClass(this.el.nativeElement, className);
+    });
 
-    // Aggiungi la classe corretta basata sullo stato
-    const className = this.getClassName(status);
+    // Aggiunge la classe CSS corretta basata sulla chiave dell'enum
+    const statusKey = status as keyof typeof TicketStatusEnum;
+    const className = `status-${statusKey.toLowerCase()}`;
     if (className) {
       this.renderer.addClass(this.el.nativeElement, className);
-    }
-  }
-
-  private getClassName(status: TicketStatus): string {
-    switch (status) {
-      case TicketStatus.OPEN:
-        return 'status-open';
-      case TicketStatus.PENDING:
-        return 'status-pending';
-      case TicketStatus.IN_PROGRESS:
-        return 'status-in-progress';
-      case TicketStatus.CLOSED:
-        return 'status-closed';
-      default:
-        return '';
     }
   }
 }

@@ -5,6 +5,7 @@ import { TicketService } from '../../../../features/tickets/services/ticket.serv
 import { Subject, takeUntil } from 'rxjs';
 import { MENU_ITEMS } from '../../../../shared/constants/menu.constants';
 import { IMenuItem } from '../../../../shared/interfaces/menu-item.interface';
+import { getTicketStatusEnumValue } from '../../../../shared/utility/string-editor.utility';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,10 +14,11 @@ import { IMenuItem } from '../../../../shared/interfaces/menu-item.interface';
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   /**
-   * Proprietà
+   * Property
    */
   viewingTickets: Ticket[] = [];
   menuItems: IMenuItem[] = MENU_ITEMS;
+  getTicketStatusEnumValue = getTicketStatusEnumValue;
 
   /**
    * costruttore

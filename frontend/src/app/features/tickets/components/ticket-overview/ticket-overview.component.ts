@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Ticket, TicketStatus } from '../../../../shared/models/ticket.model';
+import {
+  Ticket,
+  TicketStatusEnum,
+} from '../../../../shared/models/ticket.model';
 
 @Component({
   selector: 'app-ticket-overview',
