@@ -39,17 +39,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
   dataSource: MatTableDataSource<Ticket> = new MatTableDataSource();
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  viewingTickets: Ticket[] = [];
+  selectedStatus: string[] = []; // Stati selezionati
 
   /**
    * costruttore
    */
-  constructor(private ticketService: TicketService) {}
+  constructor(private ticketService: TicketService, private router: Router) {}
 
   /**
    * Inizializza il componente
    */
   ngOnInit(): void {
     this.loadTickets();
+    this.ticketService.viewingTickets$.subscribe((tickets: Ticket[]) => {
+      this.viewingTickets = tickets;
+    });
+  }
+
+  /**
+   * Verifica se un ticket è presente nella lista viewingTickets.
+   * @param ticket Ticket da controllare.
+   * @returns true se il ticket è in viewingTickets, false altrimenti.
+   */
+  isViewingTicket(ticket: Ticket): boolean {
+    return this.viewingTickets.some(
+      (viewingTicket) => viewingTicket.id === ticket.id
+    );
   }
 
   /**
@@ -87,16 +103,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Metodo per aggiungere un ticket alla sidebar
-   */
-  addTicketToSidebar(ticket: Ticket): void {
-    this.ticketService.addViewingTicket(ticket.id!);
-  }
-
-  // Variabili per i filtri
-  selectedStatus: string[] = []; // Stati selezionati
-
-  /**
    * Seleziona tutti gli stati e aggiorna la UI.
    * @param select MatSelect
    */
@@ -125,15 +131,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const textFilter = text ? text.trim().toLowerCase() : '';
 
     // Gestione del filtro per stato
-    const statusFilter =
-      Array.isArray(status) && status.includes('all')
-        ? [] // Nessun filtro sugli stati (Tutti)
-        : Array.isArray(status)
-        ? status.map((s) => s.toLowerCase())
-        : [status.toLowerCase()];
-
-    // Debug dei filtri
-    console.log('*** DEBUG FILTERS ***', { textFilter, statusFilter });
+    const statusFilter = Array.isArray(status)
+      ? status.map((s) => s.toLowerCase())
+      : [status.toLowerCase()];
 
     // Configura il filterPredicate
     this.dataSource.filterPredicate = (data: Ticket, filter: string) => {
@@ -142,7 +142,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       const matchesStatus =
         filters.status.length === 0 || // Se nessuno stato è selezionato, mostra tutti
         filters.status.includes(data.status.toLowerCase());
-
       return matchesText && matchesStatus;
     };
 
@@ -151,6 +150,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
       text: textFilter,
       status: statusFilter,
     });
+  }
+
+  /**
+   * Aggiunge un ticket alla sidebar e naviga alla pagina del ticket.
+   * ** NOTA **: Se si preme Ctrl, Shift o Alt, non naviga.
+   */
+  onRowClick(event: MouseEvent, ticket: Ticket): void {
+    this.ticketService.addViewingTicket(ticket.id!);
+    // Controlla se Ctrl, Shift o Alt è premuto
+    if (event.shiftKey || event.altKey || event.ctrlKey) {
+      event.preventDefault();
+      return;
+    } else {
+      this.router.navigate(['/tickets', ticket.id]);
+    }
   }
 
   /**

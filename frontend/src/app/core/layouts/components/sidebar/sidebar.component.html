@@ -28,13 +28,24 @@
         <div>
           <mat-card-title>{{ ticket.title }}</mat-card-title>
           <mat-card-subtitle>
-            <span class="status" [appStatusClass]="ticket.status">
-              {{ getTicketStatusEnumValue(ticket.status) }}
-            </span>
+            <div class="d-flex justify-content-between">
+              <span class="status" [appStatusClass]="ticket.status">
+                {{ getTicketStatusEnumValue(ticket.status) }}
+              </span>
+              <span
+                class="fs-6"
+                [ngClass]="{ 'selected-ticket': isSelectedTicket(ticket.id!) }"
+                >ID: {{ ticket.id }}</span
+              >
+            </div>
           </mat-card-subtitle>
         </div>
         <div>
-          <mat-icon (click)="removeViewingTicket(ticket.id!)">cancel</mat-icon>
+          <mat-icon
+            matTooltip="Chiudi"
+            (click)="removeViewingTicket(ticket.id!); $event.stopPropagation()"
+            >cancel</mat-icon
+          >
         </div>
       </mat-card-header>
     </mat-card>

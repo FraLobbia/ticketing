@@ -105,7 +105,12 @@ export class TicketService {
     const ticketIds: number[] = this.getViewingTicketsIdFromLocalStorage();
     console.group('Ottengo i viewing ticket dal DB');
     console.table(ticketIds);
+    ticketIds.length === 0 &&
+      console.log('Nessun ticket nel local storage da recuperare a DB');
     console.groupEnd();
+    if (!ticketIds || ticketIds.length === 0) {
+      return new BehaviorSubject<Ticket[]>([]).asObservable();
+    }
     return this.http.get<Ticket[]>(`${this.baseUrl}/viewing-tickets`, {
       params: { ids: ticketIds.join(',') },
     });

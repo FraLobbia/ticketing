@@ -80,7 +80,7 @@
       <ng-container matColumnDef="createdAt">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Created At</th>
         <td mat-cell *matCellDef="let ticket">
-          {{ ticket.createdAt | date : "EEEE" }}
+          {{ ticket.createdAt | date : "EEEE" | titlecase }}
           <br />
           {{ ticket.createdAt | date : "dd MMMM yyyy" }}
         </td>
@@ -88,8 +88,10 @@
 
       <!-- Data Rows -->
       <tr
-        [routerLink]="'/tickets/' + ticket.id"
-        (click)="addTicketToSidebar(ticket)"
+        [ngClass]="{ 'highlight-row': isViewingTicket(ticket) }"
+        (click)="onRowClick($event, ticket)"
+        (mousedown)="onRowClick($event, ticket)"
+        (contextmenu)="onRowClick($event, ticket)"
         mat-row
         *matRowDef="let row; let ticket; columns: displayedColumns"
       ></tr>
