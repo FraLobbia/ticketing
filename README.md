@@ -33,12 +33,14 @@ Utilizzando **Angular** per il frontend, **Spring Boot** per il backend e **MySQ
 ```bash
 git clone https://github.com/FraLobbia/ticketing.git
 cd ticketing
+```
 
-## Avvia Docker
+### **2. Avvia Docker
 
 Assicurati che Docker sia in esecuzione.
 
-## Builda e avvia il progetto
+### **3. Builda e avvia il progetto
 
 ```bash
 docker compose up
+```
