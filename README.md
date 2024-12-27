@@ -25,6 +25,17 @@ Utilizzando **Angular** per il frontend, **Spring Boot** per il backend e **MySQ
 | **Container**  | Docker, Docker Compose                                                               |
 
 ---
+## 📂 Struttura del progetto
+
+```bash
+ticketing/
+├── frontend/                # Codice sorgente Angular
+├── backend/                 # Codice sorgente JAVA Spring Boot
+├── mysql-data/              # Persistenza dati MySQL
+├── docker-compose.yml       # Configurazione Docker
+└── README.md                # Documentazione del progetto
+```
+---
 
 ## 🚀 Avvio del Progetto
 
