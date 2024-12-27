@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+
 import {
   Ticket,
   TicketStatusEnum,
@@ -6,8 +7,9 @@ import {
 import { TicketService } from '../../services/ticket.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { getTicketStatusEnumValue } from '../../../../shared/utility/string-editor.utility';
+import { SnackbarService } from '../../../../shared/services/snackbar.service';
 
 @Component({
   selector: 'app-single-ticket-page',
@@ -19,11 +21,10 @@ export class SingleTicketPageComponent implements OnDestroy {
    * Variabili
    */
   ticket: Ticket | undefined;
-  ticketStatusKeys: string[] = []; // Array per i valori enum
+  ticketStatusKeys: string[] = Object.keys(TicketStatusEnum);
   id: number | undefined;
   statusForm: FormGroup = new FormGroup({});
   getTicketStatusEnumValue = getTicketStatusEnumValue;
-  @Output() statusChanged = new EventEmitter<Ticket>();
 
   /**
    * Costruttore
@@ -31,7 +32,8 @@ export class SingleTicketPageComponent implements OnDestroy {
   constructor(
     private ticketService: TicketService,
     private route: ActivatedRoute,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private msg: SnackbarService
   ) {}
 
   /**
@@ -40,7 +42,6 @@ export class SingleTicketPageComponent implements OnDestroy {
   ngOnInit(): void {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.id = +params['id'];
-      this.ticketStatusKeys = Object.keys(TicketStatusEnum);
       this.initializeForm();
       this.fetchTicketData();
     });
@@ -88,8 +89,18 @@ export class SingleTicketPageComponent implements OnDestroy {
       .updateTicketStatus(this.id!, this.statusForm.value.status)
       .subscribe((data: Ticket) => {
         this.ticket = data;
-        this.ticketService.getViewingTicketsFromDB().subscribe((tickets) => {});
+        // this.ticketService.getViewingTicketsFromDB().subscribe((tickets) => {});
       });
+  }
+
+  /**
+   * Copia l'ID del ticket negli appunti
+   */
+  copyTicketId(): void {
+    if (this.ticket?.id) {
+      navigator.clipboard.writeText(this.ticket.id.toString());
+      this.msg.show(`Ticket ID ${this.ticket.id} copiato negli appunti`);
+    }
   }
 
   /**

@@ -58,7 +58,7 @@ body {
   @extend .badge-pill;
 }
 
-.status-in_progress {
+.status-in-progress {
   background-color: rgb(214, 140, 2);
   @extend .badge;
   @extend .badge-pill;
@@ -90,4 +90,75 @@ body {
 
 .text-black {
   color: gray !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.m-0 {
+  margin: 0 !important;
+}
+
+.pointer-cursor {
+  cursor: pointer;
+}
+.not-allowed-cursor {
+  cursor: not-allowed;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-start {
+  justify-content: flex-start;
+}
+
+.justify-content-end {
+  justify-content: flex-end;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.justify-content-around {
+  justify-content: space-around;
+}
+
+.justify-content-evenly {
+  justify-content: space-evenly;
+}
+
+.align-items-start {
+  align-items: flex-start;
+}
+
+.align-items-end {
+  align-items: flex-end;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.filter-container {
+  display: flex;
+  gap: 16px; /* Spaziatura tra input e select */
+  align-items: center;
+  margin-bottom: 16px; /* Spaziatura dal contenuto */
+}
+
+.filter-item {
+  flex: 1; /* I campi occupano uguale spazio */
+  min-width: 200px; /* Larghezza minima */
+}
+
+.no-checkbox-option .mat-pseudo-checkbox {
+  display: none;
 }

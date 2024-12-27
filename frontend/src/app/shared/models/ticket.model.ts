@@ -2,8 +2,8 @@ import { Account } from './account.model';
 
 export enum TicketStatusEnum {
   OPEN = 'Aperto',
-  IN_PROGRESS = 'In lavorazione',
-  PENDING = 'In attesa',
+  IN_PROGRESS = 'In Lavorazione',
+  PENDING = 'In Attesa',
   CLOSED = 'Chiuso',
 }
 

@@ -14,6 +14,7 @@ import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
 import { Subject, Subscription, takeUntil } from 'rxjs';
 import { getTicketStatusEnumValue } from '../../../../shared/utility/string-editor.utility';
+import { MatSelectChange } from '@angular/material/select';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -23,8 +24,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   /**
    * Property
    */
+  textFilter: string = '';
+  statusFilter: string = '';
   tickets: Ticket[] = [];
-  availableStatus = Object.values(TicketStatusEnum);
+  availableStatus = Object.keys(TicketStatusEnum);
   displayedColumns: string[] = [
     'id',
     'title',
@@ -83,14 +86,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
   }
 
-  applyStatusFilter(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    if (target) {
-      const filterValue = target.value;
-      this.dataSource.filter = filterValue.trim().toLowerCase();
-    }
-  }
-
   /**
    * Metodo per aggiungere un ticket alla sidebar
    */
@@ -98,15 +93,64 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.ticketService.addViewingTicket(ticket.id!);
   }
 
+  // Variabili per i filtri
+  selectedStatus: string[] = []; // Stati selezionati
+
   /**
-   * Metodo per filtrare i ticket nella tabella material
+   * Seleziona tutti gli stati e aggiorna la UI.
+   * @param select MatSelect
    */
-  applyFilter(event: Event): void {
-    const target = event.target as HTMLInputElement;
-    if (target) {
-      const filterValue = target.value;
-      this.dataSource.filter = filterValue.trim().toLowerCase();
-    }
+  selectAll(select: any): void {
+    this.selectedStatus = [];
+    select.close(); // Chiude il menu a tendina
+    this.applyFilter('', this.selectedStatus); // Applica il filtro
+  }
+
+  /**
+   * Gestisce la selezione manuale delle opzioni.
+   * @param event Evento di cambiamento
+   */
+  onStatusChange(event: any): void {
+    this.selectedStatus = event.value;
+    this.applyFilter('', this.selectedStatus);
+  }
+
+  /**
+   * Applica un filtro (testuale o stato) alla tabella.
+   * @param text Testo da filtrare
+   * @param status Stato da filtrare
+   */
+  applyFilter(text: string, status: string[] | string): void {
+    // Gestione del filtro testuale
+    const textFilter = text ? text.trim().toLowerCase() : '';
+
+    // Gestione del filtro per stato
+    const statusFilter =
+      Array.isArray(status) && status.includes('all')
+        ? [] // Nessun filtro sugli stati (Tutti)
+        : Array.isArray(status)
+        ? status.map((s) => s.toLowerCase())
+        : [status.toLowerCase()];
+
+    // Debug dei filtri
+    console.log('*** DEBUG FILTERS ***', { textFilter, statusFilter });
+
+    // Configura il filterPredicate
+    this.dataSource.filterPredicate = (data: Ticket, filter: string) => {
+      const filters = JSON.parse(filter);
+      const matchesText = data.title.toLowerCase().includes(filters.text);
+      const matchesStatus =
+        filters.status.length === 0 || // Se nessuno stato è selezionato, mostra tutti
+        filters.status.includes(data.status.toLowerCase());
+
+      return matchesText && matchesStatus;
+    };
+
+    // Aggiorna il filtro della tabella
+    this.dataSource.filter = JSON.stringify({
+      text: textFilter,
+      status: statusFilter,
+    });
   }
 
   /**

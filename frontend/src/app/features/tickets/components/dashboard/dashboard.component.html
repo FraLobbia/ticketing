@@ -1,21 +1,43 @@
 <div class="dashboard-container">
   <!-- Campo di ricerca -->
-  <mat-form-field>
-    <mat-label>Filtra</mat-label>
-    <input
-      matInput
-      (keyup)="applyFilter($event)"
-      placeholder="Filtra nella tabella"
-    />
-    <mat-select
-      placeholder="Stato"
-      (selectionChange)="applyStatusFilter($event.value)"
-    >
-      <mat-option *ngFor="let status of availableStatus" [value]="status">
-        {{ status }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  <div class="filter-container">
+    <!-- Input testuale -->
+    <mat-form-field appearance="outline" class="filter-item">
+      <mat-label>Filtra per testo</mat-label>
+      <input
+        matInput
+        #textInput
+        (keyup)="applyFilter(textInput.value, statusSelect.value)"
+        placeholder="Inserisci testo"
+      />
+    </mat-form-field>
+
+    <!-- Select per il filtro dello stato -->
+    <mat-form-field appearance="outline" class="filter-item">
+      <mat-label>Filtra per stato</mat-label>
+      <mat-select
+        #statusSelect
+        [value]="selectedStatus"
+        (selectionChange)="onStatusChange($event)"
+        multiple
+      >
+        <!-- Opzione per "Seleziona tutto" -->
+        <mat-option
+          class="mat-button no-checkbox-option"
+          (click)="selectAll(statusSelect)"
+        >
+          <strong>Seleziona tutto</strong>
+        </mat-option>
+
+        <!-- Opzioni per gli stati -->
+        <mat-option *ngFor="let status of availableStatus" [value]="status">
+          <span [appStatusClass]="status">
+            {{ getTicketStatusEnumValue(status) }}
+          </span>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 
   <!-- tabella -->
   <div class="table-container">
