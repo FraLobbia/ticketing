@@ -138,8 +138,17 @@
 		<dependency>
 			<groupId>io.github.cdimascio</groupId>
 			<artifactId>dotenv-java</artifactId>
-			<version>3.0.0</version>
+			<version>3.1.0</version>
 		</dependency>
+
+    <!-- Selenium WebDriver -->
+    <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-java</artifactId>
+				<!-- November 25, 2024 - https://www.selenium.dev/downloads/ -->
+        <version>4.27.0</version> 
+    </dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
