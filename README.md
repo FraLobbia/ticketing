@@ -8,7 +8,7 @@ Utilizzando **Angular** per il frontend, **Spring Boot** per il backend e **MySQ
 ## 🌟 Funzionalità Principali
 
 - ✨ **Gestione Completa dei Ticket**: Crea, visualizza, filtra e aggiorna i ticket in tempo reale.
-- 🔍 **Filtraggio Avanzato**: Ricerca dinamica per stato e testo.
+- 🔍 **Filtraggio Avanzato**: Ricerca dinamica per stato, titolo o descrizione del ticket.
 - 🎨 **Interfaccia Moderna**: UI sviluppata con **Angular Material**.
 - 🔒 **Autenticazione Sicura**: Implementazione di **JWT** per la gestione degli utenti.
 - 🐳 **Esecuzione Semplice**: Utilizza **Docker Compose** per l’avvio.
