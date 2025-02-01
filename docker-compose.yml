@@ -1,4 +1,5 @@
 services:
+# ============= FRONTEND  ==================
     frontend:
         build:
             context: ./frontend
@@ -12,7 +13,7 @@ services:
             - ./frontend/package-lock.json:/app/package-lock.json
         networks:
             - ticketing-network
-
+# ============= BACKEND  ==================
     backend:
         build:
             context: .. # contesto di build diverso per poter utilizzare un unico file .env esterno a frontend e backend
@@ -31,7 +32,7 @@ services:
             - ./backend/src/main/resources/application.properties:/app/src/main/resources/application.properties
         networks:
             - ticketing-network
-
+# ============= MYSQL ==================
     mysql:
         image: mysql:8.0
         environment:
