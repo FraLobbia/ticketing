@@ -14,52 +14,58 @@ import com.backend.model.DTO.response.AuthResponseDTO;
 import com.backend.service.AccountService;
 import com.backend.service.AuthService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-  /**
-   * Servizi iniettati
-   */
-  private final AuthService authService;
+	/**
+	 * Servizi iniettati
+	 */
+	private final AuthService authService;
 
-  private final AccountService accountService;
+	private final AccountService accountService;
 
-  /**
-   * Costruttore
-   */
-  public AuthController(AuthService authService, AccountService accountService) {
-    this.authService = authService;
-    this.accountService = accountService;
-  }
+	/**
+	 * Costruttore
+	 */
+	public AuthController(AuthService authService, AccountService accountService) {
+		this.authService = authService;
+		this.accountService = accountService;
+	}
 
-  /**
-   * @param loginDto un oggetto {@link LoginDTO} contenente i dati necessari per
-   *                 il login.
-   * @return Un oggetto {@link ResponseEntity} contenente il token di
-   *         autenticazione
-   */
-  @PostMapping("/login")
-  public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDto) {
-    String token = authService.login(loginDto);
-    AuthResponseDTO authResponseDto = new AuthResponseDTO();
-    authResponseDto.setAccessToken(token);
-    return ResponseEntity.status(HttpStatus.OK).body(authResponseDto);
-  }
+	/**
+	 * @param loginDto un oggetto {@link LoginDTO} contenente i dati necessari per
+	 *                 il login.
+	 * @return Un oggetto {@link ResponseEntity} contenente il token di
+	 *         autenticazione
+	 */
+	@PostMapping("/login")
+	public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDto) {
+		log.debug("Chiamo il servizio per effettuare il login");
+		String token = authService.login(loginDto);
+		
+		AuthResponseDTO authResponseDto = new AuthResponseDTO();
+		authResponseDto.setAccessToken(token);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(authResponseDto);
+	}
 
-  /**
-   * @param registrationDto Un oggetto {@link AccountRegistrationDTO} contenente i
-   *                        dati necessari per registrare un nuovo account.
-   * @return Un oggetto {@link ResponseEntity} contenente l'account creato o un
-   *         errore HTTP.
-   */
-  @PostMapping("/register")
-  public ResponseEntity<AccountResponseDTO> register(@RequestBody AccountRegistrationDTO registrationDto) {
-    AccountResponseDTO createdAccount = accountService.createAccount(registrationDto);
-    if (createdAccount == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-    }
-    return ResponseEntity.status(HttpStatus.CREATED).body(createdAccount);
-  }
+	/**
+	 * @param registrationDto Un oggetto {@link AccountRegistrationDTO} contenente i
+	 *                        dati necessari per registrare un nuovo account.
+	 * @return Un oggetto {@link ResponseEntity} contenente l'account creato o un
+	 *         errore HTTP.
+	 */
+	@PostMapping("/register")
+	public ResponseEntity<AccountResponseDTO> register(@RequestBody AccountRegistrationDTO registrationDto) {
+		AccountResponseDTO createdAccount = accountService.createAccount(registrationDto);
+		if (createdAccount == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		}
+		return ResponseEntity.status(HttpStatus.CREATED).body(createdAccount);
+	}
 
 }

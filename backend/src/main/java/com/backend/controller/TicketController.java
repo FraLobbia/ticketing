@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.backend.model.DTO.request.TicketRequestDto;
 import com.backend.model.DTO.response.TicketResponseDto;
+import com.backend.model.Enum.TicketStatus;
 import com.backend.service.TicketService;
 
 @RestController
@@ -42,6 +43,7 @@ public class TicketController {
    */
   @PostMapping
   public ResponseEntity<TicketResponseDto> createTicket(@RequestBody TicketRequestDto ticketRequestDto) {
+	  ticketRequestDto.setStatus(TicketStatus.OPEN);
     TicketResponseDto ticket = ticketService.createTicket(ticketRequestDto);
     if (ticket == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

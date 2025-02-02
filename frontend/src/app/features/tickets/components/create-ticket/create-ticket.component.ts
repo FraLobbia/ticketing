@@ -29,7 +29,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private ticketService: TicketService,
     private router: Router
-  ) {}
+  ) { }
 
   /**
    * Inizializza il componente
@@ -46,7 +46,6 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
     this.ticketForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
-      status: TicketStatusEnum.OPEN,
       accountId: this.authService.getUserIdFromToken(),
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -59,6 +58,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     if (this.ticketForm.valid) {
       const newTicket: Ticket = this.ticketForm.value;
+      console.log('*** DEBUG ***', newTicket);
       this.ticketService.createTicket(newTicket).subscribe((ticket) => {
         console.info('Ticket created:', ticket);
         this.router.navigate(['/tickets']);

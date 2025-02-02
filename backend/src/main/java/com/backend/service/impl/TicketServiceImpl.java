@@ -79,7 +79,7 @@ public class TicketServiceImpl implements TicketService {
   @Override
   public TicketResponseDto getTicketById(Long id) {
     Ticket ticket = ticketRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Ticket not found"));
+        .orElseThrow(() -> new RuntimeException("[getTicketById] Ticket con id (" + id + ") non trovato nel db"));
     return mapToDto(ticket);
   }
 
@@ -108,7 +108,7 @@ public class TicketServiceImpl implements TicketService {
   @Override
   public TicketResponseDto updateTicket(Long id, TicketRequestDto ticketRequestDto) {
     Ticket ticket = ticketRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Ticket not found"));
+        .orElseThrow(() -> new RuntimeException("[updateTicket] Ticket con id (" + id + ") non trovato nel db"));
 
     ticket.setTitle(ticketRequestDto.getTitle());
     ticket.setDescription(ticketRequestDto.getDescription());
@@ -168,7 +168,7 @@ public class TicketServiceImpl implements TicketService {
 
     Long idAccount = ticket.getAccount().getId();
     Account account = accountRepository.findById(idAccount)
-        .orElseThrow(() -> new RuntimeException("Account not found"));
+        .orElseThrow(() -> new RuntimeException("[mapToDto] Account con id (" + idAccount + ") non trovato nel db"));
     AccountResponseDTO accountDto = accountService.convertToDTO(account);
     dto.setAccount(accountDto);
     return dto;
@@ -204,7 +204,7 @@ public class TicketServiceImpl implements TicketService {
     try {
       Optional<Ticket> optionalTicket = ticketRepository.findById(id);
       if (optionalTicket.isEmpty()) {
-        System.out.println("Ticket non trovato");
+        System.out.println("[updateTicketStatus] Ticket con id (" + id + ") non trovato nel db");
         return null;
       }
       Ticket ticket = optionalTicket.get();
