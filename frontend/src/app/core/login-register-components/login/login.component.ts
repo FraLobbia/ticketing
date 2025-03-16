@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { ILogin } from '../../../shared/interfaces/auth.interface';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, take, takeUntil } from 'rxjs';
+import { SnackbarService } from '../../../shared/services/snackbar.service';
 
 @Component({
   selector: 'app-login',
@@ -16,7 +17,8 @@ export class LoginComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private msg: SnackbarService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -27,10 +29,17 @@ export class LoginComponent implements OnDestroy {
   onSubmit(): void {
     if (this.loginForm.valid) {
       const loginData: ILogin = this.loginForm.value;
-      const loginSub = this.authService.login(loginData).subscribe(
-        () => this.router.navigate(['/tickets']),
-        (error) => console.error('Login failed', error)
-      );
+      this.authService.login(loginData).pipe(takeUntil(this.destroy$))
+
+        .subscribe(
+          {
+            next: () => this.router.navigate(['/tickets']),
+            error: (error) => {
+              console.error(error);
+              this.msg.show(error, 'Chiudi', 5000);
+            },
+          }
+        );
     }
   }
 

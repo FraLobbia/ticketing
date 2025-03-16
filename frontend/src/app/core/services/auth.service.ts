@@ -22,14 +22,15 @@ export class AuthService {
 
   isAdmin = false;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   /**
    * Effettua il login dell'utente.
    *  @param email - Email utente
    *  @param password - Password
    * @returns Observable contenente la risposta del server
-   */ login({ email, password }: ILogin): Observable<ILoginResponse> {
+   */
+  login({ email, password }: ILogin): Observable<ILoginResponse> {
     const url = `${this.url}/auth/login`;
     const body = { email, password };
     return this.http.post<ILoginResponse>(url, body).pipe(
@@ -45,7 +46,8 @@ export class AuthService {
    *  @param email - Email utente
    *  @param password - Password
    * @returns Observable contenente la risposta del server
-   */ register({
+   */
+  register({
     name,
     surname,
     email,

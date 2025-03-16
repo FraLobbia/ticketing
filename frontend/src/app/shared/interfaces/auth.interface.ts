@@ -14,6 +14,8 @@ export interface ILogin {
  */
 export interface ILoginResponse {
   accessToken: string;
+  exceptionCode?: string;
+  message?: string;
 }
 
 /**

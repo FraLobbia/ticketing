@@ -1,4 +1,4 @@
-// package com.backend.selenium;
+// package selenium;
 
 // import org.junit.jupiter.api.Test;
 // import org.openqa.selenium.WebDriver;
