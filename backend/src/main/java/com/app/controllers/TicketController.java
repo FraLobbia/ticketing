@@ -3,6 +3,7 @@ package com.app.controllers;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,17 +24,9 @@ import com.app.services.TicketService;
 @RequestMapping("/api/tickets")
 public class TicketController {
 
-  /**
-   * Servizi iniettati
-   */
-  private final TicketService ticketService;
+@Autowired
+  private  TicketService ticketService;
 
-  /**
-   * Costruttore
-   */
-  public TicketController(TicketService ticketService) {
-    this.ticketService = ticketService;
-  }
 
   /**
    * Crea un nuovo ticket basato sul TicketRequestDto fornito.
@@ -44,7 +37,7 @@ public class TicketController {
   @PostMapping
   public ResponseEntity<TicketResponseDto> createTicket(@RequestBody TicketRequestDto ticketRequestDto) {
 	  ticketRequestDto.setStatus(TicketStatusEnum.OPEN);
-    TicketResponseDto ticket = ticketService.createTicket(ticketRequestDto);
+    TicketResponseDto ticket = ticketService.save(ticketRequestDto);
     if (ticket == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
@@ -59,7 +52,7 @@ public class TicketController {
    */
   @GetMapping("/{id}")
   public ResponseEntity<TicketResponseDto> getTicketById(@PathVariable Long id) {
-    TicketResponseDto ticket = ticketService.getTicketById(id);
+	  	TicketResponseDto ticket = ticketService.findById(id).orElse(null);
     if (ticket == null) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
