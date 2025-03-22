@@ -1,15 +1,11 @@
 import { Account } from './account.model';
+import { Ticket } from './ticket.model';
 
-export interface CommentRequestDto {
+export interface Comment {
+  id?: number;
   content: string;
-  createdAt: Date;
-  ticketId: number;
-  accountId: number;
-}
-
-export interface CommentResponseDto {
-  id: number;
-  content: string;
-  createdAt: Date;
   author: Account;
+  createdAt?: Date;
+  updatedAt?: Date;
+  ticket: Ticket;
 }

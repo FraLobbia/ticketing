@@ -1,4 +1,4 @@
-package com.app.models.enums;
+package com.app.model.enums;
 
 public enum TicketStatusEnum {
     OPEN,

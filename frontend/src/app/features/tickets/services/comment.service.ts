@@ -1,17 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {
-  CommentRequestDto,
-  CommentResponseDto,
-} from '../../../shared/models/comment.model';
+import { Comment } from '../../../shared/models/comment.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CommentService {
   // costruttore
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private baseUrl = 'http://localhost:8080/api/comments';
 
@@ -21,9 +18,9 @@ export class CommentService {
    * @returns Observable<CommentResponseDto>
    */
   createComment(
-    commentRequestDto: CommentRequestDto
-  ): Observable<CommentResponseDto> {
-    return this.http.post<CommentResponseDto>(
+    commentRequestDto: Comment
+  ): Observable<Comment> {
+    return this.http.post<Comment>(
       `${this.baseUrl}`,
       commentRequestDto
     );
@@ -34,8 +31,8 @@ export class CommentService {
    * @param ticketId
    * @returns Observable<CommentResponseDto[]>
    */
-  getCommentsByTicketId(ticketId: number): Observable<CommentResponseDto[]> {
-    return this.http.get<CommentResponseDto[]>(
+  getCommentsByTicketId(ticketId: number): Observable<Comment[]> {
+    return this.http.get<Comment[]>(
       `${this.baseUrl}/ticket/${ticketId}`
     );
   }

@@ -1,10 +1,10 @@
 export interface Account {
   id: number;
-  name: string;
-  surname: string;
-  email: string;
-  roles: RoleEnum[];
-  profilePictureUrl?: string; // Opzionale, se decidi di includere l'URL dell'immagine del profilo
+  name?: string;
+  surname?: string;
+  email?: string;
+  roles?: RoleEnum[];
+  profilePictureUrl?: string;
 }
 
 export enum RoleEnum {

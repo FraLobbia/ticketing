@@ -3,12 +3,11 @@
     <!-- info apertura modifica ticket -->
     <div>
       <p>
-        <strong>Creato da: </strong>{{ ticket.account.name }}
-        {{ ticket.account.surname }}
+        <strong>Creato da: </strong>{{ ticket.author.name }}
+        {{ ticket.author.surname }}
       </p>
       <p>
-        <strong>Creato il: </strong
-        >{{ ticket.createdAt | date : "EEEE - dd MMMM y - HH:mm" }}
+        <strong>Creato il: </strong>{{ ticket.createdAt | date : "EEEE - dd MMMM y - HH:mm" }}
       </p>
       <p>
         <strong> Aggiornato il: </strong>
@@ -18,20 +17,13 @@
     <!-- selezione status -->
     <form *ngIf="ticket" [formGroup]="statusForm">
       <div>
-        <h6
-          class="m-0 text-center pointer-cursor"
-          [matTooltip]="'Copia l\'ID'"
-          matTooltipPosition="above"
-          (click)="copyTicketId()"
-        >
+        <h6 class="m-0 text-center pointer-cursor" [matTooltip]="'Copia l\'ID'" matTooltipPosition="above"
+          (click)="copyTicketId()">
           Ticket ID: <strong>{{ ticket.id }}</strong>
         </h6>
         <hr />
-        <mat-select
-          [appStatusClass]="statusForm.get('status')?.value"
-          formControlName="status"
-          (selectionChange)="handleStatusChange()"
-        >
+        <mat-select [appStatusClass]="statusForm.get('status')?.value" formControlName="status"
+          (selectionChange)="handleStatusChange()">
           <mat-option *ngFor="let status of ticketStatusKeys" [value]="status">
             <span [appStatusClass]="status">
               {{ getTicketStatusEnumValue(status) }}

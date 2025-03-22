@@ -6,7 +6,7 @@ import {
   OnInit,
   SimpleChanges,
 } from '@angular/core';
-import { CommentResponseDto } from '../../../../shared/models/comment.model';
+import { Comment } from '../../../../shared/models/comment.model';
 import { CommentService } from '../../services/comment.service';
 import { Subject, Subscription } from 'rxjs';
 
@@ -20,14 +20,14 @@ export class CommentListComponent implements OnInit, OnChanges, OnDestroy {
    * Variabili
    */
   @Input() ticketId!: number | undefined;
-  comments: CommentResponseDto[] = [];
+  comments: Comment[] = [];
   sortOrder: 'asc' | 'desc' = 'desc';
   showTooltip: number | null = null;
 
   /**
    * Costruttore
    */
-  constructor(private commentService: CommentService) {}
+  constructor(private commentService: CommentService) { }
 
   /**
    * Inizializza il componente
@@ -64,12 +64,12 @@ export class CommentListComponent implements OnInit, OnChanges, OnDestroy {
     if (this.sortOrder === 'asc') {
       this.comments.sort(
         (a, b) =>
-          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime()
       );
     } else {
       this.comments.sort(
         (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
       );
     }
   }

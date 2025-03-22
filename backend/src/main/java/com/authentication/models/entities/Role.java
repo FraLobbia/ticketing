@@ -12,7 +12,9 @@ import com.authentication.models.enums.RoleEnum;
 @Table(name = "ROLES")
 public class Role implements GrantedAuthority {
 
-  @Id
+  private static final long serialVersionUID = -8047497620617344134L;
+
+@Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 

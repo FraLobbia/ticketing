@@ -1,4 +1,4 @@
-package com.app.services;
+package com.app.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,9 +7,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.app.services.interfaces.BaseCrudService;
+import com.app.service.interfaces.BaseCrudService;
 import com.authentication.models.dto.AccountDTO;
-import com.authentication.models.dto.RegistrationDTO;
 import com.authentication.models.entities.Account;
 import com.authentication.repositories.AccountRepository;
 

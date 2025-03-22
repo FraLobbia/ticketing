@@ -12,7 +12,7 @@ export interface Ticket {
   title: string;
   description: string;
   status: TicketStatusEnum;
-  account: Account;
+  author: Account;
   createdAt: Date;
-  updatedAt: Date;
+  updatedAt?: Date;
 }

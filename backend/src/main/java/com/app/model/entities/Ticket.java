@@ -1,8 +1,8 @@
-package com.app.models.entities;
+package com.app.model.entities;
 
 import java.time.LocalDateTime;
 
-import com.app.models.enums.TicketStatusEnum;
+import com.app.model.enums.TicketStatusEnum;
 import com.authentication.models.entities.Account;
 
 import jakarta.persistence.Column;
@@ -41,6 +41,6 @@ public class Ticket {
   @Column(nullable = false)
   private LocalDateTime createdAt;
 
-  @Column(nullable = false)
+  @Column(nullable = true)
   private LocalDateTime updatedAt;
 }

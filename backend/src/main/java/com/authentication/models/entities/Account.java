@@ -7,8 +7,8 @@ import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import com.app.models.entities.Comment;
-import com.app.models.entities.Ticket;
+import com.app.model.entities.Comment;
+import com.app.model.entities.Ticket;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

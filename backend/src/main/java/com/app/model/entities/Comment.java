@@ -1,4 +1,4 @@
-package com.app.models.entities;
+package com.app.model.entities;
 
 import java.time.LocalDateTime;
 
@@ -24,21 +24,24 @@ import lombok.Setter;
 @Entity
 @Table(name = "COMMENTS")
 public class Comment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "ticket_id", nullable = false)
-    private Ticket ticket;
+	@Column(nullable = false, length = 500)
+	private String content;
 
-    @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
+	@ManyToOne
+	@JoinColumn(name = "ticket_id", nullable = false)
+	private Ticket ticket;
 
-    @Column(nullable = false, length = 500)
-    private String content;
+	@ManyToOne
+	@JoinColumn(name = "account_id", nullable = false)
+	private Account account;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
+	@Column(nullable = false)
+	private LocalDateTime createdAt;
+
+	@Column(nullable = true)
+	private LocalDateTime updatedAt;
 }

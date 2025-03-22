@@ -8,9 +8,10 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommentService } from '../../services/comment.service';
-import { CommentRequestDto } from '../../../../shared/models/comment.model';
 import { AuthService } from '../../../../core/services/auth.service';
-import { Subject, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
+import { Ticket } from '../../../../shared/models/ticket.model';
+import { Comment } from '../../../../shared/models/comment.model';
 
 @Component({
   selector: 'app-comment-form',
@@ -21,7 +22,8 @@ export class CommentFormComponent implements OnDestroy {
   /**
    * Variabili
    */
-  @Input() ticketId!: number | undefined; //Input per ricevere l'id del ticket e dell'account dal parent component
+  authorId: number | undefined;
+  @Input() ticket: Ticket | undefined;
   @Output() commentAdded = new EventEmitter<void>(); //Evento emesso al parent quando un commento viene aggiunto
   commentForm: FormGroup;
 
@@ -42,18 +44,19 @@ export class CommentFormComponent implements OnDestroy {
    * Metodo per inviare il commento al server
    */
   onSubmit() {
-    const accountId = this.authService.getUserIdFromToken();
-    if (!accountId) {
+    const id = this.authService.getUserIdFromToken();
+    if (!id) {
       console.error('Account id not found');
       return;
+    } else {
+      this.authorId = id;
     }
 
-    if (this.commentForm.valid && accountId && this.ticketId) {
-      const newComment: CommentRequestDto = {
+    if (this.commentForm.valid && this.authorId && this.ticket) {
+      const newComment: Comment = {
         content: this.commentForm.value.content,
-        createdAt: new Date(),
-        ticketId: this.ticketId, //TODO
-        accountId: +accountId,
+        ticket: this.ticket,
+        author: { id: this.authorId },
       };
       const createCommentSub = this.commentService
         .createComment(newComment)

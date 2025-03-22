@@ -46,9 +46,6 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
     this.ticketForm = this.fb.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
-      accountId: this.authService.getUserIdFromToken(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
     });
   }
 
@@ -57,7 +54,12 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
    */
   onSubmit(): void {
     if (this.ticketForm.valid) {
-      const newTicket: Ticket = this.ticketForm.value;
+      const newTicket: Ticket = {
+        ...this.ticketForm.value,
+        author: {
+          id: this.authService.getUserIdFromToken(),
+        },
+      };
       console.log('*** DEBUG ***', newTicket);
       this.ticketService.createTicket(newTicket).subscribe((ticket) => {
         console.info('Ticket created:', ticket);

@@ -1,4 +1,4 @@
-package com.app.models.dtos;
+package com.app.model.dtos;
 
 import java.time.LocalDateTime;
 
@@ -11,5 +11,7 @@ public class CommentDto {
   private Long id;
   private String content;
   private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
   private AccountDTO author;
+  private TicketDto ticket;
 }

@@ -1,5 +1,6 @@
-package com.app.services;
+package com.app.service;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -8,10 +9,10 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.app.models.entities.Ticket;
-import com.app.models.enums.TicketStatusEnum;
-import com.app.repositories.TicketRepository;
-import com.app.services.interfaces.BaseCrudService;
+import com.app.model.entities.Ticket;
+import com.app.model.enums.TicketStatusEnum;
+import com.app.repository.TicketRepository;
+import com.app.service.interfaces.BaseCrudService;
 import com.authentication.models.entities.Account;
 
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +49,7 @@ public class TicketService implements BaseCrudService<Ticket, Long> {
 		ticket.setDescription(e.getDescription());
 		ticket.setStatus(TicketStatusEnum.OPEN);
 		ticket.setAccount(account);
-		ticket.setCreatedAt(e.getCreatedAt());
-		ticket.setUpdatedAt(e.getUpdatedAt());
+		ticket.setCreatedAt(LocalDateTime.now());
 
 		Ticket savedTicket = repo.save(ticket);
 		return savedTicket;
@@ -63,7 +63,7 @@ public class TicketService implements BaseCrudService<Ticket, Long> {
 		ticket.setTitle(e.getTitle());
 		ticket.setDescription(e.getDescription());
 		ticket.setStatus(e.getStatus());
-		ticket.setUpdatedAt(e.getUpdatedAt());
+		ticket.setUpdatedAt(LocalDateTime.now());
 
 		Ticket updatedTicket = repo.save(ticket);
 		return updatedTicket;

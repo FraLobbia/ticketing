@@ -4,28 +4,16 @@
     <!-- Input testuale -->
     <mat-form-field appearance="outline" class="filter-item">
       <mat-label>Filtra per testo</mat-label>
-      <input
-        matInput
-        #textInput
-        (keyup)="applyFilter(textInput.value, statusSelect.value)"
-        placeholder="Inserisci testo"
-      />
+      <input matInput #textInput (keyup)="applyFilter(textInput.value, statusSelect.value)"
+        placeholder="Inserisci testo" />
     </mat-form-field>
 
     <!-- Select per il filtro dello stato -->
     <mat-form-field appearance="outline" class="filter-item">
       <mat-label>Filtra per stato</mat-label>
-      <mat-select
-        #statusSelect
-        [value]="selectedStatus"
-        (selectionChange)="onStatusChange($event)"
-        multiple
-      >
+      <mat-select #statusSelect [value]="selectedStatus" (selectionChange)="onStatusChange($event)" multiple>
         <!-- Opzione per "Seleziona tutto" -->
-        <mat-option
-          class="mat-button no-checkbox-option"
-          (click)="selectAll(statusSelect)"
-        >
+        <mat-option class="mat-button no-checkbox-option" (click)="selectAll(statusSelect)">
           <strong>Seleziona tutto</strong>
         </mat-option>
 
@@ -63,7 +51,7 @@
         <td class="center-text" mat-cell *matCellDef="let ticket">
           <span [appStatusClass]="ticket.status">{{
             getTicketStatusEnumValue(ticket.status)
-          }}</span>
+            }}</span>
         </td>
       </ng-container>
 
@@ -71,8 +59,8 @@
       <ng-container matColumnDef="createdBy">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Account</th>
         <td mat-cell *matCellDef="let ticket">
-          {{ ticket.account.name }} <br />
-          {{ ticket.account.surname }}
+          {{ ticket.author.name }} <br />
+          {{ ticket.author.surname }}
         </td>
       </ng-container>
 
@@ -87,21 +75,12 @@
       </ng-container>
 
       <!-- Data Rows -->
-      <tr
-        [ngClass]="{ 'highlight-row': isViewingTicket(ticket) }"
-        (click)="onRowClick($event, ticket)"
-        (mousedown)="onRowClick($event, ticket)"
-        (contextmenu)="onRowClick($event, ticket)"
-        mat-row
-        *matRowDef="let row; let ticket; columns: displayedColumns"
-      ></tr>
+      <tr [ngClass]="{ 'highlight-row': isViewingTicket(ticket) }" (click)="onRowClick($event, ticket)"
+        (mousedown)="onRowClick($event, ticket)" (contextmenu)="onRowClick($event, ticket)" mat-row
+        *matRowDef="let row; let ticket; columns: displayedColumns"></tr>
     </table>
 
     <!-- Paginator -->
-    <mat-paginator
-      [pageSizeOptions]="[5, 10, 20]"
-      [pageSize]="20"
-      showFirstLastButtons
-    ></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="20" showFirstLastButtons></mat-paginator>
   </div>
 </div>
