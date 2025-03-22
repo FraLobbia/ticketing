@@ -2,6 +2,7 @@ package com.app.controllers;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,124 +16,96 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.models.dtos.request.TicketRequestDto;
-import com.app.models.dtos.response.TicketResponseDto;
-import com.app.models.enums.TicketStatusEnum;
+import com.app.models.dtos.TicketDto;
+import com.app.models.entities.Ticket;
+import com.app.models.mapper.TicketMapper;
 import com.app.services.TicketService;
 
 @RestController
 @RequestMapping("/api/tickets")
 public class TicketController {
 
-@Autowired
-  private  TicketService ticketService;
+	@Autowired
+	private TicketService service;
 
+	@Autowired
+	private TicketMapper ticketMapper;
 
-  /**
-   * Crea un nuovo ticket basato sul TicketRequestDto fornito.
-   *
-   * @param ticketRequestDto L'oggetto DTO che contiene i dettagli del ticket.
-   * @return TicketResponseDto Il ticket creato.
-   */
-  @PostMapping
-  public ResponseEntity<TicketResponseDto> createTicket(@RequestBody TicketRequestDto ticketRequestDto) {
-	  ticketRequestDto.setStatus(TicketStatusEnum.OPEN);
-    TicketResponseDto ticket = ticketService.save(ticketRequestDto);
-    if (ticket == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    }
-    return ResponseEntity.status(201).body(ticket);
-  }
+	private TicketDto toDto(Ticket ticket) {
+		return ticketMapper.toDto(ticket);
+	}
 
-  /**
-   * Recupera un ticket tramite il suo ID.
-   *
-   * @param id L'ID del ticket da recuperare.
-   * @return TicketResponseDto Il ticket con l'ID specificato.
-   */
-  @GetMapping("/{id}")
-  public ResponseEntity<TicketResponseDto> getTicketById(@PathVariable Long id) {
-	  	TicketResponseDto ticket = ticketService.findById(id).orElse(null);
-    if (ticket == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    }
-    return ResponseEntity.ok(ticket);
-  }
+	private Ticket toEntity(TicketDto dto) {
+		return ticketMapper.toEntity(dto);
+	}
 
-  /**
-   * Recupera una lista di tutti i ticket.
-   *
-   * @return List<TicketResponseDto> Una lista di tutti i ticket.
-   */
-  @GetMapping
-  public ResponseEntity<List<TicketResponseDto>> getAllTickets() {
-    List<TicketResponseDto> tickets = ticketService.getAllTickets();
-    if (tickets == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    }
-    return ResponseEntity.ok(tickets);
-  }
+	@PostMapping
+	public ResponseEntity<TicketDto> create(@RequestBody TicketDto dto) {
+		Ticket e = service.create(toEntity(dto));
 
-  /**
-   * Aggiorna un ticket esistente in base al suo ID e al TicketRequestDto fornito.
-   *
-   * @param id               L'ID del ticket da aggiornare.
-   * @param ticketRequestDto L'oggetto DTO che contiene i dettagli aggiornati del
-   *                         ticket.
-   * @return TicketResponseDto Il ticket aggiornato.
-   */
-  @PutMapping("/{id}")
-  public ResponseEntity<TicketResponseDto> updateTicket(@PathVariable Long id,
-      @RequestBody TicketRequestDto ticketRequestDto) {
-    TicketResponseDto updatedTicket = ticketService.updateTicket(id, ticketRequestDto);
-    if (updatedTicket == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    }
-    return ResponseEntity.ok(updatedTicket);
-  }
+		if (e == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
+		return ResponseEntity.status(201).body(toDto(e));
+	}
 
-  /**
-   * Cancella un ticket tramite il suo ID.
-   *
-   * @param id L'ID del ticket da cancellare.
-   * @return void
-   */
-  @DeleteMapping("/{id}")
-  public ResponseEntity<Void> deleteTicket(@PathVariable Long id) {
-    ticketService.deleteTicket(id);
-    return ResponseEntity.noContent().build();
-  }
+	@GetMapping("/{id}")
+	public ResponseEntity<TicketDto> read(@PathVariable Long id) {
+		TicketDto e = toDto(service.read(id).orElse(null));
 
-  /**
-   * Recupera una lista di ticket in base a un array di ID.
-   *
-   * @param ids Una stringa di ID separati da virgole.
-   * @return List<TicketResponseDto> Una lista di ticket con gli ID specificati.
-   */
-  @GetMapping("/viewing-tickets")
-  public ResponseEntity<List<TicketResponseDto>> getViewingTickets(String ids) {
-    List<TicketResponseDto> tickets = ticketService.getTicketsByIds(ids);
-    if (tickets == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    }
-    return ResponseEntity.ok(tickets);
-  }
+		if (e == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
+		return ResponseEntity.ok(e);
+	}
 
-  /**
-   * Aggiorna lo stato di un ticket.
-   *
-   * @param id     L'ID del ticket da aggiornare.
-   * @param status Il nuovo stato del ticket.
-   * @return TicketResponseDto Il ticket aggiornato.
-   */
-  @PutMapping("/status/{id}")
-  public ResponseEntity<TicketResponseDto> updateTicketStatus(@PathVariable Long id,
-      @RequestBody Map<String, String> status) {
-    String statusString = status.get("status");
-    TicketResponseDto updatedTicket = ticketService.updateTicketStatus(id, statusString);
-    if (updatedTicket == null) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-    }
-    return ResponseEntity.ok(updatedTicket);
-  }
+	@GetMapping
+	public ResponseEntity<List<TicketDto>> readAll() {
+		List<TicketDto> list = service.readAll().stream().map(this::toDto).collect(Collectors.toList());
+
+		if (list.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+		}
+		return ResponseEntity.ok(list);
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<TicketDto> update(@PathVariable Long id, @RequestBody TicketDto dto) {
+		Ticket e = service.update(toEntity(dto));
+
+		if (e == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
+		return ResponseEntity.ok(toDto(e));
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		service.delete(id);
+		
+		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/viewing-tickets")
+	public ResponseEntity<List<TicketDto>> getViewingTickets(String ids) {
+		List<TicketDto> list = service.readAllByIds(ids).stream().map(this::toDto)
+				.collect(Collectors.toList());
+
+		if (list == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
+		return ResponseEntity.ok(list);
+	}
+
+	@PutMapping("/status/{id}")
+	public ResponseEntity<TicketDto> updateTicketStatus(@PathVariable Long id,
+			@RequestBody Map<String, String> status) {
+		String statusString = status.get("status");
+		Ticket e = service.updateTicketStatus(id, statusString);
+		
+		if (e == null) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
+		return ResponseEntity.ok(toDto(e));
+	}
 }

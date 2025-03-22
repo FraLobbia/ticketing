@@ -38,7 +38,8 @@ public class AccountController {
 	 */
 	@GetMapping
 	public List<AccountDTO> getAllAccounts() {
-		return accountService.getAllAccounts();
+		return null;
+//		return accountService.findAll();
 	}
 
 	/**
@@ -50,7 +51,8 @@ public class AccountController {
 	 */
 	@GetMapping("/{id}")
 	public ResponseEntity<AccountDTO> getAccountById(@PathVariable Long id) {
-		return ResponseEntity.of(accountService.getAccountById(id));
+		return null;
+//		return ResponseEntity.of(accountService.getAccountById(id));
 	}
 
 	/**
@@ -66,7 +68,7 @@ public class AccountController {
 
 		// TODO: da rivedere
 
-		Optional<Account> updatedAccount = accountService.updateAccount(id, accountDetails);
+		Optional<Account> updatedAccount = accountService.update(id, accountDetails);
 
 		if (updatedAccount == null) {
 			return ResponseEntity.notFound().build();

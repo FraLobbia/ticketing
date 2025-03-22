@@ -57,9 +57,7 @@ public class SecurityConfig {
 	 */
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		/**
-		 * Configurazione richieste HTTP:
-		 */
+		 // Configurazione richieste HTTP:
 		http.csrf(csrf -> csrf.disable()) // disattivato a causa dell'utilizzo di JWT
 				.cors(cors -> cors.configurationSource(corsConfigurationSource())) // configurazione CORS (più sotto)
 				.authorizeHttpRequests(authorize -> {
@@ -68,9 +66,7 @@ public class SecurityConfig {
 					authorize.anyRequest().authenticated();
 				});
 
-		/**
-		 * Configurazione filtro di autenticazione:
-		 */
+		 // Configurazione filtro di autenticazione:
 		http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();

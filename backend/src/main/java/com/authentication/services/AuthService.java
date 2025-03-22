@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.authentication.jwt.JwtService;
+import com.authentication.jwt.JwtUtils;
 import com.authentication.models.dto.LoginRequestDTO;
 import com.authentication.models.dto.LoginResponseDTO;
 import com.authentication.models.dto.RegistrationDTO;
@@ -19,7 +19,7 @@ import com.authentication.repositories.AccountRepository;
 import com.authentication.repositories.RoleRepository;
 
 @Service
-public class AuthService extends JwtService {
+public class AuthService extends JwtUtils {
 
 	@Autowired
 	private AccountRepository accountRepository;
@@ -33,7 +33,7 @@ public class AuthService extends JwtService {
 	 * JWT da restituire al client.
 	 */
 	public LoginResponseDTO login(LoginRequestDTO loginDto) {
-		String jwtToken = generateToken(loginDto.getEmail(), loginDto.getPassword());
+		String jwtToken = generateJwtToken(loginDto.getEmail(), loginDto.getPassword());
 
 		setSecurityContext(jwtToken);
 		return new LoginResponseDTO(jwtToken);

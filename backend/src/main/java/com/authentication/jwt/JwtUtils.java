@@ -11,18 +11,20 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.authentication.models.entities.Account;
 import com.authentication.models.entities.CustomUserDetails;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
 @Service
-public abstract class JwtService {
+public abstract class JwtUtils {
 
 	@Autowired
 	private Environment env;
@@ -30,18 +32,33 @@ public abstract class JwtService {
 	/**
 	 * Genera un token JWT per l'utente autenticato.
 	 */
-	public String generateToken(String email, String password) {
-			CustomUserDetails user = verifyAccount(email, password);
-			Long idAccount = user.getId();
-			Date expireDate = new Date(System.currentTimeMillis() + getJwtExpirationDate());
-
-			return Jwts.builder().subject(email).issuedAt(new Date()).claim("idAccount", idAccount)
-					.claim("name", user.getName()).claim("surname", user.getSurname())
-					.claim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
-					.expiration(expireDate).signWith(getSigningKey()).compact();
+	public String generateJwtToken(String email, String password) {
+		// da cambiare sta oscenità usando account service
+		CustomUserDetails user = verifyAccount(email, password);
+		Long idAccount = user.getId();
+		Date expireDate = new Date(System.currentTimeMillis() + getJwtExpirationDate());
+		
+		// @formatter:off
+			return Jwts.builder()
+					.subject(email)
+					.issuedAt(new Date())
+					.claim("idAccount", idAccount)
+					.claim("name", user.getName())
+					.claim("surname", user.getSurname())
+					.claim("roles", user.getAuthorities().stream()
+											.map(GrantedAuthority::getAuthority)
+											.toList())
+					.expiration(expireDate)
+					.signWith(getSigningKey())
+					.compact();
+			// @formatter:on
 	}
+	
+	 public abstract Account verifyAccount(String email, String password);
+	
 
-	public abstract CustomUserDetails verifyAccount(String email, String password);
+	// public abstract CustomUserDetails verifyAccount(String email, String
+	// password);
 
 	/**
 	 * @param token
@@ -71,18 +88,11 @@ public abstract class JwtService {
 		}
 	}
 
-	/**
-	 * Restituisce la chiave di firma per JWT. hmacShaKeyFor() restituisce una
-	 * chiave HMAC (Hash-based Message Authentication Code) per la firma del token
-	 * JWT. La chiave HMAC è una funzione hash crittografica che accetta due
-	 * argomenti: una chiave segreta e un messaggio da autenticare.
-	 * 
-	 * @return La chiave di firma per JWT.
-	 */
 	private Key getSigningKey() {
-		return Keys.hmacShaKeyFor(getJwtSecret().getBytes());
+		byte[] keyBytes = getJwtSecret().getBytes();
+		return Keys.hmacShaKeyFor(keyBytes);
 	}
-	
+
 	/**
 	 * @return La chiave segreta per JWT dalle properties.
 	 */
