@@ -1,4 +1,4 @@
-package com.app.controller;
+package com.common.abstracts;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.app.service.interfaces.BaseCrudService;
+import com.common.interfaces.BaseCrudService;
 
 public abstract class AbstractCrudController<DTO, ENTITY, ID> {
 

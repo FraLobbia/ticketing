@@ -1,98 +1,94 @@
 package com.app.service;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.app.service.interfaces.BaseCrudService;
-import com.authentication.models.dto.AccountDTO;
 import com.authentication.models.entities.Account;
+import com.authentication.models.entities.Role;
+import com.authentication.models.enums.AuthExceptionEnum;
+import com.authentication.models.enums.RoleEnum;
 import com.authentication.repositories.AccountRepository;
+import com.common.interfaces.BaseCrudService;
 
 @Service
 public class AccountService implements BaseCrudService<Account, Long> {
 
 	@Autowired
-	private AccountRepository accountRepository;
-	
-	/**
-	 * Ottiene tutti gli account dal database.
-	 *
-	 * @return una lista di oggetti Account {@link Account}.
-	 */
-	public List<Account> readAll() {
-		return accountRepository.findAll();
-	}
+	private AccountRepository repo;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
-	/**
-	 * Ottiene un account dal database in base all'ID fornito e lo mappa in un
-	 * oggetto AccountResponseDTO.
-	 *
-	 * @param id L'ID dell'account da ottenere.
-	 * @return un oggetto AccountResponseDTO {@link AccountDTO} contenente
-	 *         l'account richiesto o vuoto se non esiste.
-	 */
-	public Optional<Account> read(Long id) {
-		return accountRepository.findById(id);
-	}
+	@Override
+	public Account create(Account e) {
+		Role role = new Role();
+		role.setName(RoleEnum.ROLE_USER);
 
-	
+		Set<Role> roles = new HashSet<>();
+		roles.add(role);
+		e.setRoles(roles);
+		e.setCreatedAt(LocalDateTime.now());
 
-	public Optional<Account> update(Long id, Account accountDetails) {
-		Account account = accountRepository.findById(id).orElse(null);
-		if (account == null) {
-			return Optional.empty();
-		}
-		account.setName(accountDetails.getName());
-		account.setSurname(accountDetails.getSurname());
-		account.setEmail(accountDetails.getEmail());
-		// account.setPassword(accountDetails.getPassword());w
-
-		accountRepository.save(account);
-
-		return Optional.of(account);
-
-	}
-
-	public boolean deleteAccount(Long id) {
-		return accountRepository.findById(id).map(account -> {
-			accountRepository.delete(account);
-			return true;
-		}).orElse(false);
-	}
-
-	public AccountDTO convertToDTO(Account account) {
-		AccountDTO dto = new AccountDTO();
-		dto.setId(account.getId());
-		dto.setName(account.getName());
-		dto.setSurname(account.getSurname());
-		dto.setEmail(account.getEmail());
-		dto.setRoles(account.getRoles().stream().map(role -> role.getName().toString()) // Converti RoleEnum in String
-				.collect(Collectors.toSet()));
-		// Supponiamo che tu abbia un metodo per convertire il byte array dell'immagine
-		// in un URL:
-		// dto.setProfilePictureUrl(convertToUrl(account.getProfilePicture()));
-		return dto;
+		return repo.save(e);
 	}
 
 	@Override
-	public Account create(Account entity) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Account> readAll() {
+		return repo.findAll();
+	}
+
+	@Override
+	public Optional<Account> read(Long id) {
+		Account e = repo.findById(id)
+				.orElseThrow(() -> new RuntimeException("[read] Account con id (" + id + ") non trovato nel db"));
+		return Optional.of(e);
 	}
 
 	@Override
 	public Account update(Account entity) {
-		// TODO Auto-generated method stub
-		return null;
+		Account a = repo.findById(entity.getId()).orElseThrow(
+				() -> new RuntimeException("[update] Account con id (" + entity.getId() + ") non trovato nel db"));
+
+		a.setName(entity.getName());
+		a.setSurname(entity.getSurname());
+		a.setEmail(entity.getEmail());
+		a.setPassword(entity.getPassword());
+		a.setRoles(entity.getRoles());
+		a.setProfilePicture(entity.getProfilePicture());
+		a.setUpdatedAt(LocalDateTime.now());
+
+		return repo.save(a);
 	}
 
 	@Override
 	public void delete(Long id) {
-		// TODO Auto-generated method stub
-		
+		try {
+			repo.deleteById(id);
+		} catch (Exception e) {
+			throw new RuntimeException("[delete] Errore durante la cancellazione dell'account con id (" + id + ")");
+		}
+	}
+
+	/**
+	 * Verifica le credenziali dell'account nel database e restituisce l'account
+	 * autenticato. Se l'account non è presente nel database, viene lanciata
+	 * un'eccezione.
+	 */
+	public Account verifyAccount(String email, String password) throws UsernameNotFoundException {
+		Account account = repo.findByEmail(email)
+				.orElseThrow(() -> new UsernameNotFoundException(AuthExceptionEnum.EMAIL_NOT_FOUND.getMessage()));
+
+		if (!passwordEncoder.matches(password, account.getPassword())) {
+			throw new IllegalArgumentException(AuthExceptionEnum.INVALID_PASSWORD.getMessage());
+		}
+
+		return account;
 	}
 }

@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.app.model.entities.Comment;
 import com.app.repository.CommentRepository;
-import com.app.service.interfaces.BaseCrudService;
 import com.authentication.models.entities.Account;
+import com.common.interfaces.BaseCrudService;
 
 @Service
 public class CommentService implements BaseCrudService<Comment, Long> {

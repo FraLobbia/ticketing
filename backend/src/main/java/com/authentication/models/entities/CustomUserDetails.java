@@ -1,5 +1,6 @@
 package com.authentication.models.entities;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -25,6 +26,8 @@ public abstract class CustomUserDetails implements UserDetails {
     private String surname;
     private String email;
     private String password;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
     @Override
     public String getUsername() {

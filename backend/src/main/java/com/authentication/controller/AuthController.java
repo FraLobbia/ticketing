@@ -1,4 +1,4 @@
-package com.authentication;
+package com.authentication.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.app.service.AccountService;
 import com.authentication.models.dto.LoginRequestDTO;
 import com.authentication.models.dto.LoginResponseDTO;
 import com.authentication.models.dto.RegistrationDTO;
 import com.authentication.models.enums.AuthExceptionEnum;
 import com.authentication.services.AuthService;
 
+import jakarta.security.auth.message.AuthException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,12 +25,15 @@ import lombok.extern.slf4j.Slf4j;
 public class AuthController {
 
 	@Autowired
-	private AuthService authService;
+	private AuthService service;
+	
+	@Autowired
+	private AccountService accountService;
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginDto) {
 		try {
-			LoginResponseDTO responseDto = authService.login(loginDto);
+			LoginResponseDTO responseDto = service.login(loginDto);
 			return ResponseEntity.ok(responseDto);
 		} catch (UsernameNotFoundException | IllegalArgumentException e) {
 			log.error("Errore durante il login: " + e.getMessage());
@@ -50,11 +55,20 @@ public class AuthController {
 
 	@PostMapping("/register")
 	public ResponseEntity<LoginResponseDTO> register(@RequestBody RegistrationDTO registrationDto) {
-		LoginResponseDTO dtoResponse = authService.createAccount(registrationDto);
-		if (dtoResponse == null) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		try {
+			LoginResponseDTO dtoResponse = service.register(registrationDto);
+			return ResponseEntity.status(HttpStatus.CREATED).body(dtoResponse);
+		} catch (AuthException e) {
+			log.error("Errore durante la registrazione: {}", e.getMessage());
+			return ResponseEntity
+				.status(HttpStatus.CONFLICT)
+				.body(new LoginResponseDTO(AuthExceptionEnum.getEnumByCode(e.getMessage())));
+		} catch (Exception e) {
+			log.error("Errore generico durante la registrazione: {}", e.getMessage());
+			return ResponseEntity
+				.status(HttpStatus.BAD_REQUEST)
+				.body(new LoginResponseDTO(AuthExceptionEnum.GENERIC_ERROR));
 		}
-		return ResponseEntity.status(HttpStatus.CREATED).body(dtoResponse);
 	}
 
 }

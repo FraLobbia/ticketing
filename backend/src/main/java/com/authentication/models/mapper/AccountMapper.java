@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
-import com.authentication.models.dto.AccountDTO;
+import com.authentication.models.dto.AccountDto;
 import com.authentication.models.entities.Account;
 import com.authentication.models.entities.Role;
 import com.authentication.models.enums.RoleEnum;
@@ -23,14 +23,14 @@ public interface AccountMapper {
 	@Mapping(target = "email", source = "email")
 	// Il mapping custom per roles viene gestito dai metodi default
 	@Mapping(target = "roles", source = "roles")
-	AccountDTO toDto(Account user);
+	AccountDto toDto(Account user);
 
 	@Mapping(target = "id", source = "id")
 	@Mapping(target = "name", source = "name")
 	@Mapping(target = "surname", source = "surname")
 	@Mapping(target = "email", source = "email")
 	@Mapping(target = "roles", source = "roles")
-	Account toEntity(AccountDTO userDTO);
+	Account toEntity(AccountDto userDTO);
 
 	// Metodo custom per convertire un Set<Role> in Set<String>
 	default Set<String> mapRolesToStrings(Set<Role> roles) {

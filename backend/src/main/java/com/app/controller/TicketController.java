@@ -18,7 +18,8 @@ import com.app.model.dtos.TicketDto;
 import com.app.model.entities.Ticket;
 import com.app.model.mapper.ApplicationDtoMapper;
 import com.app.service.TicketService;
-import com.app.service.interfaces.BaseCrudService;
+import com.common.abstracts.AbstractCrudController;
+import com.common.interfaces.BaseCrudService;
 
 @RestController
 @RequestMapping("/api/tickets")

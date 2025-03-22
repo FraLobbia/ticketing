@@ -11,13 +11,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.app.service.AccountService;
 import com.authentication.models.entities.Account;
 import com.authentication.models.entities.CustomUserDetails;
 
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,13 +28,16 @@ public abstract class JwtUtils {
 
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+	private AccountService accountService;
 
 	/**
 	 * Genera un token JWT per l'utente autenticato.
 	 */
 	public String generateJwtToken(String email, String password) {
 		// da cambiare sta oscenità usando account service
-		CustomUserDetails user = verifyAccount(email, password);
+		CustomUserDetails user = accountService.verifyAccount(email, password);
 		Long idAccount = user.getId();
 		Date expireDate = new Date(System.currentTimeMillis() + getJwtExpirationDate());
 		
@@ -53,12 +56,6 @@ public abstract class JwtUtils {
 					.compact();
 			// @formatter:on
 	}
-	
-	 public abstract Account verifyAccount(String email, String password);
-	
-
-	// public abstract CustomUserDetails verifyAccount(String email, String
-	// password);
 
 	/**
 	 * @param token

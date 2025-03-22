@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import com.app.model.entities.Ticket;
 import com.app.model.enums.TicketStatusEnum;
 import com.app.repository.TicketRepository;
-import com.app.service.interfaces.BaseCrudService;
 import com.authentication.models.entities.Account;
+import com.common.interfaces.BaseCrudService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,9 +34,9 @@ public class TicketService implements BaseCrudService<Ticket, Long> {
 
 	@Override
 	public Optional<Ticket> read(Long id) {
-		Ticket ticket = repo.findById(id)
+		Ticket e = repo.findById(id)
 				.orElseThrow(() -> new RuntimeException("[read] Ticket con id (" + id + ") non trovato nel db"));
-		return Optional.of(ticket);
+		return Optional.of(e);
 	}
 
 	@Override

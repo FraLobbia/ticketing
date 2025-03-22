@@ -18,24 +18,24 @@ import com.authentication.models.enums.RoleEnum;
 import com.authentication.repositories.AccountRepository;
 import com.authentication.repositories.RoleRepository;
 
+import jakarta.security.auth.message.AuthException;
+
 @Service
 public class AuthService extends JwtUtils {
 
 	@Autowired
-	private AccountRepository accountRepository;
+	private AccountRepository accountRepo;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private RoleRepository roleRepository;
 
-	/**
-	 * Imposta il contesto di sicurezza con l'utente autenticato e genera un token
-	 * JWT da restituire al client.
-	 */
+
 	public LoginResponseDTO login(LoginRequestDTO loginDto) {
 		String jwtToken = generateJwtToken(loginDto.getEmail(), loginDto.getPassword());
 
 		setSecurityContext(jwtToken);
+		
 		return new LoginResponseDTO(jwtToken);
 	}
 
@@ -49,48 +49,20 @@ public class AuthService extends JwtUtils {
 
 	}
 
-	/**
-	 * Verifica le credenziali dell'account nel database e restituisce l'account
-	 * autenticato. Se l'account non è presente nel database, viene lanciata
-	 * un'eccezione.
-	 */
-    public Account verifyAccount(String email, String password) throws UsernameNotFoundException {
-        Account account = accountRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(AuthExceptionEnum.EMAIL_NOT_FOUND.getMessage()));
-        
-        if (!passwordEncoder.matches(password, account.getPassword())) {
-            throw new IllegalArgumentException(AuthExceptionEnum.INVALID_PASSWORD.getMessage());
-        }
-        
-        return account;
-    }
+	
+	public LoginResponseDTO register(RegistrationDTO dto) throws AuthException {
+		String email = dto.getEmail();
 
-	/**
-	 * Crea un nuovo account nel database con i dettagli forniti nel DTO di
-	 * registrazione dell'account. Se l'email è già in uso, viene lanciata
-	 * un'eccezione. Se l'account non può essere creato, viene lanciata
-	 * un'eccezione. Se l'account viene creato con successo, viene restituito
-	 * l'account creato.
-	 *
-	 * @param accountRegistrationDTO The account registration data containing the
-	 *                               account details.
-	 * @return The created account.
-	 * @throws RuntimeException If the email is already in use or if there is an
-	 *                          error creating the account.
-	 */
-	public LoginResponseDTO createAccount(RegistrationDTO accountRegistrationDTO) {
-		String email = accountRegistrationDTO.getEmail();
-
-		if (accountRepository.existsByEmail(email)) {
-			throw new RuntimeException("Error: Email is already in use!");
+		if (accountRepo.existsByEmail(email)) {
+			throw new AuthException(AuthExceptionEnum.EMAIL_ALREADY_EXISTS.getCode());
 		}
 
 		Account account = new Account();
-		account.setName(accountRegistrationDTO.getName());
-		account.setSurname(accountRegistrationDTO.getSurname());
-		account.setEmail(accountRegistrationDTO.getEmail());
+		account.setName(dto.getName());
+		account.setSurname(dto.getSurname());
+		account.setEmail(dto.getEmail());
 
-		String encodedPassword = passwordEncoder.encode(accountRegistrationDTO.getPassword());
+		String encodedPassword = passwordEncoder.encode(dto.getPassword());
 		account.setPassword(encodedPassword);
 
 		Role userRole = roleRepository.findByName(RoleEnum.ROLE_USER)
@@ -98,29 +70,16 @@ public class AuthService extends JwtUtils {
 
 		account.getRoles().add(userRole);
 		try {
-			accountRepository.save(account);
+			accountRepo.save(account);
 
 			LoginRequestDTO loginDto = new LoginRequestDTO();
 			loginDto.setEmail(account.getEmail());
-			loginDto.setPassword(accountRegistrationDTO.getPassword());
+			loginDto.setPassword(dto.getPassword());
 
 			return login(loginDto);
 
 		} catch (Exception e) {
 			throw new RuntimeException("Error: Account not created.");
 		}
-	}
-
-	/**
-	 * Carica un account dal database in base all'email fornita.
-	 * 
-	 * @param email L'email dell'account.
-	 * @return Un oggetto UserDetails che rappresenta l'account.
-	 * @throws UsernameNotFoundException Se l'account non è presente nel database.
-	 */
-	public Account loadUserByEmail(String email) throws UsernameNotFoundException {
-		Account account = accountRepository.findByEmail(email)
-				.orElseThrow(() -> new UsernameNotFoundException("Account not found with email: " + email));
-		return account;
 	}
 }

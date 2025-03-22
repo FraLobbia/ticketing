@@ -1,5 +1,7 @@
 package com.authentication.models.enums;
 
+import java.util.Arrays;
+
 public enum AuthExceptionEnum {
     
     // Errori di login
@@ -18,7 +20,8 @@ public enum AuthExceptionEnum {
     // Altri errori di autenticazione
     UNAUTHORIZED_ACCESS("AUTH010", "Accesso non autorizzato."),
     TOKEN_EXPIRED("AUTH011", "Token scaduto."),
-    INVALID_TOKEN("AUTH012", "Token non valido.");
+    INVALID_TOKEN("AUTH012", "Token non valido."),
+    GENERIC_ERROR("AUTH013", "Errore generico.");
 
     private final String exceptionCode;
     private final String message;
@@ -34,6 +37,13 @@ public enum AuthExceptionEnum {
 
     public String getMessage() {
         return message;
+    }
+    
+    public static AuthExceptionEnum getEnumByCode(String code) {
+        return Arrays.stream(AuthExceptionEnum.values())
+                .filter(e -> e.getCode().equalsIgnoreCase(code))
+                .findFirst()
+                .orElse(null); 
     }
 }
 

@@ -1,4 +1,4 @@
-package com.app.service.interfaces;
+package com.common.interfaces;
 
 import java.util.List;
 import java.util.Optional;

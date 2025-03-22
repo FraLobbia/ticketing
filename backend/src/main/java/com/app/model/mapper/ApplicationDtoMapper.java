@@ -50,4 +50,5 @@ public interface ApplicationDtoMapper  {
 	@Mapping(target = "author", source = "account")
 	@Mapping(target = "ticket", source = "ticket")
 	CommentDto toDto(Comment e);
+	
 }

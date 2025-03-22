@@ -3,7 +3,7 @@ package com.app.model.dtos;
 import java.time.LocalDateTime;
 
 import com.app.model.enums.TicketStatusEnum;
-import com.authentication.models.dto.AccountDTO;
+import com.authentication.models.dto.AccountDto;
 
 import lombok.Data;
 
@@ -15,5 +15,5 @@ public class TicketDto{
     private TicketStatusEnum status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private AccountDTO author;
+    private AccountDto author;
 }

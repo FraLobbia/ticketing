@@ -6,7 +6,7 @@ import java.util.Set;
 import lombok.Data;
 
 @Data
-public class AccountDTO {
+public class AccountDto {
   private Long id;
   private String name;
   private String surname;
