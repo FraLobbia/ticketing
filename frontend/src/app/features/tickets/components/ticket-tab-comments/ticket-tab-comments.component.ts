@@ -6,7 +6,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Ticket } from '../../../../shared/models/ticket.model';
-import { CommentListComponent } from '../comment-list/comment-list.component';
 import { Comment } from '../../../../shared/models/comment.model';
 
 @Component({
@@ -17,30 +16,12 @@ import { Comment } from '../../../../shared/models/comment.model';
 export class TicketTabCommentsComponent {
   @Input() ticket: Ticket | undefined;
   @Input() comments: Comment[] = [];
-  /**
-   * commentAdded è un evento emesso quando un commento viene aggiunto dal componente figlio CommentFormComponent
-   */
   @Output() commentAdded = new EventEmitter<void>();
-  @Output() ticketStatusChanged = new EventEmitter<void>();
-  /**
-   * Riferimento al componente figlio CommentListComponent per poter chiamare il metodo loadComments()
-   */
-  @ViewChild(CommentListComponent)
-  commentListComponent!: CommentListComponent;
-
 
   /**
-   * Metodo per notificare il parent component dell'aggiunta di un commento e ricaricare la lista dei commenti nel CommentListComponent
+   * propaga l'evento commentAdded al parent component
    */
   onCommentAdded() {
-    // Esegui delle azioni quando un commento viene aggiunto, ad esempio ricaricare la lista dei commenti
-    // this.commentListComponent.loadComments();
+    this.commentAdded.emit();
   }
-
-  // /**
-  //  * Metodo per notificare il parent component del cambio di stato del ticket
-  //  */
-  // onTicketStatusChanged() {
-  //   this.ticketStatusChanged.emit();
-  // }
 }

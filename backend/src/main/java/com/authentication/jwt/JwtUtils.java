@@ -2,19 +2,22 @@ package com.authentication.jwt;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import com.app.service.AccountService;
 import com.authentication.models.entities.Account;
 import com.authentication.models.entities.CustomUserDetails;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParserBuilder;
 import io.jsonwebtoken.Jwts;
@@ -28,24 +31,18 @@ public abstract class JwtUtils {
 
 	@Autowired
 	private Environment env;
-	
-	@Autowired
-	private AccountService accountService;
 
 	/**
 	 * Genera un token JWT per l'utente autenticato.
 	 */
-	public String generateJwtToken(String email, String password) {
-		// da cambiare sta oscenità usando account service
-		CustomUserDetails user = accountService.verifyAccount(email, password);
-		Long idAccount = user.getId();
+	public String generateJwtToken(CustomUserDetails user) {
 		Date expireDate = new Date(System.currentTimeMillis() + getJwtExpirationDate());
 		
 		// @formatter:off
 			return Jwts.builder()
-					.subject(email)
+					.subject(user.getEmail())
 					.issuedAt(new Date())
-					.claim("idAccount", idAccount)
+					.claim("idAccount", user.getId())
 					.claim("name", user.getName())
 					.claim("surname", user.getSurname())
 					.claim("roles", user.getAuthorities().stream()
@@ -112,5 +109,35 @@ public abstract class JwtUtils {
 					"Non è stato possibile recuperare la durata di validità del token JWT dalle properties. Chiave cercata: jwt.expirationMs");
 		}
 		return Long.parseLong(expiration);
+	}
+	
+	public CustomUserDetails getUserFromJwtToken(String token) {
+	    // Parso i claims dal token JWT usando la chiave di firma
+	    Claims claims = Jwts.parser()
+	            .verifyWith((SecretKey) getSigningKey())
+	            .build()
+	            .parseClaimsJws(token)
+	            .getBody();
+	    
+	    // Estrae le informazioni
+	    String email = claims.getSubject();
+	    Long idAccount = claims.get("idAccount", Long.class);
+	    String name = claims.get("name", String.class);
+	    String surname = claims.get("surname", String.class);
+	    
+	    // Estrae la lista dei ruoli (assunta come List<String>)
+	    List<String> roles = claims.get("roles", List.class);
+	    List<GrantedAuthority> authorities = roles.stream()
+	            .map(SimpleGrantedAuthority::new)
+	            .collect(Collectors.toList());
+	    
+	    // Crea un'istanza di Account (che estende CustomUserDetails)
+	    Account user = new Account();
+	    user.setId(idAccount);
+	    user.setEmail(email);
+	    user.setName(name);
+	    user.setSurname(surname);
+	    user.setPassword(""); // La password non è necessaria qui
+	    return user;
 	}
 }

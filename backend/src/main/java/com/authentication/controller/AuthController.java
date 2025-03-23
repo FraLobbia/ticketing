@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.service.AccountService;
 import com.authentication.models.dto.LoginRequestDTO;
 import com.authentication.models.dto.LoginResponseDTO;
 import com.authentication.models.dto.RegistrationDTO;
 import com.authentication.models.enums.AuthExceptionEnum;
+import com.authentication.services.AccountService;
 import com.authentication.services.AuthService;
 
 import jakarta.security.auth.message.AuthException;
@@ -26,9 +26,6 @@ public class AuthController {
 
 	@Autowired
 	private AuthService service;
-	
-	@Autowired
-	private AccountService accountService;
 
 	@PostMapping("/login")
 	public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginDto) {

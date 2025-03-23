@@ -1,4 +1,4 @@
-package com.app.service;
+package com.authentication.services;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ public class AccountService implements BaseCrudService<Account, Long> {
 	private PasswordEncoder passwordEncoder;
 
 	@Override
-	public Account create(Account e) {
+	public Account save(Account e) {
 		Role role = new Role();
 		role.setName(RoleEnum.ROLE_USER);
 
@@ -90,5 +90,9 @@ public class AccountService implements BaseCrudService<Account, Long> {
 		}
 
 		return account;
+	}
+
+	public boolean existsByEmail(String email) {
+		return repo.existsByEmail(email);
 	}
 }

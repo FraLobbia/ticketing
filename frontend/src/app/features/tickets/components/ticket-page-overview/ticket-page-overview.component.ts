@@ -30,7 +30,7 @@ export class TicketPageOverviewComponent implements OnDestroy {
   id: number | undefined;
   statusForm: FormGroup = new FormGroup({});
   getTicketStatusEnumValue = getTicketStatusEnumValue;
-  @ViewChild('ticketCorrespondence') ticketCorrespondence!: TicketTabCommentsComponent;
+
   /**
    * Costruttore
    */
@@ -51,6 +51,10 @@ export class TicketPageOverviewComponent implements OnDestroy {
       this.initializeForm();
       this.loadTicketData();
     });
+  }
+
+  onCommentAdded() {
+    this.loadComments(this.ticket!);
   }
 
   selectTab(tab: string): void {

@@ -18,7 +18,7 @@ export class SnackbarService {
   defaultDuration: number = 3000;
   defaultErrorDuration: number = 5000;
 
-  constructor(private snackBar: MatSnackBar) {}
+  constructor(private snackBar: MatSnackBar) { }
 
   /**
    * Mostra uno snackbar con il messaggio specificato.
@@ -53,6 +53,7 @@ export class SnackbarService {
       duration,
       horizontalPosition: this.horizontalPosition,
       verticalPosition: this.verticalPosition,
+
     });
   }
 }

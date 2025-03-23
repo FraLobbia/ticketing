@@ -13,7 +13,7 @@ public interface BaseCrudService<ENTITY, ID> {
 
 	List<ENTITY> readAll();
 
-	ENTITY create(ENTITY entity);
+	ENTITY save(ENTITY entity);
 
 	Optional<ENTITY> read(ID id);
 

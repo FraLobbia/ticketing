@@ -46,7 +46,11 @@
   <mat-tab label="Panoramica">
     <app-ticket-tab-description [ticket]="ticket"></app-ticket-tab-description>
   </mat-tab>
-  <mat-tab label="Commenti">
-    <app-ticket-tab-comments [ticket]="ticket" [comments]="comments"></app-ticket-tab-comments>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      Commenti ({{ comments.length}})
+    </ng-template>
+    <app-ticket-tab-comments [ticket]="ticket" [comments]="comments"
+      (commentAdded)="onCommentAdded()"></app-ticket-tab-comments>
   </mat-tab>
 </mat-tab-group>

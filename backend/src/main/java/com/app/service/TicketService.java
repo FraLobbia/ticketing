@@ -13,6 +13,7 @@ import com.app.model.entities.Ticket;
 import com.app.model.enums.TicketStatusEnum;
 import com.app.repository.TicketRepository;
 import com.authentication.models.entities.Account;
+import com.authentication.services.AccountService;
 import com.common.interfaces.BaseCrudService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +41,7 @@ public class TicketService implements BaseCrudService<Ticket, Long> {
 	}
 
 	@Override
-	public Ticket create(Ticket e) {
+	public Ticket save(Ticket e) {
 		Account account = accountService.read(e.getAccount().getId())
 				.orElseThrow(() -> new RuntimeException("Account not found"));
 

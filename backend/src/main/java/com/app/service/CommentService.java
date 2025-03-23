@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.app.model.entities.Comment;
 import com.app.repository.CommentRepository;
 import com.authentication.models.entities.Account;
+import com.authentication.services.AccountService;
 import com.common.interfaces.BaseCrudService;
 
 @Service
@@ -34,7 +35,7 @@ public class CommentService implements BaseCrudService<Comment, Long> {
 	}
 
 	@Override
-	public Comment create(Comment e) {
+	public Comment save(Comment e) {
 		Account account = accountService.read(e.getAccount().getId())
 				.orElseThrow(() -> new RuntimeException("Account not found"));
 

@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.app.service.AccountService;
 import com.authentication.models.dto.AccountDto;
 import com.authentication.models.entities.Account;
 import com.authentication.models.mapper.AccountMapper;
+import com.authentication.services.AccountService;
 import com.authentication.services.AuthService;
 import com.common.abstracts.AbstractCrudController;
 import com.common.interfaces.BaseCrudService;

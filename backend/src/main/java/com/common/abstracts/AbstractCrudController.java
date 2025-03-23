@@ -24,7 +24,7 @@ public abstract class AbstractCrudController<DTO, ENTITY, ID> {
 
 	@PostMapping
 	public ResponseEntity<DTO> create(@RequestBody DTO dto) {
-		ENTITY entity = getService().create(toEntity(dto));
+		ENTITY entity = getService().save(toEntity(dto));
 		return entity == null ? ResponseEntity.status(HttpStatus.BAD_REQUEST).build()
 				: ResponseEntity.status(HttpStatus.CREATED).body(toDto(entity));
 	}

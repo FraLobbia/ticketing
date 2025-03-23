@@ -9,16 +9,17 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommentService } from '../../services/comment.service';
 import { AuthService } from '../../../../core/services/auth.service';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { Ticket } from '../../../../shared/models/ticket.model';
 import { Comment } from '../../../../shared/models/comment.model';
+import { SnackbarService } from '../../../../shared/services/snackbar.service';
 
 @Component({
   selector: 'app-comment-form',
   templateUrl: './comment-form.component.html',
   styleUrls: ['./comment-form.component.scss'],
 })
-export class CommentFormComponent implements OnDestroy {
+export class CommentFormComponent implements OnInit, OnDestroy {
   /**
    * Variabili
    */
@@ -33,38 +34,43 @@ export class CommentFormComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private commentService: CommentService,
-    private authService: AuthService
+    private authService: AuthService,
+    private msgService: SnackbarService
+
   ) {
     this.commentForm = this.fb.group({
       content: ['', Validators.required],
     });
   }
-
-  /**
-   * Metodo per inviare il commento al server
-   */
-  onSubmit() {
+  ngOnInit(): void {
     const id = this.authService.getTokenPayload()?.idAccount;
-    if (!id) {
-      console.error('Account id not found');
-      return;
-    } else {
+    if (id) {
       this.authorId = id;
+    } else {
+      console.error('Account id not found');
+      this.msgService.showError('Non sei loggato');
     }
+  }
 
+
+  onSubmit(): void {
     if (this.commentForm.valid && this.authorId && this.ticket) {
-      const newComment: Comment = {
+      const comment: Comment = {
         content: this.commentForm.value.content,
         ticket: this.ticket,
         author: { id: this.authorId },
       };
-      const createCommentSub = this.commentService
-        .createComment(newComment)
+      this.commentService
+        .createComment(comment)
+        .pipe(takeUntil(this.destroy$))
         .subscribe(() => {
-          this.commentAdded.emit(); // Notifica il parent component dell'aggiunta di un commento
-          this.commentForm.reset(); // Reset del form
+          this.commentAdded.emit();
+          this.commentForm.reset();
         });
-    } else console.error('Form is not valid');
+    } else {
+      console.error('Form is not valid');
+      this.msgService.showError('Il form non è valido');
+    }
   }
 
   /**
@@ -72,7 +78,7 @@ export class CommentFormComponent implements OnDestroy {
    */
   destroy$ = new Subject<void>();
   ngOnDestroy(): void {
-    this.destroy$.next(); // Emissione del segnale per interrompere le sottoscrizioni
+    this.destroy$.next();
     this.destroy$.complete();
   }
 }
