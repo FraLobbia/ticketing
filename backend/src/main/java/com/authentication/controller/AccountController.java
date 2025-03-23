@@ -22,8 +22,6 @@ public class AccountController extends AbstractCrudController<AccountDto, Accoun
 
 	@Autowired
 	private AccountService service;
-	@Autowired
-	private AuthService authService;
 	
 	@Autowired
 	private AccountMapper mapper;

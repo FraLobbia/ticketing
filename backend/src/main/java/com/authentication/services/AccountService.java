@@ -1,10 +1,8 @@
 package com.authentication.services;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,8 +14,12 @@ import com.authentication.models.entities.Role;
 import com.authentication.models.enums.AuthExceptionEnum;
 import com.authentication.models.enums.RoleEnum;
 import com.authentication.repositories.AccountRepository;
+import com.authentication.repositories.RoleRepository;
 import com.common.interfaces.BaseCrudService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class AccountService implements BaseCrudService<Account, Long> {
 
@@ -25,18 +27,24 @@ public class AccountService implements BaseCrudService<Account, Long> {
 	private AccountRepository repo;
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private RoleRepository roleRepo;
 
 	@Override
 	public Account save(Account e) {
-		Role role = new Role();
-		role.setName(RoleEnum.ROLE_USER);
+		Role userRole = roleRepo.findByName(RoleEnum.ROLE_USER)
+				.orElseThrow(() -> new RuntimeException("Error: Role not found."));
 
-		Set<Role> roles = new HashSet<>();
-		roles.add(role);
-		e.setRoles(roles);
+		e.getRoles().add(userRole);
 		e.setCreatedAt(LocalDateTime.now());
 
-		return repo.save(e);
+		try {
+			Account saved = repo.save(e);
+			return saved;
+		} catch (Exception ex) {
+			log.error("[save] Errore durante il salvataggio dell'account", ex);
+			throw new RuntimeException(ex);
+		}
 	}
 
 	@Override

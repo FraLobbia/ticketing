@@ -1,6 +1,5 @@
 package com.authentication.jwt;
 
-import java.security.Key;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,7 +11,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import com.authentication.models.entities.Account;
 import com.authentication.models.entities.CustomUserDetails;
@@ -26,7 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-@Service
 public abstract class JwtUtils {
 
 	@Autowired
@@ -37,7 +34,7 @@ public abstract class JwtUtils {
 	 */
 	public String generateJwtToken(CustomUserDetails user) {
 		Date expireDate = new Date(System.currentTimeMillis() + getJwtExpirationDate());
-		
+
 		// @formatter:off
 			return Jwts.builder()
 					.subject(user.getEmail())
@@ -82,7 +79,7 @@ public abstract class JwtUtils {
 		}
 	}
 
-	private Key getSigningKey() {
+	private SecretKey getSigningKey() {
 		byte[] keyBytes = getJwtSecret().getBytes();
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
@@ -110,34 +107,26 @@ public abstract class JwtUtils {
 		}
 		return Long.parseLong(expiration);
 	}
-	
+
 	public CustomUserDetails getUserFromJwtToken(String token) {
-	    // Parso i claims dal token JWT usando la chiave di firma
-	    Claims claims = Jwts.parser()
-	            .verifyWith((SecretKey) getSigningKey())
-	            .build()
-	            .parseClaimsJws(token)
-	            .getBody();
-	    
-	    // Estrae le informazioni
-	    String email = claims.getSubject();
-	    Long idAccount = claims.get("idAccount", Long.class);
-	    String name = claims.get("name", String.class);
-	    String surname = claims.get("surname", String.class);
-	    
-	    // Estrae la lista dei ruoli (assunta come List<String>)
-	    List<String> roles = claims.get("roles", List.class);
-	    List<GrantedAuthority> authorities = roles.stream()
-	            .map(SimpleGrantedAuthority::new)
-	            .collect(Collectors.toList());
-	    
-	    // Crea un'istanza di Account (che estende CustomUserDetails)
-	    Account user = new Account();
-	    user.setId(idAccount);
-	    user.setEmail(email);
-	    user.setName(name);
-	    user.setSurname(surname);
-	    user.setPassword(""); // La password non è necessaria qui
-	    return user;
+		// Parso i claims dal token JWT usando la chiave di firma
+		Claims claims = Jwts.parser().verifyWith(getSigningKey()).build().parseSignedClaims(token).getPayload();
+
+		String email = claims.getSubject();
+		Long idAccount = claims.get("idAccount", Long.class);
+		String name = claims.get("name", String.class);
+		String surname = claims.get("surname", String.class);
+
+		List<String> roles = claims.get("roles", List.class);
+		List<GrantedAuthority> authorities = roles.stream().map(SimpleGrantedAuthority::new)
+				.collect(Collectors.toList());
+
+		Account user = new Account();
+		user.setId(idAccount);
+		user.setEmail(email);
+		user.setName(name);
+		user.setSurname(surname);
+		// TODO aggiungere i ruoli all'account
+		return user;
 	}
 }

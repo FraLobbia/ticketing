@@ -18,7 +18,9 @@ import com.authentication.models.enums.RoleEnum;
 import com.authentication.repositories.RoleRepository;
 
 import jakarta.security.auth.message.AuthException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class AuthService extends JwtUtils {
 
@@ -38,16 +40,7 @@ public class AuthService extends JwtUtils {
 		return new LoginResponseDTO(jwtToken);
 	}
 
-	/**
-	 * Estrae l'email dal token JWT e crea un oggetto di autenticazione con l'email
-	 */
-	public void setSecurityContext(CustomUserDetails user) {
-		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null,
-				user.getAuthorities());
 
-		SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-
-	}
 
 	public LoginResponseDTO register(RegistrationDTO dto) throws AuthException {
 		String email = dto.getEmail();
@@ -69,16 +62,28 @@ public class AuthService extends JwtUtils {
 
 		account.getRoles().add(userRole);
 		try {
-			service.save(account);
+			Account created = service.save(account);
 
 			LoginRequestDTO loginDto = new LoginRequestDTO();
-			loginDto.setEmail(account.getEmail());
+			loginDto.setEmail(created.getEmail());
 			loginDto.setPassword(dto.getPassword());
 
 			return login(loginDto);
 
 		} catch (Exception e) {
+			log.error("Errore durante la registrazione: {}", e.getMessage());
 			throw new RuntimeException("Error: Account not created.");
 		}
+	}
+	
+	/**
+	 * Estrae l'email dal token JWT e crea un oggetto di autenticazione con l'email
+	 */
+	public void setSecurityContext(CustomUserDetails user) {
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null,
+				user.getAuthorities());
+
+		SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
 	}
 }

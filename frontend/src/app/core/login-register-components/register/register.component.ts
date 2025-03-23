@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, takeUntil } from 'rxjs';
+import { SnackbarService } from '../../../shared/services/snackbar.service';
 
 @Component({
   selector: 'app-register',
@@ -15,8 +16,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private msg: SnackbarService
+  ) { }
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
@@ -32,16 +34,17 @@ export class RegisterComponent implements OnInit, OnDestroy {
       const registrationData = this.registerForm.value;
 
       // Simula la registrazione inviando i dati al servizio di autenticazione
-      this.authService.register(registrationData).subscribe(
-        (response) => {
-          // Successo: reindirizza l'utente al login
-          this.router.navigate(['/auth/login']);
-        },
-        (error) => {
-          // Gestisci gli errori di registrazione
-          console.error('Registrazione fallita', error);
-        }
-      );
+      this.authService.register(registrationData).pipe(
+        takeUntil(this.destroy$))
+        .subscribe(
+          {
+            next: () => this.router.navigate(['/tickets']),
+            error: (error) => {
+              console.error(error);
+              this.msg.show(error, 'Chiudi', 5000);
+            },
+          }
+        );
     }
   }
 

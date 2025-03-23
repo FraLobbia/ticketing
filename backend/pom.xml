@@ -94,6 +94,12 @@
 			<version>0.12.5</version>
 		</dependency>
 
+		<dependency>
+<!-- da controllare questa se serve effettivamente o posso farne a meno, per le properties-->
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
 	</dependencies>
 
 

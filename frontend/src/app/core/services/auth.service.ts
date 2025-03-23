@@ -33,10 +33,11 @@ export class AuthService {
   login({ email, password }: ILogin): Observable<ILoginResponse> {
     const url = `${this.url}/auth/login`;
     const body = { email, password };
-    return this.http.post<ILoginResponse>(url, body).pipe(
-      tap((response) => this.setToken(response.accessToken)), // Salva il token
-      catchError(this.handleError<ILoginResponse>('login'))
-    );
+    return this.http.post<ILoginResponse>(url, body)
+      .pipe(
+        tap((response) => this.setToken(response.accessToken)), // Salva il token
+        catchError(this.handleError<ILoginResponse>('login'))
+      );
   }
 
   /**
@@ -52,12 +53,15 @@ export class AuthService {
     surname,
     email,
     password,
-  }: IRegister): Observable<Account> {
+  }: IRegister): Observable<ILoginResponse> {
     const url = `${this.url}/auth/register`;
     const body = { name, surname, email, password };
     return this.http
-      .post<Account>(url, body)
-      .pipe(catchError(this.handleError<Account>('register')));
+      .post<ILoginResponse>(url, body)
+      .pipe(
+        tap((response) => this.setToken(response.accessToken)), // Salva il token
+        catchError(this.handleError<ILoginResponse>('login'))
+      );
   }
 
   /**

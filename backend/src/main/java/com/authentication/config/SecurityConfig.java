@@ -24,23 +24,21 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
 	@Autowired
-	private JwtAuthenticationFilter jwtFilter;
+	private AuthenticationFilter authFilter;
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.csrf(csrf -> csrf.disable()).cors(cors -> cors.configurationSource(corsConfigurationSource()))
-
+		
 				.authorizeHttpRequests(authorize -> {
-					authorize.requestMatchers("/auth/**").permitAll();
 					authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
 					authorize.anyRequest().authenticated();
 				});
 
-		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-		
+		http.addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+
 		return http.build();
 	}
-
 
 	private CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
