@@ -22,9 +22,11 @@ export interface ILoginResponse {
  * Contiene i dati dell'utente autenticato
  */
 export interface IJwtPayload {
-  sub: string; // Email dell'utente (o identificatore principale)
-  iat: number; // Issued At: Timestamp di quando il token è stato emesso
-  idAccount: number; // Identificatore dell'account dell'utente
-  roles: string; // Ruolo o ruoli dell'utente (potrebbe essere una stringa o un array di stringhe)
-  exp: number; // Expiration: Timestamp di quando il token scade
+  sub: string;      // Email dell'utente (o identificatore principale)
+  iat: number;      // Issued At: Timestamp di quando il token è stato emesso
+  idAccount: number;// Identificatore dell'account dell'utente
+  name: string;     // Nome dell'utente
+  surname: string;  // Cognome dell'utente
+  roles: string[];  // Ruolo o ruoli dell'utente (array di stringhe)
+  exp: number;      // Expiration: Timestamp di quando il token scade
 }

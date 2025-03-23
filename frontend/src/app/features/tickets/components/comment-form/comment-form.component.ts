@@ -44,7 +44,7 @@ export class CommentFormComponent implements OnDestroy {
    * Metodo per inviare il commento al server
    */
   onSubmit() {
-    const id = this.authService.getUserIdFromToken();
+    const id = this.authService.getTokenPayload()?.idAccount;
     if (!id) {
       console.error('Account id not found');
       return;

@@ -1,9 +1,11 @@
 <mat-card *ngIf="comments.length > 0; else noComments">
   <ul>
-    <li *ngFor="let comment of comments">
-      <div id="author" (mouseenter)="onMouseEnter(comment.id!)" (mouseleave)="onMouseLeave()">
-        <mat-icon matListIcon>comment</mat-icon>
-        <strong>{{ comment.author.name }} {{ comment.author.surname }}</strong>
+    <li *ngFor="let comment of comments | sortComments: sortOrder">
+      <div id="comment-{{ comment.id }}-author" (mouseenter)="onMouseEnter(comment.id!)" (mouseleave)="onMouseLeave()">
+        <div class="d-flex align-items-center">
+          <mat-icon matListIcon>comment</mat-icon>
+          <strong class="mx-2">{{ comment.author.name }} {{ comment.author.surname }}:</strong>
+        </div>
         <mat-card *ngIf="showTooltip === comment.id" class="tooltip-card">
           <div>
             Autore: {{ comment.author.name }} {{ comment.author.surname }}

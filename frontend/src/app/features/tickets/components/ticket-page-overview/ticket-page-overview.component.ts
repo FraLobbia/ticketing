@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
+import { Comment } from '../../../../shared/models/comment.model';
 
 import {
   Ticket,
@@ -10,31 +11,36 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { getTicketStatusEnumValue } from '../../../../shared/utility/string-editor.utility';
 import { SnackbarService } from '../../../../shared/services/snackbar.service';
+import { TicketTabCommentsComponent } from '../ticket-tab-comments/ticket-tab-comments.component';
+import { CommentService } from '../../services/comment.service';
 
 @Component({
-  selector: 'app-single-ticket-page',
-  templateUrl: './single-ticket-page.component.html',
-  styleUrl: './single-ticket-page.component.scss',
+  selector: 'app-ticket-page-overview',
+  templateUrl: './ticket-page-overview.component.html',
+  styleUrl: './ticket-page-overview.component.scss',
 })
-export class SingleTicketPageComponent implements OnDestroy {
+export class TicketPageOverviewComponent implements OnDestroy {
   /**
    * Variabili
    */
   ticket: Ticket | undefined;
+  comments: Comment[] = [];
+  selectedTab: string = 'overview';
   ticketStatusKeys: string[] = Object.keys(TicketStatusEnum);
   id: number | undefined;
   statusForm: FormGroup = new FormGroup({});
   getTicketStatusEnumValue = getTicketStatusEnumValue;
-
+  @ViewChild('ticketCorrespondence') ticketCorrespondence!: TicketTabCommentsComponent;
   /**
    * Costruttore
    */
   constructor(
     private ticketService: TicketService,
+    private commentService: CommentService,
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private msg: SnackbarService
-  ) {}
+  ) { }
 
   /**
    * Inizializza il componente
@@ -43,20 +49,39 @@ export class SingleTicketPageComponent implements OnDestroy {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       this.id = +params['id'];
       this.initializeForm();
-      this.fetchTicketData();
+      this.loadTicketData();
     });
+  }
+
+  selectTab(tab: string): void {
+    this.selectedTab = tab;
   }
 
   /**
    * Ottiene i dati del ticket
    */
-  fetchTicketData(): void {
+  loadTicketData(): void {
     this.ticketService
       .getTicketById(this.id!)
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: Ticket) => {
         this.ticket = data;
+        this.loadComments(this.ticket);
         this.updateForm();
+      });
+  }
+
+  /**
+  * Richiede i commenti per il ticket corrente al backend.
+  * I commenti vengono salvati nella variabile comments.
+  */
+  loadComments(ticket: Ticket) {
+    console.log('carica commenti');
+    this.commentService
+      .getCommentsByTicketId(ticket.id!)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((comments: Comment[]) => {
+        this.comments = comments;
       });
   }
 
@@ -80,6 +105,9 @@ export class SingleTicketPageComponent implements OnDestroy {
     }
   }
 
+  deleteTicket(): void {
+  }
+
   /**
    * Evento per cambiare lo stato del ticket.
    * Si iscrive anche al servizio per aggiornare la lista dei ticket visualizzati.
@@ -87,6 +115,7 @@ export class SingleTicketPageComponent implements OnDestroy {
   handleStatusChange(): void {
     this.ticketService
       .updateTicketStatus(this.id!, this.statusForm.value.status)
+      .pipe(takeUntil(this.destroy$))
       .subscribe((data: Ticket) => {
         this.ticket = data;
         // this.ticketService.getViewingTicketsFromDB().subscribe((tickets) => {});

@@ -57,7 +57,7 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
       const newTicket: Ticket = {
         ...this.ticketForm.value,
         author: {
-          id: this.authService.getUserIdFromToken(),
+          id: this.authService.getTokenPayload()?.idAccount,
         },
       };
       console.log('*** DEBUG ***', newTicket);

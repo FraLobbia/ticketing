@@ -1,2 +1,2 @@
 <app-comment-form *ngIf="ticket" [ticket]="ticket" (commentAdded)="onCommentAdded()"></app-comment-form>
-<app-comment-list *ngIf="ticket" [ticketId]="ticket.id"></app-comment-list>
+<app-comment-list *ngIf="ticket" [comments]="comments"></app-comment-list>

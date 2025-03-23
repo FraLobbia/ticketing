@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CreateTicketComponent } from './components/create-ticket/create-ticket.component';
-import { SingleTicketPageComponent } from './components/single-ticket-page/single-ticket-page.component';
+import { TicketPageOverviewComponent } from './components/ticket-page-overview/ticket-page-overview.component';
 
 const routes: Routes = [
   {
@@ -15,7 +15,7 @@ const routes: Routes = [
   },
   {
     path: ':id',
-    component: SingleTicketPageComponent,
+    component: TicketPageOverviewComponent,
   },
 ];
 

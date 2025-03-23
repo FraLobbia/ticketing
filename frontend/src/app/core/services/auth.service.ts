@@ -97,22 +97,29 @@ export class AuthService {
   }
 
   /**
-   * Recupera l'ID utente dal token di autenticazione.
-   *  @param token - Token di autenticazione
-   * @returns ID utente, o null se non è possibile decodificare il token
-   */ getUserIdFromToken(): number | null {
+   * Recupera il payload completo dal token di autenticazione.
+   * @returns Oggetto IJwtPayload contenente i dati decodificati, oppure null se il token non è valido
+   */
+  getTokenPayload(): IJwtPayload | null {
     try {
       const token = this.getToken();
       if (!token) return null;
       const decodedToken: IJwtPayload = jwtDecode(token);
       console.log('Decoded token:', decodedToken);
-      return decodedToken && decodedToken.idAccount
-        ? decodedToken.idAccount
-        : null;
+      return decodedToken;
     } catch (error) {
-      console.error('Error decoding token', error);
+      console.error('Errore durante la decodifica del token', error);
       return null;
     }
+  }
+
+  /**
+ * Verifica se l'utente ha il ruolo admin.
+ * @returns true se il token decodificato contiene il ruolo 'ROLE_ADMIN', altrimenti false.
+ */
+  isAdminUser(): boolean {
+    const jwtPayload = this.getTokenPayload();
+    return jwtPayload ? jwtPayload.roles.includes('ROLE_ADMIN') : false;
   }
 
   /**

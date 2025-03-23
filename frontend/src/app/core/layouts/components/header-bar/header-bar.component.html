@@ -1,10 +1,6 @@
 <mat-toolbar color="primary" class="header-bar">
   <div>
-    <button
-      mat-icon-button
-      class="header-bar__menu-button"
-      (click)="onToggleSidebar()"
-    >
+    <button mat-icon-button class="header-bar__menu-button" (click)="onToggleSidebar()">
       <mat-icon class="hover-color">menu</mat-icon>
     </button>
 
@@ -13,6 +9,10 @@
 
   <span class="header-bar__spacer"></span>
   <div>
+    <div class="d-flex">
+      <span *ngIf="isAdministrator" class="mx-2">ADMIN - </span>
+      <span>{{nomeCompleto}}</span>
+    </div>
     <button [routerLink]="'/tickets/create'" id="new-ticket">
       <i class="material-icons">add_circle</i>
       <span class="menu-title">Apri nuovo ticket</span>
