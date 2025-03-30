@@ -1,26 +1,45 @@
 <mat-card *ngIf="ticket" class="ticket-detail-card">
+  <div class="flex items-center gap-3 w-100 justify-between">
+    <p class="m-0 text-center pointer-cursor" [matTooltip]="'Copia l\'ID'" matTooltipPosition="left"
+      (click)="copyTicketId()">
+      N° Ticket: <strong>{{ ticket.id }}</strong>
+    </p>
+    <div class="flex items-center gap-3">
+      <!-- Delete ticket-->
+      <div *ngIf="isEditMode" mat-icon-button color="warn"
+        class="flex items-center gap-1 border-2 border-red-500 px-3 rounded-md hover:bg-red-100 transition pointer-cursor"
+        (click)="deleteTicket(ticket)">
+        <mat-icon class="text-red-600">delete</mat-icon>
+        <span class="text-red-700 text-sm font-medium">Cancella ticket</span>
+      </div>
+      <!-- Edit ticket -->
+      <div mat-icon-button class="flex items-center gap-1 border-2  px-3 rounded-md transition pointer-cursor"
+        (click)="isEditMode = !isEditMode">
+        <mat-icon>{{isEditMode ? 'save' :'edit' }}</mat-icon>
+        <span class="text-sm font-medium">{{isEditMode ? 'Salva modifiche' : 'Modifica'}}</span>
+      </div>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
   <div class="header-wrapper">
     <!-- info apertura modifica ticket -->
     <div>
       <p>
-        <strong>Creato da: </strong>{{ ticket.author.name }}
+        <strong>Autore: </strong>{{ ticket.author.name }}
         {{ ticket.author.surname }}
       </p>
       <p>
-        <strong>Creato il: </strong>{{ ticket.createdAt | date : "EEEE - dd MMMM y - HH:mm" }}
+        <strong>Data apertura: </strong>{{ ticket.createdAt | date : "EEEE - dd MMMM y - HH:mm" }}
       </p>
       <p>
-        <strong> Aggiornato il: </strong>
-        {{ ticket.updatedAt | date : "EEEE - dd MMMM y - HH:mm" }}
+        <strong>Data modifica: </strong>
+        {{ ticket.updatedAt ? (ticket.updatedAt | date : "EEEE - dd MMMM y - HH:mm") : '---' }}
       </p>
     </div>
     <!-- selezione status -->
     <form *ngIf="ticket" [formGroup]="statusForm">
       <div>
-        <h6 class="m-0 text-center pointer-cursor" [matTooltip]="'Copia l\'ID'" matTooltipPosition="above"
-          (click)="copyTicketId()">
-          Ticket ID: <strong>{{ ticket.id }}</strong>
-        </h6>
+
         <hr />
         <mat-select [appStatusClass]="statusForm.get('status')?.value" formControlName="status"
           (selectionChange)="handleStatusChange()">
@@ -36,7 +55,9 @@
   <mat-divider></mat-divider>
   <!-- titolo ticket -->
   <mat-card-header>
-    <mat-card-title>{{ ticket.title }}</mat-card-title>
+    <div class="flex justify-between items-center w-full">
+      <mat-card-title>{{ ticket.title }}</mat-card-title>
+    </div>
   </mat-card-header>
 </mat-card>
 

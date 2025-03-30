@@ -1,22 +1,21 @@
-<form [formGroup]="commentForm" (ngSubmit)="onSubmit()">
-  <mat-form-field>
+<form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="mt-5">
+  <mat-form-field appearance="outline" class="w-full">
     <mat-label>Scrivi qui il tuo commento...</mat-label>
-    <textarea
-      matInput
-      formControlName="content"
-      placeholder="Scrivi qui il tuo commento..."
-      rows="5"
-    ></textarea>
-    <mat-error
-      *ngIf="
+    <textarea matInput formControlName="content" placeholder="Scrivi qui il tuo commento..." rows="5"></textarea>
+    <mat-error *ngIf="
         commentForm.get('content')?.invalid &&
         commentForm.get('content')?.touched
-      "
-    >
-      Il commento è richiesto
+      ">
     </mat-error>
   </mat-form-field>
-  <button type="submit" [disabled]="commentForm.invalid">Commenta</button>
+
+  <button type="submit" [disabled]="commentForm.invalid"
+    class="w-full mt-3 py-2 rounded-md text-white bg-red-500 hover:bg-red-600 disabled:bg-gray-300 transition">
+    Commenta
+  </button>
 </form>
 
-<mat-divider></mat-divider>
+<!-- Divider separato visivamente -->
+<div class="my-8">
+  <mat-divider></mat-divider>
+</div>

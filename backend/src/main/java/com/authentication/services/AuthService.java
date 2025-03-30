@@ -5,6 +5,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.authentication.jwt.JwtUtils;
 import com.authentication.models.dto.LoginRequestDTO;
@@ -18,6 +19,7 @@ import com.authentication.models.enums.RoleEnum;
 import com.authentication.repositories.RoleRepository;
 
 import jakarta.security.auth.message.AuthException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -85,5 +87,20 @@ public class AuthService extends JwtUtils {
 
 		SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 
+	}
+
+
+
+	/**
+	 * Estrae il token JWT dall'header Authorization
+	 * @param request TODO
+	 */
+	public String getTokenFromRequest(HttpServletRequest request) {
+		String bearerToken = request.getHeader("Authorization");
+	
+		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+			return bearerToken.substring(7, bearerToken.length());
+		}
+		return null;
 	}
 }

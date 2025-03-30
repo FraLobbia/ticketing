@@ -60,10 +60,11 @@ export class CreateTicketComponent implements OnInit, OnDestroy {
           id: this.authService.getTokenPayload()?.idAccount,
         },
       };
-      console.log('*** DEBUG ***', newTicket);
-      this.ticketService.createTicket(newTicket).subscribe((ticket) => {
-        console.info('Ticket created:', ticket);
-        this.router.navigate(['/tickets']);
+      this.ticketService.create(newTicket).subscribe((ticket: Ticket) => {
+        console.groupCollapsed('Ticket creato con successo (...)');
+        console.table(ticket);
+        console.groupEnd();
+        this.router.navigate(['/tickets/' + ticket.id]);
       });
     }
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject, tap } from 'rxjs';
+import { Observable, BehaviorSubject, tap, finalize } from 'rxjs';
 import { Ticket } from '../../../shared/models/ticket.model';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { Ticket } from '../../../shared/models/ticket.model';
 })
 export class TicketService {
   // costruttore
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private baseUrl = 'http://localhost:8080/api/tickets';
 
@@ -34,7 +34,7 @@ export class TicketService {
     });
   }
 
-  createTicket(ticket: Ticket): Observable<Ticket> {
+  create(ticket: Ticket): Observable<Ticket> {
     return this.http.post<Ticket>(`${this.baseUrl}`, ticket);
   }
 
@@ -103,17 +103,39 @@ export class TicketService {
    */
   getViewingTicketsFromDB(): Observable<Ticket[]> {
     const ticketIds: number[] = this.getViewingTicketsIdFromLocalStorage();
-    console.group('Ottengo i viewing ticket dal DB');
-    console.table(ticketIds);
-    ticketIds.length === 0 &&
-      console.log('Nessun ticket nel local storage da recuperare a DB');
-    console.groupEnd();
+
+    console.groupCollapsed('Gestione ticket in visione (...)');
+    console.log("-> ID dal local storage: ", ticketIds);
+
     if (!ticketIds || ticketIds.length === 0) {
+      console.log('Nessun ticket nel local storage da recuperare a DB');
+      console.groupEnd();
       return new BehaviorSubject<Ticket[]>([]).asObservable();
     }
+
     return this.http.get<Ticket[]>(`${this.baseUrl}/viewing-tickets`, {
       params: { ids: ticketIds.join(',') },
-    });
+    }).pipe(
+      tap({
+        next: (tickets) => {
+          console.log('-> Ticket recuperati dal DB:');
+          console.table(
+            tickets.map(ticket => ({
+              ID: ticket.id,
+              Titolo: ticket.title,
+              Descrizione: ticket.description,
+              Stato: ticket.status,
+              Autore: `${ticket.author.name} ${ticket.author.surname}`,
+              CreatoIl: ticket.createdAt,
+              AggiornatoIl: ticket.updatedAt || 'N/A',
+            })),
+            ['ID', 'Titolo', 'Descrizione', 'Stato', 'Autore', 'CreatoIl', 'AggiornatoIl']
+          );
+        },
+        error: (err) => console.error("Errore nel recupero dei ticket:", err),
+      }),
+      finalize(() => console.groupEnd())
+    );
   }
 
   updateTicketStatus(id: number, status: string): Observable<Ticket> {

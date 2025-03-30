@@ -6,7 +6,7 @@ import {
   TicketStatusEnum,
 } from '../../../../shared/models/ticket.model';
 import { TicketService } from '../../services/ticket.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { getTicketStatusEnumValue } from '../../../../shared/utility/string-editor.utility';
@@ -26,6 +26,7 @@ export class TicketPageOverviewComponent implements OnDestroy {
   ticket: Ticket | undefined;
   comments: Comment[] = [];
   selectedTab: string = 'overview';
+  isEditMode: boolean = true;
   ticketStatusKeys: string[] = Object.keys(TicketStatusEnum);
   id: number | undefined;
   statusForm: FormGroup = new FormGroup({});
@@ -38,6 +39,7 @@ export class TicketPageOverviewComponent implements OnDestroy {
     private ticketService: TicketService,
     private commentService: CommentService,
     private route: ActivatedRoute,
+    private router: Router,
     private fb: FormBuilder,
     private msg: SnackbarService
   ) { }
@@ -80,7 +82,6 @@ export class TicketPageOverviewComponent implements OnDestroy {
   * I commenti vengono salvati nella variabile comments.
   */
   loadComments(ticket: Ticket) {
-    console.log('carica commenti');
     this.commentService
       .getCommentsByTicketId(ticket.id!)
       .pipe(takeUntil(this.destroy$))
@@ -109,7 +110,20 @@ export class TicketPageOverviewComponent implements OnDestroy {
     }
   }
 
-  deleteTicket(): void {
+  editTicket(t: Ticket): void {
+    // this.router.navigate(['/tickets/edit/' + this.ticket?.id]);
+  }
+
+  deleteTicket(t: Ticket): void {
+    this.ticketService
+      .deleteTicket(t.id!)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.msg.show(`Ticket ${t.id} eliminato con successo`);
+        this.ticket = undefined;
+        this.router.navigate(['/tickets']);
+      }
+      );
   }
 
   /**

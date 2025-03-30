@@ -1,7 +1,6 @@
 import {
   Component,
-  Input,
-  OnInit
+  Input
 } from '@angular/core';
 import { Comment } from '../../../../shared/models/comment.model';
 
@@ -11,9 +10,13 @@ import { Comment } from '../../../../shared/models/comment.model';
   styleUrls: ['./comment-list.component.scss'],
 })
 export class CommentListComponent {
+  delete() {
+    throw new Error('Method not implemented.');
+  }
   @Input() comments: Comment[] = [];
   sortOrder: 'asc' | 'desc' = 'desc';
   showTooltip: number | null = null;
+  isEditMode: boolean = false;
 
   /**
    * Gestiscono l'evento per mostrare/nascondere il tooltip sopra il nome dell'utente

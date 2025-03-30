@@ -12,6 +12,7 @@ import { SnackbarService } from '../../../shared/services/snackbar.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnDestroy {
+
   loginForm: FormGroup;
 
   constructor(
@@ -34,13 +35,16 @@ export class LoginComponent implements OnDestroy {
         .subscribe(
           {
             next: () => this.router.navigate(['/tickets']),
-            error: (error) => {
-              console.error(error);
-              this.msg.show(error, 'Chiudi', 5000);
-            },
           }
         );
     }
+  }
+
+  fillInputs(): void {
+    this.loginForm.patchValue({
+      email: 'test@test.com',
+      password: 'qwerty',
+    });
   }
 
   /**

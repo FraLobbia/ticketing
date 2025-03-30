@@ -43,7 +43,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			return; // Interrompe la catena dei filtri dopo aver gestito la risposta con getOutputStream()
 		}
 
-		String token = getTokenFromRequest(request);
+		String token = authService.getTokenFromRequest(request);
 
 		if (StringUtils.hasText(token) && authService.isJwtTokenValid(token)) {
 
@@ -94,17 +94,5 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 			LoginResponseDTO registerResponse = new LoginResponseDTO(AuthExceptionEnum.GENERIC_ERROR);
 			new ObjectMapper().writeValue(response.getOutputStream(), registerResponse);
 		}
-	}
-
-	/**
-	 * Estrae il token JWT dall'header Authorization
-	 */
-	private String getTokenFromRequest(HttpServletRequest request) {
-		String bearerToken = request.getHeader("Authorization");
-
-		if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-			return bearerToken.substring(7, bearerToken.length());
-		}
-		return null;
 	}
 }

@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { ILoginResponse } from '../../shared/interfaces/auth.interface';
 import { jwtDecode } from 'jwt-decode';
 import { Account } from '../../shared/models/account.model';
+import { SnackbarService } from '../../shared/services/snackbar.service';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +23,7 @@ export class AuthService {
 
   isAdmin = false;
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient, private router: Router, private msg: SnackbarService) { }
 
   /**
    * Effettua il login dell'utente.
@@ -109,7 +110,7 @@ export class AuthService {
       const token = this.getToken();
       if (!token) return null;
       const decodedToken: IJwtPayload = jwtDecode(token);
-      console.log('Decoded token:', decodedToken);
+      // console.log('Decoded token:', decodedToken);
       return decodedToken;
     } catch (error) {
       console.error('Errore durante la decodifica del token', error);
@@ -132,8 +133,10 @@ export class AuthService {
    *  @param result - Valore opzionale da restituire come risultato dell'osservabile
    * @returns Funzione che restituisce un osservabile
    */ private handleError<T>(operation = 'operation', result?: T) {
-    return (error: Error): Observable<T> => {
-      console.error(`${operation} failed: ${error.message}`);
+    return (response: { error: any; message: string; }): Observable<T> => {
+      console.error(`${operation} failed: ${response.message}`);
+      console.table(response);
+      this.msg.show(response.error.message, 'Chiudi', 5000);
       return of(result as T);
     };
   }

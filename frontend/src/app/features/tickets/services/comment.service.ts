@@ -39,10 +39,10 @@ export class CommentService {
 
   /**
    * Richiede al backend di eliminare un commento.
-   * @param commentId
+   * @param id
    * @returns Observable<void>
    */
-  deleteComment(commentId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${commentId}`);
+  deleteComment(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }
 }
