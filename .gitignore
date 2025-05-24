@@ -32,4 +32,11 @@ build/
 ### VS Code ###
 .vscode/
 
+<<<<<<< Updated upstream
 .fake
+=======
+.fake
+.DS_Store
+mysql-data/.DS_Store
+.DS_Store
+>>>>>>> Stashed changes
