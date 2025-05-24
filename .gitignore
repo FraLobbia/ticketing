@@ -33,3 +33,5 @@ build/
 .vscode/
 
 .fake
+.DS_Store
+mysql-data/.DS_Store
