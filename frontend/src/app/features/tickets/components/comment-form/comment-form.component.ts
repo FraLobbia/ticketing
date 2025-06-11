@@ -21,11 +21,11 @@ import { SnackbarService } from '../../../../shared/services/snackbar.service';
 })
 export class CommentFormComponent implements OnInit, OnDestroy {
   /**
-   * Variabili
+   * Campi
    */
-  authorId: number | undefined;
   @Input() ticket: Ticket | undefined;
   @Output() commentAdded = new EventEmitter<void>(); //Evento emesso al parent quando un commento viene aggiunto
+  authorId: number | undefined;
   commentForm: FormGroup;
 
   /**
@@ -36,7 +36,6 @@ export class CommentFormComponent implements OnInit, OnDestroy {
     private commentService: CommentService,
     private authService: AuthService,
     private msgService: SnackbarService
-
   ) {
     this.commentForm = this.fb.group({
       content: ['', Validators.required],

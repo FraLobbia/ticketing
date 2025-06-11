@@ -1,13 +1,13 @@
-<form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="mt-5">
-  <mat-form-field appearance="outline" class="w-full">
-    <mat-label>Scrivi qui il tuo commento...</mat-label>
-    <textarea matInput formControlName="content" placeholder="Scrivi qui il tuo commento..." rows="5"></textarea>
-    <mat-error *ngIf="
+<form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="mt-5 d-flex flex-column">
+  <label>Scrivi qui il tuo commento...</label>
+  <div class="w-full">
+    <textarea class="w-100" formControlName="content" placeholder="Scrivi qui il tuo commento..."></textarea>
+    <small *ngIf="
         commentForm.get('content')?.invalid &&
         commentForm.get('content')?.touched
       ">
-    </mat-error>
-  </mat-form-field>
+    </small>
+  </div>
 
   <button type="submit" [disabled]="commentForm.invalid"
     class="w-full mt-3 py-2 rounded-md text-white bg-red-500 hover:bg-red-600 disabled:bg-gray-300 transition">

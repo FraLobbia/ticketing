@@ -1,11 +1,13 @@
+@use "../../../../styles/bootstrapOverrides" as *;
+
 .auth-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #ffe8cc;
+  background-color: $primary;
 }
 
 .login-card {
-  background-color: #fff4e5;
+  background-color: lighten($primary, 5%);
 }
