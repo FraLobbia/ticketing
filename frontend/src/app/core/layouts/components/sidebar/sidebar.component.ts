@@ -14,7 +14,7 @@ import { getTicketStatusEnumValue } from '../../../../shared/utility/string-edit
 })
 export class SidebarComponent implements OnInit, OnDestroy {
   /**
-   * Property
+   * Campi
    */
   viewingTickets: Ticket[] = [];
   menuItems: IMenuItem[] = MENU_ITEMS;
@@ -31,13 +31,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.ticketService['updateViewingTicketsSubject']();
-    this.subscribeToViewingTickets();
-  }
-
-  /**
-   * Sottoscrizione al subject per ricevere i ticket visualizzati ogni volta che cambiano
-   */
-  private subscribeToViewingTickets(): void {
     this.ticketService.viewingTickets$
       .pipe(takeUntil(this.destroy$))
       .subscribe((tickets: Ticket[]) => {

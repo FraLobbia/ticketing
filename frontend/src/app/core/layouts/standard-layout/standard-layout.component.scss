@@ -1,8 +1,9 @@
+
+@use "bootstrapOverrides" as *;
 .layout {
   display: flex;
   height: 90vh;
-
-  background-color: #ffe8cc;
+  background-color: $primary;
 }
 
 app-sidebar {
@@ -22,5 +23,5 @@ app-header-bar {
   overflow-y: auto; /* Abilita lo scorrimento verticale */
   flex-grow: 1;
   padding: 20px;
-  background-color: #fff4e5;
+  background-color: lighten($primary, 5%);
 }

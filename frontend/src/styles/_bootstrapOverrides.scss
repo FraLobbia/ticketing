@@ -7,7 +7,7 @@
 // 2. Include any default variable overrides here
 
 $primary: #ffe8cc;
-$primary-dark: #ffcc89;
+$primary-dark: #f5d0a0;
 $secondary: #232e3e;
 $tertiary: #f44336;
 
@@ -18,6 +18,9 @@ $tertiary: #f44336;
 // 4. Include any default map overrides here
 
 $custom-theme-colors: (
+  "primary": $primary,
+  "primary-dark": $primary-dark,
+  "secondary": $secondary,
 	"tertiary": $tertiary,
 );
 $theme-colors: map-merge($theme-colors, $custom-theme-colors);

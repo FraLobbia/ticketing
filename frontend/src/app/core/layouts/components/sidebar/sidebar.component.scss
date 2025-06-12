@@ -1,91 +1,17 @@
-ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  li {
-    border-radius: 20px;
-  }
-}
+@use "bootstrapOverrides" as *;
 
-.menu-item {
-  padding: 10px 20px;
-  justify-content: center;
+.card-viewing {
+  overflow: hidden;      /* vincola tutto dentro i bordi della card */
+  width: 100%;           /* occupa tutta la larghezza del container */
   cursor: pointer;
-  display: flex;
-  align-items: center;
+  transition: background-color 0.2s;
 
-  &.menu-item-active,
-  &.active {
-    /* Classe aggiunta da routerLinkActive */
-    background-color: #232e3e;
-    color: white;
+  &:hover:not(.active) {
+    background-color: lighten($secondary, 10%) !important;
+    color: white !important;
 
-    .material-icons {
-      color: white;
-    }
-    &:hover {
-      background-color: #acacac;
+    i {
+      color: white !important;
     }
   }
-  a {
-    text-decoration: none;
-    color: inherit;
-    width: 100%;
-    display: flex;
-    align-items: center;
-  }
-
-  .material-icons {
-    margin-right: 10px;
-    color: #232e3e;
-  }
-
-  .menu-title {
-    font-size: 1.5rem;
-  }
-}
-
-mat-divider {
-  margin-bottom: 10px;
-}
-
-mat-card {
-  margin: 10px;
-  background-color: #e3e0e0;
-  cursor: pointer;
-  &:hover:where(:not(.selected-ticket)) {
-    background-color: #acacac;
-  }
-  mat-card-header {
-    padding-block-start: 5px;
-    align-items: center;
-    justify-content: space-between;
-    display: flex;
-    & > div:nth-child(2) {
-      margin-right: auto;
-    }
-    mat-icon:hover {
-      color: #007bff;
-      &:where(:not(.selected-ticket)) {
-        color: #0056b3;
-      }
-    }
-  }
-}
-
-.selected-ticket {
-  background-color: #232e3e;
-  color: white;
-}
-
-.fs-6 {
-  font-size: 0.8rem;
-}
-
-.status {
-  margin-bottom: 5px;
-}
-h5 {
-  margin-left: 10px;
-  font-weight: 500 !important;
 }

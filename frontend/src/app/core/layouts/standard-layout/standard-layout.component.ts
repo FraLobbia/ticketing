@@ -7,10 +7,10 @@ import { Component } from '@angular/core';
 })
 export class StandardLayoutComponent {
   /**
-   * Variabili
+   * Campi
    */
   isSidebarVisible: boolean = true;
-  sideBarWidth: number = 250;
+  sideBarWidth: number = 250; //px
 
   /**
    * Costruttore

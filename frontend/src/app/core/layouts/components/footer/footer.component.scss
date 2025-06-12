@@ -1,5 +1,7 @@
+
+@use "bootstrapOverrides" as *;
 .footer {
-  background-color: #333;
+  background-color: $secondary;
   color: #fff;
   padding: 10px 0;
   text-align: center;
@@ -18,7 +20,7 @@
     margin-top: 10px;
 
     a {
-      color: #fff;
+      color: white;
       margin: 0 10px;
       text-decoration: none;
       font-size: 14px;

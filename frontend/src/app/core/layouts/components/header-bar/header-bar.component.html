@@ -1,24 +1,26 @@
-<mat-toolbar color="primary" class="header-bar">
-  <div>
-    <button mat-icon-button class="header-bar__menu-button" (click)="onToggleSidebar()">
-      <mat-icon class="hover-color">menu</mat-icon>
-    </button>
+<div role="toolbar" class="d-flex align-items-center justify-content-between bg-secondary text-white px-3">
+  <div class="d-flex align-items-center">
 
-    <span [routerLink]="'/tickets'" class="header-bar__title">Ticketing</span>
+    <button class="btn text-white p-0" (click)="onToggleSidebar()">
+      <i class="bi bi-list hover-color fs-3"></i>
+    </button>
+    <button [routerLink]="'/tickets'" class=" btn text-white ms-3 fw-medium fs-4 hover-color">
+      Ticketing
+    </button>
   </div>
 
-  <span class="header-bar__spacer"></span>
-  <div>
-    <div class="d-flex">
+  <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center me-3">
       <span *ngIf="isAdministrator" class="mx-2">ADMIN - </span>
       <span>{{nomeCompleto}}</span>
     </div>
-    <button [routerLink]="'/tickets/create'" id="new-ticket">
-      <i class="material-icons">add_circle</i>
-      <span class="menu-title">Apri nuovo ticket</span>
+    <button [routerLink]="'/tickets/create'" id="new-ticket"
+      class="d-flex align-items-center gap-2 px-3 py-2 mx-4 rounded bg-danger text-white border-0 bg-tertiary">
+      <i class="bi bi-plus-circle-fill"></i>
+      <span>Apri nuovo ticket</span>
     </button>
-    <button mat-icon-button class="header-bar__user-button" (click)="logout()">
-      <mat-icon class="hover-color">logout</mat-icon>
+    <button class="btn text-white p-0" (click)="logout()">
+      <i class="bi bi-exclude fs-4 hover-color"></i>
     </button>
   </div>
-</mat-toolbar>
+</div>

@@ -8,9 +8,8 @@ import { LoginModule } from './login-register-components/login/login.module';
 import { RegisterModule } from './login-register-components/register/register.module';
 import { LayoutsModule } from './layouts/layouts.module';
 import { RouterModule } from '@angular/router';
-import { MaterialModule } from './material/material.module';
 
-const myModules = [LoginModule, RegisterModule, LayoutsModule, MaterialModule];
+const myModules = [LoginModule, RegisterModule, LayoutsModule];
 
 @NgModule({
   imports: [CommonModule, ReactiveFormsModule, RouterModule, ...myModules],

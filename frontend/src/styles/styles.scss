@@ -1,4 +1,5 @@
-@use "./bootstrapOverrides";
+@use "bootstrapOverrides";
+@use "../../node_modules/bootstrap-icons/font/bootstrap-icons.scss";;
 
 .status-open {
   background-color: teal;

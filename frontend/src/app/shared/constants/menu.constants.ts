@@ -3,25 +3,25 @@ import { IMenuItem } from './../interfaces/menu-item.interface';
 export const MENU_ITEMS: IMenuItem[] = [
   {
     title: 'Dashboard',
-    icon: 'dashboard',
+    icon: 'bi-card-list',
     path: '/tickets',
     isActive: false,
   },
   {
     title: 'Ticket di oggi',
-    icon: 'calendar_month',
+    icon: 'bi-calendar-event',
     path: 'today',
     isActive: false,
   },
   {
     title: 'In pending',
-    icon: 'pending_actions',
+    icon: 'bi-hourglass-split',
     path: 'pending',
     isActive: false,
   },
   {
     title: 'Impostazioni',
-    icon: 'settings',
+    icon: 'bi-gear-wide-connected',
     path: 'settings',
     isActive: false,
   },

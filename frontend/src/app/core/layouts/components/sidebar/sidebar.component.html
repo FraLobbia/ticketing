@@ -1,53 +1,63 @@
-<div class="side-bar">
-  <h5>Sezioni</h5>
-  <nav>
-    <ul>
-      <li
-        *ngFor="let item of menuItems"
-        class="menu-item"
-        [ngClass]="{ 'menu-item-active': item.isActive }"
-        routerLinkActive="menu-item-active"
-        [routerLinkActiveOptions]="{ exact: true }"
-      >
-        <a [routerLink]="item.path" (click)="handleMenuNavigation(item)">
-          <i class="material-icons">{{ item.icon }}</i>
-          <span class="menu-title">{{ item.title }}</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
-  <mat-divider></mat-divider>
-  <div class="tickets-container">
-    <h5>Ticket in visione</h5>
-    <mat-card
-      *ngFor="let ticket of viewingTickets"
-      [ngClass]="{ 'selected-ticket': isSelectedTicket(ticket.id!) }"
-      [routerLink]="['/tickets', ticket.id]"
+<div class="bg-primary overflow-auto vh-100">
+  <!-- Sezioni -->
+  <h5 class="h5 m-1 fw-medium">Sezioni</h5>
+  <nav class="nav flex-column px-2">
+    <button
+      type="button"
+      *ngFor="let item of menuItems"
+      [routerLink]="item.path"
+      routerLinkActive="bg-secondary text-white"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-link d-flex align-items-center px-3 py-2 rounded-pill text-black"
+      (click)="handleMenuNavigation(item)"
     >
-      <mat-card-header>
-        <div>
-          <mat-card-title>{{ ticket.title }}</mat-card-title>
-          <mat-card-subtitle>
-            <div class="d-flex justify-content-between">
-              <span class="status" [appStatusClass]="ticket.status">
-                {{ getTicketStatusEnumValue(ticket.status) }}
-              </span>
-              <span
-                class="fs-6"
-                [ngClass]="{ 'selected-ticket': isSelectedTicket(ticket.id!) }"
-                >ID: {{ ticket.id }}</span
-              >
-            </div>
-          </mat-card-subtitle>
+      <i class="bi {{ item.icon }} me-2"></i>
+      <span class="fw-semibold">{{ item.title }}</span>
+    </button>
+  </nav>
+
+  <hr class="border-1 my-3">
+
+  <!-- Ticket in visione -->
+  <h5 class="h5 ms-1 fw-medium">Ticket in visione</h5>
+  <div class="tickets-container px-2">
+    <div
+      *ngFor="let ticket of viewingTickets"
+      [routerLink]="['/tickets', ticket.id]"
+      class="card card-viewing mb-2 overflow-hidden w-100"
+      [ngClass]="{
+        'bg-primary-dark': !isSelectedTicket(ticket.id!),
+        'bg-secondary text-white': isSelectedTicket(ticket.id!)
+      }"
+    >
+      <div class="card-header d-flex flex-column p-2">
+        <!-- Riga ID + titolo -->
+        <div class="d-flex align-items-center gap-2 overflow-hidden w-100">
+          <span class="text-nowrap">ID: {{ ticket.id }}</span>
+          <span class="vr"></span>
+          <span class="d-block text-truncate">{{ ticket.title }}</span>
         </div>
-        <div>
-          <mat-icon
-            matTooltip="Chiudi"
+        <!-- Badge e chiudi -->
+        <div class="d-flex justify-content-between align-items-center mt-2">
+          <span class="badge-pill w-100" [appStatusClass]="ticket.status">
+            {{ getTicketStatusEnumValue(ticket.status) }}
+          </span>
+          <button
+            type="button"
+            class="btn p-0 ms-2"
+            title="Chiudi"
             (click)="removeViewingTicket(ticket.id!); $event.stopPropagation()"
-            >cancel</mat-icon
           >
+            <i
+              class="bi bi-x-circle-fill"
+              [ngClass]="{
+                'text-white': isSelectedTicket(ticket.id!),
+                'text-muted': !isSelectedTicket(ticket.id!)
+              }"
+            ></i>
+          </button>
         </div>
-      </mat-card-header>
-    </mat-card>
+      </div>
+    </div>
   </div>
 </div>
