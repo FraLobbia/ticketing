@@ -1,4 +1,4 @@
-@use "bootstrapOverrides";
+@use "bootstrapOverrides" as *;
 @use "../../node_modules/bootstrap-icons/font/bootstrap-icons.scss";;
 
 .status-open {
@@ -27,4 +27,9 @@
 
 .badge-pill {
   border-radius: 10rem; // Arrotonda il badge a forma di "pillola"
+}
+
+.nav-link.active {
+  // border-bottom: none !important;
+  border-bottom-color: $primary-dark !important;
 }

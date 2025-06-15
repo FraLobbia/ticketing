@@ -1,54 +1,54 @@
-<mat-card *ngIf="comments.length > 0; else noComments">
-  <ul>
-    <div *ngFor="let comment of comments | sortComments: sortOrder" class="flex flex-row justify-between items-center">
-      <li>
-        <div id="comment-{{ comment.id }}-author" (mouseenter)="onMouseEnter(comment.id!)"
-          (mouseleave)="onMouseLeave()">
-          <div class="d-flex align-items-</div>center">
-            <mat-icon matListIcon>comment</mat-icon>
-            <strong class="mx-2">{{ comment.author.name }} {{ comment.author.surname }}:</strong>
+<div *ngIf="comments.length > 0; else noComments">
+  <ul class="list-group">
+    <div *ngFor="let comment of comments | sortComments: sortOrder">
+      <li class="p-0">
+        <div class="card d-flex flex-column justify-content-between p-2 mb-1">
+          <div id="comment-{{ comment.id }}-author" (mouseenter)="onMouseEnter(comment.id!)"
+            (mouseleave)="onMouseLeave()">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-chat-left-text-fill"></i>
+              <strong class="mx-2">{{ comment.author.name }} {{ comment.author.surname }}:</strong>
+            </div>
+            <div class="card tooltip-card" *ngIf="showTooltip === comment.id">
+              <div>
+                Autore: {{ comment.author.name }} {{ comment.author.surname }}
+              </div>
+              <div>
+                Email:
+                <a href="mailto:{{ comment.author.email }}">{{
+                  comment.author.email
+                  }}</a>
+              </div>
+            </div>
           </div>
-          <mat-card *ngIf="showTooltip === comment.id" class="tooltip-card">
-            <div>
-              Autore: {{ comment.author.name }} {{ comment.author.surname }}
-            </div>
-            <div>
-              Email:
-              <a href="mailto:{{ comment.author.email }}">{{
-                comment.author.email
-                }}</a>
-            </div>
-          </mat-card>
-        </div>
 
-        <div matLine>{{ comment.content }}</div>
-        <div matLine>
-          <small>{{
-            comment.createdAt | date : "EEEE, d MMMM, y, h:mm a"
-            }}</small>
+          <div>{{ comment.content }}</div>
+
+          <div class="d-flex justify-content-between gap-3">
+            <small class="text-muted">{{
+              comment.createdAt | date : "EEEE, d MMMM, y, h:mm a"
+              }}</small>
+            <section id="comment-actions" class="d-flex align-items-center gap-2">
+              <!-- Edit ticket -->
+              <button class="btn p-0" (click)="isEditMode = !isEditMode">
+                <i class="bi" [ngClass]="isEditMode ? 'bi-save' :'bi-pencil' "></i>
+              </button>
+              <!-- Delete ticket-->
+              <button class="btn p-0" *ngIf="isEditMode" (click)="delete()">
+                <i class="bi bi-trash text-danger"></i>
+              </button>
+            </section>
+          </div>
         </div>
       </li>
 
-      <div class="flex flex-column items-center gap-3">
-        <!-- Edit ticket -->
-        <div mat-icon-button class="flex items-center gap-1 border-2  px-3 rounded-md transition pointer-cursor"
-          (click)="isEditMode = !isEditMode">
-          <mat-icon>{{isEditMode ? 'save' :'edit' }}</mat-icon>
-        </div>
-        <!-- Delete ticket-->
-        <div *ngIf="isEditMode" mat-icon-button color="warn"
-          class="flex items-center gap-1 border-2 border-red-500 px-3 rounded-md hover:bg-red-100 transition pointer-cursor"
-          (click)="delete()">
-          <mat-icon class="text-red-600">delete</mat-icon>
-        </div>
-      </div>
     </div>
   </ul>
-</mat-card>
+</div>
 <ng-template #noComments>
-  <mat-card>
-    <mat-card-content>
+  <div class="card">
+    <div class="card-content">
       <p>Non ci sono commenti</p>
-    </mat-card-content>
-  </mat-card>
+    </div>
+  </div>
 </ng-template>

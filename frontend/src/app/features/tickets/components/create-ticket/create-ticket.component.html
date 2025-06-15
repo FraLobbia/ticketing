@@ -1,33 +1,51 @@
-<mat-card>
-  <mat-card-title>Crea un nuovo ticket</mat-card-title>
-  <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()">
-    <mat-form-field>
-      <mat-label>Titolo</mat-label>
-      <input matInput formControlName="title" placeholder="Titolo del ticket" />
-      <mat-error *ngIf="ticketForm.get('title')!.invalid"
-        >Titolo obbligatorio</mat-error
-      >
-    </mat-form-field>
+<div class="card mx-auto" style="max-width:600px">
+  <div class="card-header bg-secondary text-white">
+    <h2 class="mb-0">Crea un nuovo ticket</h2>
+  </div>
+  <form [formGroup]="ticketForm" (ngSubmit)="onSubmit()" class="card-body">
+    <div class="mb-3">
+      <label for="title" class="form-label">Titolo</label>
+      <input
+        id="title"
+        type="text"
+        formControlName="title"
+        class="form-control"
+        [class.is-invalid]="title?.touched && title?.invalid"
+        placeholder="Titolo del ticket"
+      />
+      <div *ngIf="title?.touched && title?.errors?.['required']" class="invalid-feedback">
+        Il titolo è obbligatorio.
+      </div>
+      <div *ngIf="title?.touched && title?.errors?.['minlength']" class="invalid-feedback">
+        Minimo 5 caratteri richiesti.
+      </div>
+    </div>
 
-    <mat-form-field>
-      <mat-label>Descrizione</mat-label>
+    <div class="mb-3">
+      <label for="description" class="form-label">Descrizione</label>
       <textarea
-        matInput
+        id="description"
         formControlName="description"
-        placeholder="Descrizione del ticket"
-      ></textarea>
-      <mat-error *ngIf="ticketForm.get('description')!.invalid"
-        >Descrizione obbligatoria</mat-error
-      >
-    </mat-form-field>
+        class="form-control"
+        [class.is-invalid]="description?.touched && description?.invalid"
+        rows="4"
+        placeholder="Descrizione del ticket">
+      </textarea>
+      <div *ngIf="description?.touched && description?.errors?.['required']" class="invalid-feedback">
+        La descrizione è obbligatoria.
+      </div>
+      <div *ngIf="description?.touched && description?.errors?.['minlength']" class="invalid-feedback">
+        Minimo 10 caratteri richiesti.
+      </div>
+    </div>
 
     <button
       type="submit"
-      [disabled]="ticketForm.invalid"
-      [style.cursor]="ticketForm.invalid ? 'not-allowed' : 'pointer'"
-      [ngClass]="{ 'text-black': ticketForm.invalid }"
-    >
-      Crea Ticket
+      id="create-ticket-button"
+      class="btn btn-tertiary w-100 d-flex justify-content-center align-items-center"
+      [disabled]="ticketForm.invalid || isLoading">
+      <span *ngIf="!isLoading">Crea Ticket</span>
+      <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
     </button>
   </form>
-</mat-card>
+</div>

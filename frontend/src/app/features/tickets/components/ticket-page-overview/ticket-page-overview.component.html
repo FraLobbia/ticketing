@@ -1,77 +1,137 @@
-<mat-card *ngIf="ticket" class="ticket-detail-card">
-  <div class="flex items-center gap-3 w-100 justify-between">
-    <p class="m-0 text-center pointer-cursor" [matTooltip]="'Copia l\'ID'" matTooltipPosition="left"
-      (click)="copyTicketId()">
-      N° Ticket: <strong>{{ ticket.id }}</strong>
-    </p>
-    <div class="flex items-center gap-3">
-      <!-- Delete ticket-->
-      <div *ngIf="isEditMode" mat-icon-button color="warn"
-        class="flex items-center gap-1 border-2 border-red-500 px-3 rounded-md hover:bg-red-100 transition pointer-cursor"
-        (click)="deleteTicket(ticket)">
-        <mat-icon class="text-red-600">delete</mat-icon>
-        <span class="text-red-700 text-sm font-medium">Cancella ticket</span>
+<!-- Spinner full-screen -->
+<div *ngIf="isLoading"
+  class="position-fixed top-0 start-0 vw-100 vh-100 d-flex justify-content-center align-items-center bg-white bg-opacity-75"
+  role="status" aria-live="polite">
+  <div class="spinner-border" aria-hidden="true"></div>
+</div>
+
+<ng-template #noTicket>
+  <div class="alert alert-warning text-center">
+    Ticket non trovato.
+  </div>
+</ng-template>
+
+<div *ngIf="ticket; else noTicket" class="card mx-auto my-4" style="max-width:800px">
+  <div class="card-body">
+    <!-- Header azioni -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <p class="mb-0" title="Clicca per copiare" style="cursor: pointer" (click)="copyTicketId()">
+        N° Ticket: <strong>{{ ticket.id }}</strong>
+      </p>
+      <div class="btn-group" role="group">
+        <button type="button" class="btn" [ngClass]="isEditMode ? 'btn-tertiary' : 'btn-outline-tertiary'"
+          (click)="toggleEdit()">
+          <i class="bi" [ngClass]="isEditMode ? 'bi-check2' : 'bi-pencil'"></i>
+          {{ isEditMode ? 'Salva' : 'Modifica' }}
+        </button>
+        <button type="button" class="btn btn-outline-secondary" (click)="confirmDelete()" [disabled]="isDeleting">
+          <i class="bi bi-trash" *ngIf="!isDeleting"></i>
+          <span *ngIf="isDeleting" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Elimina
+        </button>
       </div>
-      <!-- Edit ticket -->
-      <div mat-icon-button class="flex items-center gap-1 border-2  px-3 rounded-md transition pointer-cursor"
-        (click)="isEditMode = !isEditMode">
-        <mat-icon>{{isEditMode ? 'save' :'edit' }}</mat-icon>
-        <span class="text-sm font-medium">{{isEditMode ? 'Salva modifiche' : 'Modifica'}}</span>
+    </div>
+
+    <hr>
+
+    <div class="accordion" id="accordionExample">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+            aria-expanded="false" aria-controls="collapseOne">
+            <h4 class="mb-0">{{ ticket.title }}</h4>
+          </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+          data-bs-parent="#accordionExample">
+          <div class="accordion-body">
+            <div class="row mb-4">
+              <div class="col-sm-6">
+                <p><strong>Autore:</strong> {{ ticket.author.name }} {{ ticket.author.surname }}</p>
+                <p><strong>Apertura:</strong> {{ ticket.createdAt | date:'EEEE, dd MMM yyyy HH:mm' }}</p>
+                <p>
+                  <strong>Ultima modifica:</strong>
+                  {{ ticket.updatedAt ? (ticket.updatedAt | date:'EEEE, dd MMM yyyy HH:mm') : '---' }}
+                </p>
+              </div>
+              <div class="col-sm-6">
+                <label for="statusSelect" class="form-label"><strong>Stato</strong></label>
+                <div class="d-flex align-items-center">
+                  <span class="badge me-2" [ngClass]="getStatusBadgeClass(statusControl.value)">
+                    {{ getTicketStatusEnumValue(statusControl.value) }}
+                  </span>
+                  <form [formGroup]="statusForm" (ngSubmit)="onStatusChange()">
+                    <div class="input-group">
+                      <select id="statusSelect" class="form-select" formControlName="status"
+                        [disabled]="isStatusLoading" aria-label="Seleziona stato">
+                        <option *ngFor="let s of ticketStatusKeys" [value]="s">
+                          {{ getTicketStatusEnumValue(s) }}
+                        </option>
+                      </select>
+                      <button class="btn btn-outline-secondary" type="submit" [disabled]="isStatusLoading">
+                        <span *ngIf="!isStatusLoading">OK</span>
+                        <span *ngIf="isStatusLoading" class="spinner-border spinner-border-sm" role="status"
+                          aria-hidden="true"></span>
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info ticket e stato -->
+
+  </div>
+
+  <!-- Tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" [class.active]="selectedTab==='overview'" (click)="selectedTab='overview'" role="tab">
+        Panoramica
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" [class.active]="selectedTab==='comments'" (click)="selectedTab='comments'" role="tab">
+        Commenti ({{ comments.length }})
+      </button>
+    </li>
+  </ul>
+
+  <div class="card-body">
+    <ng-container [ngSwitch]="selectedTab">
+      <app-ticket-tab-description *ngSwitchCase="'overview'" [ticket]="ticket"></app-ticket-tab-description>
+      <app-ticket-tab-comments *ngSwitchCase="'comments'" [ticket]="ticket" [comments]="comments"
+        (commentAdded)="loadComments()"></app-ticket-tab-comments>
+    </ng-container>
+  </div>
+</div>
+
+<!-- Modal conferma cancellazione -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">
+          Conferma Eliminazione
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+      </div>
+      <div class="modal-body">
+        Sei sicuro di voler eliminare il ticket
+        <strong>{{ ticket?.id }}</strong>?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Annulla
+        </button>
+        <button type="button" class="btn btn-danger" (click)="deleteTicket()" data-bs-dismiss="modal">
+          Elimina
+        </button>
       </div>
     </div>
   </div>
-  <mat-divider></mat-divider>
-  <div class="header-wrapper">
-    <!-- info apertura modifica ticket -->
-    <div>
-      <p>
-        <strong>Autore: </strong>{{ ticket.author.name }}
-        {{ ticket.author.surname }}
-      </p>
-      <p>
-        <strong>Data apertura: </strong>{{ ticket.createdAt | date : "EEEE - dd MMMM y - HH:mm" }}
-      </p>
-      <p>
-        <strong>Data modifica: </strong>
-        {{ ticket.updatedAt ? (ticket.updatedAt | date : "EEEE - dd MMMM y - HH:mm") : '---' }}
-      </p>
-    </div>
-    <!-- selezione status -->
-    <form *ngIf="ticket" [formGroup]="statusForm">
-      <div>
-
-        <hr />
-        <mat-select [appStatusClass]="statusForm.get('status')?.value" formControlName="status"
-          (selectionChange)="handleStatusChange()">
-          <mat-option *ngFor="let status of ticketStatusKeys" [value]="status">
-            <span [appStatusClass]="status">
-              {{ getTicketStatusEnumValue(status) }}
-            </span>
-          </mat-option>
-        </mat-select>
-      </div>
-    </form>
-  </div>
-  <mat-divider></mat-divider>
-  <!-- titolo ticket -->
-  <mat-card-header>
-    <div class="flex justify-between items-center w-full">
-      <mat-card-title>{{ ticket.title }}</mat-card-title>
-    </div>
-  </mat-card-header>
-</mat-card>
-
-<!-- tab -->
-
-<mat-tab-group color="warn">
-  <mat-tab label="Panoramica">
-    <app-ticket-tab-description [ticket]="ticket"></app-ticket-tab-description>
-  </mat-tab>
-  <mat-tab>
-    <ng-template mat-tab-label>
-      Commenti ({{ comments.length}})
-    </ng-template>
-    <app-ticket-tab-comments [ticket]="ticket" [comments]="comments"
-      (commentAdded)="onCommentAdded()"></app-ticket-tab-comments>
-  </mat-tab>
-</mat-tab-group>
+</div>

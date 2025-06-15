@@ -1,13 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {
-  Ticket,
-  TicketStatusEnum,
-} from '../../../../shared/models/ticket.model';
+import { Ticket, TicketStatusEnum } from '../../../../shared/models/ticket.model';
 import { AuthService } from '../../../../core/services/auth.service';
 import { TicketService } from '../../services/ticket.service';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, throwError } from 'rxjs';
+import { finalize, takeUntil, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-ticket-create',
@@ -15,66 +13,58 @@ import { Subject } from 'rxjs';
   styleUrls: ['./create-ticket.component.scss'],
 })
 export class CreateTicketComponent implements OnInit, OnDestroy {
-  /**
-   * Variabili
-   */
   ticketForm!: FormGroup;
-  statuses = Object.values(TicketStatusEnum); // Enum values for the dropdown
+  statuses = Object.values(TicketStatusEnum);
+  isLoading = false;
+  private destroy$ = new Subject<void>();
 
-  /**
-   * Costruttore
-   */
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private ticketService: TicketService,
     private router: Router
-  ) { }
+  ) {}
 
-  /**
-   * Inizializza il componente
-   * Crea il form per la creazione di un nuovo ticket
-   */
   ngOnInit(): void {
-    this.initializeForm();
-  }
-
-  /**
-   * Inizializza il form per la creazione di un nuovo ticket
-   */
-  initializeForm(): void {
     this.ticketForm = this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
+      title: ['', [Validators.required, Validators.minLength(5)]],
+      description: ['', [Validators.required, Validators.minLength(10)]],
     });
   }
 
-  /**
-   * Invia il form al backend per creare un nuovo ticket
-   */
   onSubmit(): void {
-    if (this.ticketForm.valid) {
-      const newTicket: Ticket = {
-        ...this.ticketForm.value,
-        author: {
-          id: this.authService.getTokenPayload()?.idAccount,
-        },
-      };
-      this.ticketService.create(newTicket).subscribe((ticket: Ticket) => {
-        console.groupCollapsed('Ticket creato con successo (...)');
-        console.table(ticket);
-        console.groupEnd();
-        this.router.navigate(['/tickets/' + ticket.id]);
-      });
+    if (this.ticketForm.invalid) {
+      this.ticketForm.markAllAsTouched();
+      return;
     }
+
+    this.isLoading = true;
+    const payload: Ticket = {
+      ...this.ticketForm.value,
+      author: { id: this.authService.getTokenPayload()!.idAccount },
+    };
+
+    this.ticketService.create(payload)
+      .pipe(
+        takeUntil(this.destroy$),
+        finalize(() => this.isLoading = false),
+        catchError(err => {
+          console.error('Errore creazione ticket', err);
+          // potresti mostrare un toast o un alert qui
+          return throwError(err);
+        })
+      )
+      .subscribe(ticket => {
+        this.router.navigate(['/tickets', ticket.id]);
+      });
   }
 
-  /**
-   * Destroy del componente e delle sottoscrizioni
-   */
-  destroy$ = new Subject<void>();
   ngOnDestroy(): void {
-    this.destroy$.next(); // Emissione del segnale per interrompere le sottoscrizioni
+    this.destroy$.next();
     this.destroy$.complete();
   }
+
+  // convenience getters
+  get title() { return this.ticketForm.get('title'); }
+  get description() { return this.ticketForm.get('description'); }
 }

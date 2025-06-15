@@ -1,21 +1,31 @@
-<form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="mt-5 d-flex flex-column">
-  <label>Scrivi qui il tuo commento...</label>
-  <div class="w-full">
-    <textarea class="w-100" formControlName="content" placeholder="Scrivi qui il tuo commento..."></textarea>
-    <small *ngIf="
-        commentForm.get('content')?.invalid &&
-        commentForm.get('content')?.touched
-      ">
-    </small>
+<form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="mt-5">
+  <div class="mb-3">
+    <label for="content" class="form-label">Scrivi qui il tuo commento...</label>
+    <textarea
+      id="content"
+      formControlName="content"
+      class="form-control"
+      [class.is-invalid]="content?.touched && content?.invalid"
+      rows="3"
+      placeholder="Scrivi qui il tuo commento...">
+    </textarea>
+    <div *ngIf="content?.touched && content?.errors?.['required']" class="invalid-feedback">
+      Il commento non può essere vuoto.
+    </div>
+    <div *ngIf="content?.touched && content?.errors?.['minlength']" class="invalid-feedback">
+      Minimo 3 caratteri richiesti.
+    </div>
   </div>
 
-  <button type="submit" [disabled]="commentForm.invalid"
-    class="w-full mt-3 py-2 rounded-md text-white bg-red-500 hover:bg-red-600 disabled:bg-gray-300 transition">
-    Commenta
+  <button
+    type="submit"
+    class="btn btn-tertiary w-100 d-flex justify-content-center align-items-center"
+    [disabled]="commentForm.invalid || isLoading">
+    <span *ngIf="!isLoading">Commenta</span>
+    <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
   </button>
 </form>
 
-<!-- Divider separato visivamente -->
-<div class="my-8">
-  <mat-divider></mat-divider>
+<div class="my-4">
+  <hr>
 </div>

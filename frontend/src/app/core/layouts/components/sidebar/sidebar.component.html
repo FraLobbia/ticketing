@@ -3,12 +3,11 @@
   <h5 class="h5 m-1 fw-medium">Sezioni</h5>
   <nav class="nav flex-column px-2">
     <button
-      type="button"
       *ngFor="let item of menuItems"
       [routerLink]="item.path"
       routerLinkActive="bg-secondary text-white"
       [routerLinkActiveOptions]="{ exact: true }"
-      class="nav-link d-flex align-items-center px-3 py-2 rounded-pill text-black"
+      class="btn nav-link d-flex align-items-center px-3 py-2 rounded-pill text-black"
       (click)="handleMenuNavigation(item)"
     >
       <i class="bi {{ item.icon }} me-2"></i>
@@ -26,11 +25,10 @@
       [routerLink]="['/tickets', ticket.id]"
       class="card card-viewing mb-2 overflow-hidden w-100"
       [ngClass]="{
-        'bg-primary-dark': !isSelectedTicket(ticket.id!),
         'bg-secondary text-white': isSelectedTicket(ticket.id!)
       }"
     >
-      <div class="card-header d-flex flex-column p-2">
+      <div class="d-flex flex-column p-2">
         <!-- Riga ID + titolo -->
         <div class="d-flex align-items-center gap-2 overflow-hidden w-100">
           <span class="text-nowrap">ID: {{ ticket.id }}</span>

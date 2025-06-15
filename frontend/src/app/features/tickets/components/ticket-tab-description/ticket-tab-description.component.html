@@ -1,5 +1,22 @@
-<div *ngIf="ticket" class="bg-custom-primary shadow rounded-custom p-4">
-  <div class="p-2">
-    <p>{{ ticket.description }}</p>
+<div *ngIf="ticket; else noTicket" class="card mt-2">
+  <div class="card-header">
+    <h5 class="mb-0">Descrizione Ticket</h5>
+  </div>
+  <div class="card-body">
+    <p *ngIf="hasDescription" class="card-text">
+      {{ displayedText }}
+    </p>
+    <button
+      *ngIf="isLong"
+      class="btn btn-link btn-sm p-0 mt-2"
+      (click)="toggleExpand()">
+      {{ isExpanded ? 'Mostra meno' : 'Mostra altro' }}
+    </button>
   </div>
 </div>
+
+<ng-template #noTicket>
+  <div class="alert alert-warning text-center">
+    Ticket non trovato.
+  </div>
+</ng-template>
