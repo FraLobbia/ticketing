@@ -45,7 +45,7 @@
   <!-- tabella -->
   <div class="table-responsive table-container">
     <table class="table table-bordered table-hover align-middle">
-      <thead class="table-light">
+      <thead class="">
         <tr>
           <th *ngFor="let col of displayedColumns" (click)="sortData(col)" class="sortable"
             [ngClass]="{ active: sortColumn === col }">
