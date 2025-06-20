@@ -1,19 +1,17 @@
-<mat-card class="not-found-card container">
-  <mat-card-header>
-    <mat-card-title>
-      <mat-icon class="not-found-icon">error_outline</mat-icon>
-      Pagina non trovata
-    </mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
-    <p>
-      La pagina che stai cercando non esiste. Potresti aver digitato l'indirizzo
-      in modo errato o la pagina potrebbe essere stata spostata.
-    </p>
-  </mat-card-content>
-  <mat-card-actions>
-    <button mat-raised-button routerLink="/tickets">
-      Torna alla Dashboard
-    </button>
-  </mat-card-actions>
-</mat-card>
+<div class="container my-5">
+  <div class="card text-center shadow not-found-card">
+    <div class="card-header bg-danger text-white">
+      <h5 class="card-title d-flex justify-content-center align-items-center gap-2">
+        <i class="bi bi-exclamation-triangle-fill fs-4"></i>
+        Pagina non trovata
+      </h5>
+    </div>
+    <div class="card-body">
+      <p class="card-text">
+        La pagina che stai cercando non esiste. Potresti aver digitato l'indirizzo
+        in modo errato o la pagina potrebbe essere stata spostata.
+      </p>
+      <a class="btn btn-primary" routerLink="/tickets">Torna alla Dashboard</a>
+    </div>
+  </div>
+</div>

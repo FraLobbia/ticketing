@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MaterialModule } from '../../core/material/material.module';
+
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CreateTicketComponent } from './components/create-ticket/create-ticket.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -34,7 +34,6 @@ const ticketComponents = [
   ],
   imports: [
     CommonModule,
-    MaterialModule,
     ReactiveFormsModule,
     TicketRoutingModule,
     SharedModule,

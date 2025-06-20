@@ -1,86 +1,94 @@
 <div class="dashboard-container">
   <!-- Campo di ricerca -->
-  <div class="filter-container">
-    <!-- Input testuale -->
-    <mat-form-field appearance="outline" class="filter-item">
-      <mat-label>Filtra per testo</mat-label>
-      <input matInput #textInput (keyup)="applyFilter(textInput.value, statusSelect.value)"
-        placeholder="Inserisci testo" />
-    </mat-form-field>
+  <div class="filter-container mb-2">
+    <div class="row g-2 align-items-end">
+      <!-- Filtro per testo -->
+      <div class="col-md-6">
+        <label for="textInput" class="form-label">Filtra per testo</label>
+        <input type="text" class="form-control" id="textInput" placeholder="Inserisci testo"
+          (keyup)="applyFilter(textInput.value, selectedStatus)" #textInput />
+      </div>
 
-    <!-- Select per il filtro dello stato -->
-    <mat-form-field appearance="outline" class="filter-item">
-      <mat-label>Filtra per stato</mat-label>
-      <mat-select #statusSelect [value]="selectedStatus" (selectionChange)="onStatusChange($event)" multiple>
-        <!-- Opzione per "Seleziona tutto" -->
-        <mat-option class="mat-button no-checkbox-option" (click)="selectAll(statusSelect)">
-          <strong>Seleziona tutto</strong>
-        </mat-option>
-
-        <!-- Opzioni per gli stati -->
-        <mat-option *ngFor="let status of availableStatus" [value]="status">
-          <span [appStatusClass]="status">
-            {{ getTicketStatusEnumValue(status) }}
-          </span>
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+      <!-- Filtro per stato -->
+      <div class="col-md-6">
+        <label class="form-label">Filtra per stato</label>
+        <div class="dropdown w-100">
+          <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start" type="button"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Seleziona stati
+          </button>
+          <ul class="dropdown-menu w-100 p-2" style="max-height: 200px; overflow-y: auto;">
+            <li>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="selectAll" (change)="toggleSelectAll($event)"
+                  [checked]="selectedStatus.length === availableStatus.length" />
+                <label class="form-check-label" for="selectAll">
+                  Seleziona tutto
+                </label>
+              </div>
+            </li>
+            <li *ngFor="let status of availableStatus">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" [id]="'status-' + status" [value]="status"
+                  [checked]="selectedStatus.includes(status)" (change)="onCheckboxChange($event)" />
+                <label class="form-check-label" [for]="'status-' + status">
+                  {{ getTicketStatusEnumValue(status) }}
+                </label>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- tabella -->
-  <div class="table-container">
-    <table mat-table [dataSource]="dataSource" matSort>
-      <!-- Header Row -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <div class="table-responsive table-container">
+    <table class="table table-bordered table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th *ngFor="let col of displayedColumns" (click)="sortData(col)" class="sortable"
+            [ngClass]="{ active: sortColumn === col }">
+            {{ getColumnHeader(col) }}
+            <span *ngIf="sortColumn === col">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+        </tr>
+      </thead>
 
-      <!-- ID Column -->
-      <ng-container matColumnDef="id">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
-        <td mat-cell *matCellDef="let ticket">{{ ticket.id }}</td>
-      </ng-container>
-
-      <!-- Title Column -->
-      <ng-container matColumnDef="title">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Title</th>
-        <td mat-cell *matCellDef="let ticket">{{ ticket.title }}</td>
-      </ng-container>
-
-      <!-- Status Column -->
-      <ng-container matColumnDef="status">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-        <td class="center-text" mat-cell *matCellDef="let ticket">
-          <span [appStatusClass]="ticket.status">{{
-            getTicketStatusEnumValue(ticket.status)
-            }}</span>
-        </td>
-      </ng-container>
-
-      <!-- Account Column -->
-      <ng-container matColumnDef="createdBy">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Account</th>
-        <td mat-cell *matCellDef="let ticket">
-          {{ ticket.author.name }} <br />
-          {{ ticket.author.surname }}
-        </td>
-      </ng-container>
-
-      <!-- CreatedAt Column -->
-      <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created At</th>
-        <td mat-cell *matCellDef="let ticket">
-          {{ ticket.createdAt | date : "EEEE" | titlecase }}
-          <br />
-          {{ ticket.createdAt | date : "dd MMMM yyyy" }}
-        </td>
-      </ng-container>
-
-      <!-- Data Rows -->
-      <tr [ngClass]="{ 'highlight-row': isViewingTicket(ticket) }" (click)="onRowClick($event, ticket)"
-        (mousedown)="onRowClick($event, ticket)" (contextmenu)="onRowClick($event, ticket)" mat-row
-        *matRowDef="let row; let ticket; columns: displayedColumns"></tr>
+      <tbody>
+        <tr *ngFor="let ticket of paginatedTickets" [ngClass]="{ 'highlight-row': isViewingTicket(ticket) }"
+          (click)="onRowClick($event, ticket)" (mousedown)="onRowClick($event, ticket)"
+          (contextmenu)="onRowClick($event, ticket)" style="cursor: pointer">
+          <td *ngFor="let col of displayedColumns">
+            <ng-container *ngIf="col !== 'status'; else statusTpl">
+              {{ columnAccessors[col](ticket) }}
+            </ng-container>
+            <ng-template #statusTpl>
+              <span [appStatusClass]="ticket.status">
+                {{ getTicketStatusEnumValue(ticket.status) }}
+              </span>
+            </ng-template>
+          </td>
+        </tr>
+      </tbody>
     </table>
-
-    <!-- Paginator -->
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" [pageSize]="20" showFirstLastButtons></mat-paginator>
   </div>
+  <nav *ngIf="totalPages > 1">
+    <ul class="pagination justify-content-center">
+      <li class="page-item" [class.disabled]="currentPage === 1" (click)="changePage(currentPage - 1)">
+        <a class="page-link" href="javascript:void(0)">«</a>
+      </li>
+
+      <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index"
+        [class.active]="currentPage === i + 1" (click)="changePage(i + 1)">
+        <a class="page-link" href="javascript:void(0)">{{ i + 1 }}</a>
+      </li>
+
+      <li class="page-item" [class.disabled]="currentPage === totalPages" (click)="changePage(currentPage + 1)">
+        <a class="page-link" href="javascript:void(0)">»</a>
+      </li>
+    </ul>
+  </nav>
 </div>

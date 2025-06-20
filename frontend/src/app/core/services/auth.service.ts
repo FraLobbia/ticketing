@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
 import { ILoginResponse } from '../../shared/interfaces/auth.interface';
 import { jwtDecode } from 'jwt-decode';
 import { Account } from '../../shared/models/account.model';
-import { SnackbarService } from '../../shared/services/snackbar.service';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +22,7 @@ export class AuthService {
 
   isAdmin = false;
 
-  constructor(private http: HttpClient, private router: Router, private msg: SnackbarService) { }
+  constructor(private http: HttpClient, private router: Router) { }
 
   /**
    * Effettua il login dell'utente.
@@ -136,7 +135,7 @@ export class AuthService {
     return (response: { error: any; message: string; }): Observable<T> => {
       console.error(`${operation} failed: ${response.message}`);
       console.table(response);
-      this.msg.show(response.error.message, 'Chiudi', 5000);
+      // this.msg.show(response.error.message, 'Chiudi', 5000);
       return of(result as T);
     };
   }

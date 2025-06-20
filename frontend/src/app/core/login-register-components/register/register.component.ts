@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Subject, Subscription, takeUntil } from 'rxjs';
-import { SnackbarService } from '../../../shared/services/snackbar.service';
 
 @Component({
   selector: 'app-register',
@@ -16,8 +15,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router,
-    private msg: SnackbarService
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -41,7 +39,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
             next: () => this.router.navigate(['/tickets']),
             error: (error) => {
               console.error(error);
-              this.msg.show(error, 'Chiudi', 5000);
+              // this.msg.show(error, 'Chiudi', 5000);
             },
           }
         );

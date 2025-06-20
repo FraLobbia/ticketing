@@ -8,7 +8,6 @@ import { Ticket, TicketStatusEnum } from '../../../../shared/models/ticket.model
 import { Comment } from '../../../../shared/models/comment.model';
 import { TicketService } from '../../services/ticket.service';
 import { CommentService } from '../../services/comment.service';
-import { SnackbarService } from '../../../../shared/services/snackbar.service';
 import { getTicketStatusEnumValue, getStatusBadgeClass } from '../../../../shared/utility/string-editor.utility';
 @Component({
   selector: 'app-ticket-page-overview',
@@ -39,8 +38,7 @@ export class TicketPageOverviewComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private ticketService: TicketService,
-    private commentService: CommentService,
-    private msg: SnackbarService
+    private commentService: CommentService
   ) { }
 
   ngOnInit(): void {
@@ -64,7 +62,7 @@ export class TicketPageOverviewComponent implements OnInit, OnDestroy {
           this.statusForm.patchValue({ status: t.status });
           this.loadComments();
         },
-        error: () => this.msg.show('Impossibile caricare il ticket')
+        // error: () => this.msg.show('Impossibile caricare il ticket')
       });
   }
 
@@ -79,7 +77,7 @@ export class TicketPageOverviewComponent implements OnInit, OnDestroy {
 
   public toggleEdit(): void {
     this.isEditMode = !this.isEditMode;
-    this.msg.show(this.isEditMode ? 'Modalità modifica attivata' : 'Modalità modifica disattivata');
+    // this.msg.show(this.isEditMode ? 'Modalità modifica attivata' : 'Modalità modifica disattivata');
   }
 
 
@@ -91,7 +89,7 @@ export class TicketPageOverviewComponent implements OnInit, OnDestroy {
   public copyTicketId(): void {
     if (this.ticket?.id) {
       navigator.clipboard.writeText(this.ticket.id.toString());
-      this.msg.show(`ID ticket ${this.ticket.id} copiato`);
+      // this.msg.show(`ID ticket ${this.ticket.id} copiato`);
     }
   }
 

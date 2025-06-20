@@ -4,7 +4,7 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { ILogin } from '../../../shared/interfaces/auth.interface';
 import { Subject, Subscription, take, takeUntil } from 'rxjs';
-import { SnackbarService } from '../../../shared/services/snackbar.service';
+
 
 @Component({
   selector: 'app-login',
@@ -18,8 +18,7 @@ export class LoginComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router,
-    private msg: SnackbarService
+    private router: Router
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
