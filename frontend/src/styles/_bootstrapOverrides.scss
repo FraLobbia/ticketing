@@ -35,6 +35,9 @@ $nav-tabs-link-active-border-color: rgba(0, 0, 0, 0.175);
 // Cards
 $card-bg: $primary-dark;
 
+// Forms
+$form-label-margin-bottom: none;
+
 // 3. Include remainder of required Bootstrap stylesheets (including any separate color mode stylesheets)
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/variables-dark";
