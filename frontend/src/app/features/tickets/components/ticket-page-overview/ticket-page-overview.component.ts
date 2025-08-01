@@ -36,7 +36,7 @@ export class TicketPageOverviewComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private router: Router,
+    protected router: Router,
     private ticketService: TicketService,
     private commentService: CommentService
   ) { }
@@ -84,6 +84,7 @@ export class TicketPageOverviewComponent implements OnInit, OnDestroy {
   onStatusChange(): void { }
   confirmDelete(): void { }
   deleteTicket(): void { }
+
 
 
   public copyTicketId(): void {

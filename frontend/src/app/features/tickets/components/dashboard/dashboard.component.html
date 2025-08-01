@@ -44,34 +44,34 @@
 
   <!-- tabella -->
   <div class="table-responsive table-container">
-    <table class="table table-bordered table-hover align-middle">
+    <table class="table table-bordered table-hover align-middle rounded-3 overflow-hidden">
       <thead class="">
-        <tr>
-          <th *ngFor="let col of displayedColumns" (click)="sortData(col)" class="sortable"
-            [ngClass]="{ active: sortColumn === col }">
-            {{ getColumnHeader(col) }}
-            <span *ngIf="sortColumn === col">
-              {{ sortDirection === 'asc' ? '▲' : '▼' }}
-            </span>
-          </th>
-        </tr>
+      <tr>
+        <th *ngFor="let col of displayedColumns" (click)="sortData(col)" class="sortable"
+        [ngClass]="{ active: sortColumn === col }">
+        {{ getColumnHeader(col) }}
+        <span *ngIf="sortColumn === col">
+          {{ sortDirection === 'asc' ? '▲' : '▼' }}
+        </span>
+        </th>
+      </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="let ticket of paginatedTickets" [ngClass]="{ 'highlight-row': isViewingTicket(ticket) }"
-          (click)="onRowClick($event, ticket)" (mousedown)="onRowClick($event, ticket)"
-          (contextmenu)="onRowClick($event, ticket)" style="cursor: pointer">
-          <td *ngFor="let col of displayedColumns">
-            <ng-container *ngIf="col !== 'status'; else statusTpl">
-              {{ columnAccessors[col](ticket) }}
-            </ng-container>
-            <ng-template #statusTpl>
-              <span [appStatusClass]="ticket.status">
-                {{ getTicketStatusEnumValue(ticket.status) }}
-              </span>
-            </ng-template>
-          </td>
-        </tr>
+      <tr *ngFor="let ticket of paginatedTickets" [ngClass]="{ 'highlight-row': isViewingTicket(ticket) }"
+        (click)="onRowClick($event, ticket)" (mousedown)="onRowClick($event, ticket)"
+        (contextmenu)="onRowClick($event, ticket)" style="cursor: pointer">
+        <td *ngFor="let col of displayedColumns">
+        <ng-container *ngIf="col !== 'status'; else statusTpl">
+          {{ columnAccessors[col](ticket) }}
+        </ng-container>
+        <ng-template #statusTpl>
+          <span [appStatusClass]="ticket.status">
+          {{ getTicketStatusEnumValue(ticket.status) }}
+          </span>
+        </ng-template>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

@@ -1,94 +1,97 @@
-<div class="card shadow mx-auto">
-  <button type="button" class="btn btn-link me-auto" routerLink="/login" aria-label="Torna al login">
-    <i class="bi bi-arrow-left"></i> Torna al login
-  </button>
-
-  <h2 class="mb-2 text-center mt-1">Registrazione</h2>
-  <p class="text-center mb-0">
-    Compila il modulo per creare un nuovo account.
-  </p>
-
-  <form [formGroup]="fg" (ngSubmit)="onSubmit()" class="p-4" autocomplete="on" novalidate>
-    <!-- Nome -->
-    <div class="mb-3">
-      <label for="name" class="form-label">Nome</label>
-      <input id="name" type="text" class="form-control" formControlName="name" placeholder="Inserisci il tuo nome"
-        [class.is-invalid]="hasError('name','required')" />
-      <div class="invalid-feedback">
-        Il nome è obbligatorio.
-      </div>
-    </div>
-
-    <!-- Cognome -->
-    <div class="mb-3">
-      <label for="surname" class="form-label">Cognome</label>
-      <input id="surname" type="text" class="form-control" formControlName="surname"
-        placeholder="Inserisci il tuo cognome" [class.is-invalid]="hasError('surname','required')" />
-      <div class="invalid-feedback">
-        Il cognome è obbligatorio.
-      </div>
-    </div>
-
-    <!-- Email -->
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <input id="email" type="email" class="form-control" formControlName="email" placeholder="Inserisci la tua email"
-        [class.is-invalid]="hasError('email','required') || hasError('email','email')" />
-      <div class="invalid-feedback" *ngIf="hasError('email','required')">
-        L’email è obbligatoria.
-      </div>
-      <div class="invalid-feedback" *ngIf="hasError('email','email')">
-        Inserisci un indirizzo email valido.
-      </div>
-    </div>
-
-    <!-- Password -->
-    <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
-      <div class="input-group">
-        <input autocomplete="new-password" id="newPassword" [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="newPassword"
-          placeholder="Inserisci la tua password"
-          [class.is-invalid]="hasError('password','required') || hasError('password','minlength')" />
-        <button type="button" class="btn btn-outline-secondary" (click)="this.showPassword = !this.showPassword"
-          [attr.aria-label]="showPassword ? 'Nascondi password' : 'Mostra password'">
-          <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
-        </button>
-      </div>
-      <div class="invalid-feedback" *ngIf="hasError('password','required')">
-        La password è obbligatoria.
-      </div>
-      <div class="invalid-feedback" *ngIf="hasError('password','minlength')">
-        Minimo 6 caratteri.
-      </div>
-    </div>
-
-    <!-- Conferma Password -->
-    <div class="mb-4">
-      <label for="confirmPassword" class="form-label">
-        Conferma Password
-      </label>
-      <div class="input-group">
-        <input autocomplete="new-password" id="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'" class="form-control"
-          formControlName="confirmPassword" placeholder="Reinserisci la password" [class.is-invalid]="
-            hasError('confirmPassword','required') || errors?.['passwordMismatch']"
-           />
-        <button type="button" class="btn btn-outline-secondary" (click)="this.showConfirmPassword = !this.showConfirmPassword"
-          [attr.aria-label]="showConfirmPassword ? 'Nascondi password' : 'Mostra password'">
-          <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
-        </button>
-      </div>
-      <div class="invalid-feedback" *ngIf="hasError('confirmPassword','required')">
-        La conferma è obbligatoria.
-      </div>
-      <div class="invalid-feedback" *ngIf="errors?.['passwordMismatch']">
-        Le password non coincidono.
-      </div>
-    </div>
-
-    <button type="submit" class="btn w-100" [ngClass]="fg.invalid || isLoading ? 'btn-primary' : 'btn-tertiary'"
-      [disabled]="fg.invalid || isLoading">
-      <span *ngIf="!isLoading">Registrati</span>
-      <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+<div class="background-image">
+  <div class="card shadow" >
+    <button type="button" class="btn btn-link me-auto" routerLink="/login" aria-label="Torna al login">
+      <i class="bi bi-arrow-left"></i> Torna al login
     </button>
-  </form>
+
+    <h2 class="mb-2 text-center mt-1">Registrazione</h2>
+    <p class="text-center mb-0">
+      Compila il modulo per creare un nuovo account.
+    </p>
+
+    <form [formGroup]="fg" (ngSubmit)="onSubmit()" class="p-4" autocomplete="on" novalidate>
+      <!-- Nome -->
+      <div class="mb-3">
+        <label for="name" class="form-label">Nome</label>
+        <input id="name" type="text" class="form-control" formControlName="name" placeholder="Inserisci il tuo nome"
+          [class.is-invalid]="hasError('name','required')" />
+        <div class="invalid-feedback">
+          Il nome è obbligatorio.
+        </div>
+      </div>
+
+      <!-- Cognome -->
+      <div class="mb-3">
+        <label for="surname" class="form-label">Cognome</label>
+        <input id="surname" type="text" class="form-control" formControlName="surname"
+          placeholder="Inserisci il tuo cognome" [class.is-invalid]="hasError('surname','required')" />
+        <div class="invalid-feedback">
+          Il cognome è obbligatorio.
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input id="email" type="email" class="form-control" formControlName="email" placeholder="Inserisci la tua email"
+          [class.is-invalid]="hasError('email','required') || hasError('email','email')" />
+        <div class="invalid-feedback" *ngIf="hasError('email','required')">
+          L’email è obbligatoria.
+        </div>
+        <div class="invalid-feedback" *ngIf="hasError('email','email')">
+          Inserisci un indirizzo email valido.
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <div class="input-group">
+          <input autocomplete="new-password" id="newPassword" [type]="showPassword ? 'text' : 'password'"
+            class="form-control" formControlName="newPassword" placeholder="Inserisci la tua password"
+            [class.is-invalid]="hasError('password','required') || hasError('password','minlength')" />
+          <button type="button" class="btn btn-outline-secondary" (click)="this.showPassword = !this.showPassword"
+            [attr.aria-label]="showPassword ? 'Nascondi password' : 'Mostra password'">
+            <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+        <div class="invalid-feedback" *ngIf="hasError('password','required')">
+          La password è obbligatoria.
+        </div>
+        <div class="invalid-feedback" *ngIf="hasError('password','minlength')">
+          Minimo 6 caratteri.
+        </div>
+      </div>
+
+      <!-- Conferma Password -->
+      <div class="mb-4">
+        <label for="confirmPassword" class="form-label">
+          Conferma Password
+        </label>
+        <div class="input-group">
+          <input autocomplete="new-password" id="confirmPassword" [type]="showConfirmPassword ? 'text' : 'password'"
+            class="form-control" formControlName="confirmPassword" placeholder="Reinserisci la password"
+            [class.is-invalid]="
+            hasError('confirmPassword','required') || errors?.['passwordMismatch']" />
+          <button type="button" class="btn btn-outline-secondary"
+            (click)="this.showConfirmPassword = !this.showConfirmPassword"
+            [attr.aria-label]="showConfirmPassword ? 'Nascondi password' : 'Mostra password'">
+            <i class="bi" [ngClass]="showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+          </button>
+        </div>
+        <div class="invalid-feedback" *ngIf="hasError('confirmPassword','required')">
+          La conferma è obbligatoria.
+        </div>
+        <div class="invalid-feedback" *ngIf="errors?.['passwordMismatch']">
+          Le password non coincidono.
+        </div>
+      </div>
+
+      <button type="submit" class="btn w-100" [ngClass]="fg.invalid || isLoading ? 'btn-primary' : 'btn-tertiary'"
+        [disabled]="fg.invalid || isLoading">
+        <span *ngIf="!isLoading">Registrati</span>
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      </button>
+    </form>
+  </div>
 </div>

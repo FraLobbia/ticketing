@@ -1,19 +1,14 @@
-<div class="container mt-5">
-  <div class="card shadow rounded mx-auto" style="max-width: 400px;">
+<div class="background-image">
+  <div class="card shadow rounded" style="max-width: 400px;">
     <div class="card-body p-4">
-      <h2 class="mb-4 text-center">Login</h2>
+      <h2 class="mb-4 text-center">Accedi</h2>
       <form [formGroup]="fg" (ngSubmit)="onSubmit()" autocomplete="on" novalidate>
         <!-- Email -->
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
-          <input
-            id="email"
-            type="email"
-            class="form-control"
-            formControlName="email"
+          <input id="email" type="email" class="form-control" formControlName="email"
             placeholder="Inserisci la tua email"
-            [class.is-invalid]="hasError('email','required') || hasError('email','email')"
-          />
+            [class.is-invalid]="hasError('email','required') || hasError('email','email')" />
           <div class="invalid-feedback" *ngIf="hasError('email','required')">
             L’email è obbligatoria.
           </div>
@@ -26,20 +21,11 @@
         <div class="mb-4">
           <label for="password" class="form-label">Password</label>
           <div class="input-group">
-            <input
-              id="password"
-              [type]="showPassword ? 'text' : 'password'"
-              class="form-control"
-              formControlName="password"
-              placeholder="Inserisci la tua password"
-              [class.is-invalid]="hasError('password','required')"
-            />
-            <button
-              type="button"
-              class="btn btn-outline-secondary"
-              (click)="this.showPassword = !this.showPassword"
-              [attr.aria-label]="showPassword ? 'Nascondi password' : 'Mostra password'"
-            >
+            <input id="password" [type]="showPassword ? 'text' : 'password'" class="form-control"
+              formControlName="password" placeholder="Inserisci la tua password"
+              [class.is-invalid]="hasError('password','required')" />
+            <button type="button" class="btn btn-outline-secondary" (click)="this.showPassword = !this.showPassword"
+              [attr.aria-label]="showPassword ? 'Nascondi password' : 'Mostra password'">
               <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
             </button>
           </div>
@@ -49,13 +35,9 @@
         </div>
 
         <!-- Submit -->
-        <button
-          type="submit"
-          class="btn w-100 mb-3"
-          [ngClass]="fg.invalid ? 'btn-primary' : 'btn-tertiary'"
-          [disabled]="fg.invalid"
-        >
-          Login
+        <button type="submit" class="btn w-100 mb-3" [ngClass]="fg.invalid ? 'btn-primary' : 'btn-tertiary'"
+          [disabled]="fg.invalid">
+          Accedi
         </button>
 
         <!-- Link to register -->
@@ -64,11 +46,7 @@
         </p>
 
         <!-- Test button -->
-        <button
-          type="button"
-          class="btn btn-outline-secondary w-100"
-          (click)="fillInputs()"
-        >
+        <button type="button" class="btn btn-outline-secondary w-100" (click)="fillInputs()">
           TEST
         </button>
       </form>

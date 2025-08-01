@@ -4,8 +4,11 @@
     <button class="btn text-white p-0" (click)="onToggleSidebar()">
       <i class="bi bi-list hover-color fs-3"></i>
     </button>
-    <button [routerLink]="'/tickets'" class=" btn text-white ms-3 fw-medium fs-4 hover-color">
+    <button [routerLink]="'/tickets'" class="btn text-white ms-3 fw-medium fs-4 hover-color">
       Ticketing
+    </button>
+    <button type="button" class="btn text-white" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i> Torna indietro
     </button>
   </div>
 
